@@ -1,0 +1,122 @@
+.hero-frame {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* GALERI MASONRY & GRID (FINAL)        */
+
+.gallery-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    color: #000;
+    padding-left: 0;
+    text-align: center; /* Disesuaikan agar center seperti desain umum */
+}
+
+/* === CONTAINER GRID === */
+.custom-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 Kolom */
+    gap: 24px; 
+    width: 100%;
+}
+
+/* === ITEM GRID (DEFAULT: KOTAK 1:1) === */
+.grid-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1; /* KUNCI: Memaksa kotak */
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 16px; /* Sudut melengkung */
+}
+
+/* === ATURAN KHUSUS OTOMATIS: FOTO KE-1 & KE-10 LEBAR === */
+.grid-item:nth-child(1), 
+.grid-item:nth-child(10) {
+    grid-column: span 2;   /* Memakan 2 kolom */
+    aspect-ratio: 2.1 / 1; /* Persegi Panjang */
+}
+
+/* === GAMBAR === */
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Agar tidak gepeng */
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* === HOVER EFFECT (MASONRY STYLE) === */
+
+/* 1. Overlay Gelap */
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+    z-index: 2;
+    padding: 20px;
+}
+
+/* 2. Konten Overlay */
+.overlay-content {
+    text-align: center;
+    color: white;
+    width: 100%;
+}
+
+/* 3. Judul (Animasi Masuk dari Kiri) */
+.overlay-title {
+    font-weight: 800; 
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateX(-80px);
+    transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* 4. Ikon (Animasi Masuk dari Bawah) */
+.overlay-content i {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition-delay: 0.1s;
+}
+
+/* === INTERAKSI SAAT HOVER === */
+.grid-item:hover .grid-overlay { opacity: 1; }
+.grid-item:hover .overlay-title { opacity: 1; transform: translateX(0); }
+.grid-item:hover .overlay-content i { opacity: 1; transform: translateY(0); }
+.grid-item:hover img { transform: scale(1.1); }
+
+/* === RESPONSIF (HP) === */
+@media (max-width: 768px) {
+    .custom-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    /* Di HP, item 1 & 10 tetap lebar */
+    .grid-item:nth-child(1), 
+    .grid-item:nth-child(10) {
+        grid-column: span 2; 
+        aspect-ratio: 2 / 1;
+    }
+    .overlay-title { font-size: 1.1rem; }
+    .grid-item { border-radius: 12px; }
+}
