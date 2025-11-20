@@ -1,11 +1,5 @@
 <?php
 require 'config.php';
-
-// ==========================================================
-// 1. QUERY BAGIAN WEBSITE RESMI (NAV, LOGO, DLL) - JANGAN UBAH
-// ==========================================================
-
-// QUERY NAV
 $qNav = "SELECT * FROM vw_nav";
 $rNav = pg_query($conn, $qNav);
 
@@ -44,12 +38,10 @@ $qLogo = "SELECT * FROM vw_logo_cta";
 $rLogo = pg_query($conn, $qLogo);
 $rowLogo = pg_fetch_assoc($rLogo);
 
-// QUERY STATS
 $qStats = "SELECT * FROM get_statistik()";
 $rStats = pg_query($conn, $qStats);
 $rowStats = pg_fetch_assoc($rStats);
 
-// QUERY VISI MISI
 $qVisi = "SELECT * FROM vw_visi_lab";
 $rVisi = pg_query($conn, $qVisi);
 $rowVisi = pg_fetch_assoc($rVisi);
@@ -59,26 +51,15 @@ $rMisi = pg_query($conn, $qMisi);
 $rowMisi = pg_fetch_assoc($rMisi);
 
 
-// ==========================================================
-// 2. LOGIKA FITUR GALERI (MASONRY + PAGINATION)
-// ==========================================================
-
-$limit = 14; // Wajib 14 agar layout grid pas
-
-// Ambil halaman saat ini
+$limit = 14; 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-// Hitung Total Data
 $queryTotal = "SELECT count(*) as total FROM galeri";
 $resultTotal = pg_query($conn, $queryTotal);
 $rowTotal = pg_fetch_assoc($resultTotal);
 $totalData = $rowTotal['total'];
-
-// Hitung Total Halaman
 $totalPage = ceil($totalData / $limit);
-
-// Ambil Data Galeri (Terbaru diatas)
 $query = "SELECT * FROM galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
 $result = pg_query($conn, $query);
 ?>
