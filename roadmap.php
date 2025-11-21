@@ -67,6 +67,7 @@
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleRoadmap.css"> 
     <link href="https://cdn.lineicons.com/3.0/lineicons.css" rel="stylesheet"> 
+    <link rel="stylesheet" href="css/styleFooter.css">
 </head>
 <body>
 
