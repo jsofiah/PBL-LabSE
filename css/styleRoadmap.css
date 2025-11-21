@@ -1,0 +1,430 @@
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+
+/* Wrapper utama hero, membatasi lebar dan memberi jarak atas */
+.hero-wrapper { /* Mulai class hero-wrapper */
+    max-width: 1400px; /* Membatasi lebar maksimum kontainer */
+    margin: 0 auto; /* Membuat elemen rata tengah */
+    padding-top: 30px; /* Jarak dari bagian atas halaman */
+} /* Akhir hero-wrapper */
+
+/* Container hero */
+.hero-container { /* Pembungkus isi hero */
+    border-radius: 25px; /* Membuat sudut melengkung */
+    padding: 2.5rem; /* Memberi jarak dalam */
+}
+
+/* Frame kotak hero berisi gambar */
+.hero-frame { /* Area gambar hero */
+    position: relative; /* Dibutuhkan untuk elemen absolute */
+    width: 100%; /* Full lebar */
+    height: 230px; /* Tinggi hero */
+    border-radius: 20px; /* Melengkung */
+    overflow: hidden; /* Memotong bagian gambar yang keluar */
+    background: #000; /* Background hitam */
+}
+
+/* Gambar background hero */
+.hero-frame img { /* Styling untuk gambar */
+    width: 100%; /* Isi seluruh lebar */
+    height: 100%; /* Isi seluruh tinggi */
+    object-fit: cover; /* Tidak distorsi */
+    filter: brightness(0.65); /* Menggelapkan untuk kontras teks */
+}
+
+/* Overlay gelap di atas gambar */
+.hero-overlay { /* Layer gelap */
+    position: absolute; /* Menempel pada parent */
+    top: 0; /* Mulai atas */
+    left: 0; /* Mulai kiri */
+    width: 100%; /* Full lebar */
+    height: 100%; /* Full tinggi */
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.1),
+        rgba(0,0,0,0.3)
+    ); /* Gradasi gelap */
+}
+
+/* Container teks dalam hero */
+.hero-content { /* Wrapper teks hero */
+    position: absolute; /* Menindih gambar */
+    top: 0; /* Posisi atas */
+    left: 0; /* Posisi kiri */
+    width: 100%; /* Full lebar */
+    height: 100%; /* Full tinggi */
+    display: flex; /* Flexbox */
+    flex-direction: column; /* Susun vertikal */
+    justify-content: center; /* Teks center vertikal */
+    align-items: center; /* Center horizontal */
+    padding: 2rem; /* Jarak dalam */
+}
+
+/* Judul hero */
+.hero-title { /* Styling judul */
+    font-size: clamp(2rem, 6vw, 4rem); /* Ukuran responsif */
+    font-weight: bold; /* Tebal */
+    color: white; /* Putih */
+    text-align: center; /* Tengah */
+    line-height: 1.2; /* Jarak baris */
+    margin-bottom: 2rem; /* Jarak bawah */
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5); /* Bayangan */
+    letter-spacing: -1px; /* Sedikit rapat */
+}
+
+/* Wrapper box keterangan */
+.hero-boxes { /* Wrapper box */
+    display: flex; /* Flex container */
+    gap: 15rem; /* Jarak antar box */
+    flex-wrap: wrap; /* Bisa turun ke bawah */
+    justify-content: space-between; /* Rata sebar */
+    align-items: flex-end; /* Rata bagian bawah */
+    width: 100%; /* Full */
+    max-width: 900px; /* Batas maksimum */
+}
+
+/* Box hero */
+.hero-box { /* Box umum */
+    padding: 1.5rem 2rem; /* Jarak dalam */
+    border-radius: 15px; /* Melengkung */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* Bayangan */
+}
+
+/* Box kiri */
+.hero-box-left {
+    background: #FFD601; /* Warna kuning */
+    color: #000; /* Teks hitam */
+    max-width: 350px; /* Lebar maksimal */
+    flex: 1; /* Fleksibel */
+    min-width: 280px; /* Lebar minimum */
+}
+
+/* Teks dalam box kiri */
+.hero-box-left h3 {
+    font-size: 1.1rem; /* Ukuran teks */
+    line-height: 1.5; /* Jarak baris */
+    font-weight: 600; /* Tebal */
+    margin: 0; /* Hilangkan margin default */
+}
+
+/* ============================================================
+   TIMELINE SECTION
+   ============================================================ */
+
+/* Reset & global */
+* { /* Semua elemen */
+    box-sizing: border-box; /* Hitung border ke dalam */
+}
+
+html { /* Tag html */
+    font-size: 14px; /* Ukuran font dasar */
+}
+
+body { /* Body halaman */
+    background: #f6f9fc; /* Warna background */
+    font-family: "Open Sans", sans-serif; /* Font */
+    color: #525f7f; /* Warna teks */
+}
+
+/* Judul timeline */
+h2 { /* Tag H2 */
+    margin: 1% auto 5%; /* Margin atas 1%, bawah 5% */
+    text-align: center; /* Tengah */
+    font-size: clamp(2rem, 6vw, 4rem); /* Responsif */
+    font-weight: bold; /* Tebal */
+}
+
+/* Container utama timeline */
+.timeline { /* Wrapper timeline */
+    display: flex; /* Flex column */
+    flex-direction: column; /* Susun vertikal */
+    margin: 20px auto; /* Tengah */
+    position: relative; /* Untuk elemen absolute */
+}
+
+/* Event timeline */
+.timeline__event { /* Box event */
+    margin: 60px 0; /* Jarak antar event */
+    display: flex; /* Flex container */
+    position: relative; /* Untuk icon line */
+    border-radius: 6px; /* Melengkung */
+    align-self: center; /* Tengah */
+    width: 65vw; /* Lebar card */
+    height: 150px;
+}
+
+/* Event ganjil dibalik */
+.timeline__event:nth-child(2n + 1) { /* Event nomor ganjil */
+    flex-direction: row-reverse; /* Balik posisi */
+}
+
+
+/* ============================================================
+   WARNA EVENT TYPE 1 (KUNING)
+   ============================================================ */
+
+/* Warna judul kuning */
+.timeline__event--type1 .timeline__event__title {
+    color: #000; /* Hitam */
+}
+
+/* Warna tanggal kuning */
+.timeline__event--type1 .timeline__event__date {
+    color: #fff5c3; /* Kuning muda */
+    background: #FFD601; /* Kuning solid */
+}
+
+/* Icon kuning */
+.timeline__event--type1 .timeline__event__icon {
+    background: #fee983; /* Kuning muda */
+    color: #FFD601; /* Ikon kuning */
+}
+
+/* Garis icon (kanan dan kiri) */
+.timeline__event--type1 .timeline__event__icon:before,
+.timeline__event--type1 .timeline__event__icon:after {
+    background: #fee983; /* Kuning muda */
+}
+
+/* ============================================================
+   WARNA EVENT TYPE 2 (BIRU)
+   ============================================================ */
+
+.timeline__event--type2 .timeline__event__title {
+    color: #14286F; /* Biru tua */
+}
+
+.timeline__event--type2 .timeline__event__date {
+    color: #9dc4f7; /* Biru muda */
+    background: #14286F; /* Biru tua */
+}
+
+.timeline__event--type2 .timeline__event__icon {
+    background: #87bbfe; /* Biru muda */
+    color: #14286F; /* Biru tua */
+}
+
+.timeline__event--type2 .timeline__event__icon:before,
+.timeline__event--type2 .timeline__event__icon:after {
+    background: #87bbfe; /* Biru muda */
+}
+
+/* ============================================================
+   CONTENT GLOBAL
+   ============================================================ */
+
+.timeline__event__title {
+    font-size: 1.2rem; /* Ukuran judul */
+    line-height: 1.4; /* Jarak baris */
+    text-transform: uppercase; /* Kapital semua */
+    font-weight: 600; /* Tebal */
+    letter-spacing: 1.5px; /* Jarak antar huruf */
+}
+
+/* Card konten */
+.timeline__event__content {
+    padding-left: 80px;
+    padding-right: 30px;
+    padding-top: 40px; /* Jarak dalam */
+    background: #fff; /* Putih */
+    flex: 1;
+    width: auto !important;
+    box-shadow: /* Shadow 3 lapis */
+        0 30px 60px -12px rgba(50,50,93,0.25),
+        0 18px 36px -18px rgba(0,0,0,0.3),
+        0 -12px 36px -8px rgba(0,0,0,0.025);
+}
+
+/* Tanggal event */
+.timeline__event__date {
+    flex-shrink: 0;
+    font-size: 1.5rem; /* Besar */
+    font-weight: 600; /* Tebal */
+    display: flex; /* Flex */
+    align-items: center; /* Center vertikal */
+    justify-content: center; /* Tengah */
+    white-space: nowrap; /* Tidak wrap */
+    padding: 0 20px; /* Jarak samping */
+    position: relative;
+    z-index: 5;
+}
+
+/* Border-radius menyesuaikan posisi event */
+.timeline__event:nth-child(2n + 1) .timeline__event__date {
+    border-radius: 0 6px 6px 0; /* Melengkung kanan */
+    transform: translateX(-40px);
+}
+
+.timeline__event:not(:nth-child(2n + 1)) .timeline__event__date {
+    border-radius: 6px 0 0 6px; /* Melengkung kiri */
+    transform: translateX(40px);
+}
+
+.timeline__event:nth-child(2n + 1) .timeline__event__content {
+    border-radius: 6px 0 0 6px; /* Konten kiri */
+    transform: translateX(-40px);
+
+}
+
+.timeline__event:not(:nth-child(2n + 1)) .timeline__event__content {
+    border-radius: 0 6px 6px 0; /* Konten kanan */
+    transform: translateX(40px);
+
+}
+
+/* ============================================================
+   ICON BULAT (LARGE)
+   ============================================================ */
+
+.timeline__event__icon {
+    flex-shrink: 0;
+    display: flex; /* Flex */
+    align-items: center; /* Tengah vertikal */
+    justify-content: center; /* Tengah */
+    padding: 25px; /* Membesarkan lingkaran */
+    width: 100px; /* Lebar icon */
+    height:90px; /* Tinggi */
+    border-radius: 100%; /* Bulat */
+    align-self: center; /* Tengah */
+    margin: 0px; /* Jarak sisi */
+    position: relative; /* Untuk garis */
+    box-shadow: /* Shadow */
+        0 30px 60px -12px rgba(50,50,93,0.25),
+        0 18px 36px -18px rgba(0,0,0,0.3),
+        0 -12px 36px -8px rgba(0,0,0,0.025);
+}
+
+/* Icon dalam lingkaran */
+.timeline__event__icon i {
+    font-size: 32px; /* Besar icon */
+}
+
+/* Garis vertikal */
+.timeline__event__icon:before {
+    content: ""; /* Elemen kosong */
+    width: 5px; /* Lebar garis */
+    height: 300%; /* Tinggi garis panjang */
+    position: absolute; /* Posisi absolute */
+    top: 0%; /* Mulai atas */
+    left: 50%; /* Tengah horizontal */
+    transform: translateX(-50%); /* Geser tengah */
+    z-index: -1; /* Di belakang icon */
+}
+
+/* Garis horizontal */
+.timeline__event__icon:after {
+    content: ""; /* Elemen */
+    width: 200px; /* Panjang garis */
+    height: 5px; /* Ketebalan */
+    position: absolute; /* Absolute */
+    top: 50%; /* Tengah */
+    transform: translateY(-50%); /* Fix tengah */
+}
+
+/* Garis horizontal ke kanan */
+.timeline__event:nth-child(2n + 1) .timeline__event__icon:after {
+    right: 0; /* Arah ke kanan */
+}
+
+/* Garis horizontal ke kiri */
+.timeline__event:not(:nth-child(2n + 1)) .timeline__event__icon:after {
+    left: 0; /* Arah ke kiri */
+}
+
+/* Menggeser icon event ganjil */
+.timeline__event:nth-child(2n+1) .timeline__event__icon {
+    transform: translateX(45px); /* Geser kanan */
+}
+
+/* Menggeser icon event genap */
+.timeline__event:not(:nth-child(2n+1)) .timeline__event__icon {
+    transform: translateX(-45px); /* Geser kiri */
+}
+
+
+/* ============================================================
+   EVENT TERAKHIR (TANPA ICON)
+   ============================================================ */
+
+/* Hilangkan icon terakhir */
+.timeline__event:last-child .timeline__event__icon {
+    display: none;
+}
+
+/* Posisi event terakhir */
+.timeline__event:last-child {
+    flex-direction: row-reverse; /* Balik posisi */
+    margin-left: 9px; /* Sedikit geser */
+    margin-right: 40px; /* Rata kiri */
+}
+
+.timeline__event:last-child {
+    width: 65vw;    
+    height: auto !important;
+}
+.timeline__event:last-child .timeline__event__content {
+    min-height: 150px;
+}
+
+/* Kotak tanggal terakhir (opsional) */
+.timeline__event:last-child .timeline__event__date {
+    min-height: 150px;
+}
+
+
+/* ============================================================
+   RESPONSIVE MOBILE
+   ============================================================ */
+
+@media (max-width: 786px) {
+
+    .timeline__event:last-child {
+        padding-left: 0; /* Hilangkan padding */
+        margin-left: auto; /* Tengah */
+    }
+    
+    .timeline__event {
+        flex-direction: column; /* Jadi kolom */
+        width: 90vw; /* Lebar hampir penuh */
+    }
+
+    .timeline__event__content {
+        width: 100% !important; /* Full */
+        border-radius: 0 0 6px 6px !important; /* Radius bawah */
+    }
+
+    .timeline__event__icon {
+        border-radius: 6px 6px 0 0; /* Radius atas */
+        width: 100%; /* Full */
+        margin: 0; /* Hilangkan margin */
+        box-shadow: none; /* Hilangkan shadow */
+        display: flex !important; /* Tampilkan */
+    }
+
+    .timeline__event:last-child .timeline__event__icon {
+        display: flex !important; /* Tampilkan icon terakhir di mobile */
+    }
+
+    .timeline__event__icon:before,
+    .timeline__event__icon:after {
+        display: none; /* Hilangkan garis */
+    }
+
+    .timeline__event__date {
+        border-radius: 0; /* Tanpa radius */
+        padding: 20px; /* Tambah padding */
+    }
+
+    .timeline__event:nth-child(2n + 1) {
+        flex-direction: column; /* Ganjil -> column */
+    }
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fillLeft { 100% { right: 100%; } } /* Animasi pengisian kiri */
+@keyframes fillTop { 100% { top: 100%; } } /* Animasi pengisian atas */
+@keyframes fillLeftOdd { 100% { left: 100%; } } /* Animasi event ganjil */
