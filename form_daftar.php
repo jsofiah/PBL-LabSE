@@ -76,10 +76,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
-    <link rel="stylesheet" href="css/styleIndex.css">
+    <link rel="stylesheet" href="css/styleFooter.css">
+    <link rel="stylesheet" href="css/styleFormDaftar.css">
 </head>
 <body>
-    <!-- BAGIAN NAV -->
     <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
@@ -125,66 +125,84 @@
         </a>
     <?php endif; ?>
 
-    <!-- BAGIAN BANNER -->
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/background_form_pendaftaran.jpg" alt="Lab Background">
+                <img src="img/background_form_pendaftaran.jpg" alt="Pendaftaran Background">
                 <div class="hero-overlay"></div>
-                <div class="hero-content">
-                <h1 class="hero-title">
-                    FORM PENDAFTARAN
-                </h1>
-
+                    <div class="hero-content">
+                    <h1 class="hero-title">FORM PENDAFTARAN</h1>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- ===== FORM PENDAFTARAN SE GEEKS ===== -->
-<div class="container my-5">
-    <div class="p-4 rounded shadow" style="background: white;">
-        <h3 class="fw-bold mb-4">SE GEEKS</h3>
+    <div class="container py-3">
+        <div class="p-4 rounded shadow bg-white">
+            <h3 class="fw-bold mb-4">SE GEEKS</h3>
 
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nama = pg_escape_string($conn, $_POST['nama_lengkap']);
-            $prodi = pg_escape_string($conn, $_POST['program_studi']);
-            $angkatan = pg_escape_string($conn, $_POST['angkatan']);
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                        $nama = pg_escape_string($conn, $_POST['nama_lengkap']);
+                        $prodi = pg_escape_string($conn, $_POST['program_studi']);
+                        $angkatan = pg_escape_string($conn, $_POST['angkatan']);
+                        $email = pg_escape_string($conn, $_POST['email']);
+                        $nim = pg_escape_string($conn, $_POST['nim']);
 
-            // QUERY INSERT KE TABEL mhs_segeeks
-            $qInsert = "
-                INSERT INTO mhs_segeeks (id_mhs, nama_mhs, prodi_mhs, angkatan_mhs)
-                VALUES (DEFAULT, '$nama', '$prodi', '$angkatan')
-            ";
+                        $qInsert = "
+                            INSERT INTO pendaftaran_segeeks (nama_pendaftar, prodi_pendaftar, angkatan_pendaftar, email_pendaftar, nim_pendaftar)
+                            VALUES ('$nama', '$prodi', '$angkatan', '$email', '$nim')
+                        ";
 
-            $rInsert = pg_query($conn, $qInsert);
+                        $rInsert = pg_query($conn, $qInsert);
 
-            if ($rInsert) {
-                echo "<div class='alert alert-success'>Pendaftaran berhasil disimpan!</div>";
-            } else {
-                echo "<div class='alert alert-danger'>Gagal menyimpan: " . pg_last_error($conn) . "</div>";
-            }
-        }
-        ?>
+                        if ($rInsert) {
+                            echo "<div class='alert alert-success'>Pendaftaran berhasil disimpan!</div>";
+                        } else {
+                            echo "<div class='alert alert-danger'>Gagal menyimpan: " . pg_last_error($conn) . "</div>";
+                        }
+                    }
+                    ?>
 
-        <form action="" method="POST">
-            <label class="fw-semibold">Nama Lengkap</label>
-            <input type="text" name="nama_lengkap" class="form-control mb-3" required>
+                    <form action="" method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="fw-medium">Nama Lengkap</label>
+                                <input type="text" name="nama_lengkap" class="form-control mb-3" required>
+                            </div>
 
-            <label class="fw-semibold">Program Studi</label>
-            <input type="text" name="program_studi" class="form-control mb-3" required>
+                            <div class="col-md-6">
+                                <label class="fw-medium">NIM</label>
+                                <input type="text" name="nim" class="form-control mb-3" required>
+                            </div>
+                        </div>
 
-            <label class="fw-semibold">Angkatan</label>
-            <input type="text" name="angkatan" class="form-control mb-4" required>
+                        <label class="fw-medium">Program Studi</label>
+                        <input type="text" name="program_studi" class="form-control mb-3" required>
 
-            <button type="submit" class="btn btn-primary px-4">Submit</button>
-        </form>
+                        <label class="fw-medium">Angkatan</label>
+                        <input type="text" name="angkatan" class="form-control mb-4" required>
+
+                        <label class="fw-medium">Email</label>
+                        <input type="email" name="email" class="form-control mb-4" required>
+
+                        <button type="submit" class="btn btn-primary px-4">Submit</button>
+                    </form>
+                </div>
+
+                <div class="col-md-5 text-center">
+                    <img src="img/segeeks.jpg"
+                        alt="SE Geeks Image"
+                        class="img-fluid rounded shadow-sm">
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
 
-    <!-- JS FOOTER DROPDOWN -->
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
 
