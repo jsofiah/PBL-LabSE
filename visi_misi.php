@@ -46,7 +46,6 @@
 
     $qMisi = "SELECT * FROM vw_misi_lab";
     $rMisi = pg_query($conn, $qMisi);
-    $rowMisi = pg_fetch_assoc($rMisi);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -62,6 +61,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleVisiMisi.css">
+    <link rel="stylesheet" href="css/styleFooter.css">
 </head>
 <body>
     <!-- BAGIAN NAV -->
