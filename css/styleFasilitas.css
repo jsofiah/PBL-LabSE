@@ -1,0 +1,194 @@
+.hero-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+.hero-container {
+    border-radius: 25px;
+    padding: 2.5rem;
+}
+
+.hero-frame {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000;
+}
+
+.hero-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.65);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+}
+
+.hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1px;
+}
+
+/* ------------------------------------------
+   SECTION TITLE
+-------------------------------------------*/
+.container h2 {
+    font-weight: 700;
+    color: #000;
+}
+
+h3 {
+    font-weight: 600;
+}
+
+/* ------------------------------------------
+   FASILITAS SLIDER WRAPPER
+-------------------------------------------*/
+.fasilitas-slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+}
+
+/* ------------------------------------------
+   SLIDER TRACK
+-------------------------------------------*/
+.fasilitas-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 25px;
+    padding: 10px 5px;
+}
+
+.fasilitas-track::-webkit-scrollbar {
+    height: 10px;
+}
+
+.fasilitas-track::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+/* ------------------------------------------
+   FASILITAS CARD
+-------------------------------------------*/
+.fasilitas-card {
+    width: 300px;
+    min-width: 300px;
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.fasilitas-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.fasilitas-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.fasilitas-card h5 {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 12px 16px 0;
+    color: #333;
+}
+
+.fasilitas-card p {
+    font-size: 14px;
+    padding: 0 16px 16px;
+    color: #555;
+}
+
+/* ------------------------------------------
+   SLIDE BUTTONS
+-------------------------------------------*/
+.slide-btn {
+    background: none;
+    border: none;
+    font-size: 35px;
+    padding: 0 10px;
+    cursor: pointer;
+    color: #222;
+}
+
+.slide-btn:hover {
+    color: #000;
+}
+
+.slide-btn.left { margin-right: 5px; }
+.slide-btn.right { margin-left: 5px; }
+
+/* ------------------------------------------
+   RESPONSIVE MODE
+-------------------------------------------*/
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 45px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fasilitas-hero {
+        height: 280px;
+    }
+    .hero-title {
+        font-size: 38px;
+    }
+
+    .fasilitas-card {
+        width: 260px;
+        min-width: 260px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .slide-btn {
+        height: 45px;
+        width: 45px;
+        font-size: 22px;
+    }
+
+    .fasilitas-card img {
+        height: 150px;
+    }
+}

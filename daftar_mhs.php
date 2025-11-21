@@ -9,42 +9,7 @@
     $totalData = $rowTotalMhs['total'];
     $totalPages = ceil($totalData / $limit);
 
-    $qMhs = "
-        SELECT 
-            m.id_mhs,
-            m.nama_mhs,
-            m.prodi_mhs,
-            m.angkatan_mhs,
-
-            -- Subquery 1: Ambil Semua Bidang Keahlian (Digabung Koma)
-            (
-                SELECT STRING_AGG(bk.nama_keahlian, ', ')
-                FROM memuat_mhs_keahlian mmk
-                JOIN bidang_keahlian bk ON mmk.id_keahlian = bk.id_keahlian
-                WHERE mmk.id_mhs = m.id_mhs
-            ) as list_bidang,
-
-            -- Subquery 2: Ambil HANYA 3 Proyek Terbaru
-            (
-                SELECT STRING_AGG(temp_proyek.judul_proyek, ', ')
-                FROM (
-                    SELECT p.judul_proyek
-                    FROM proyek_mhs pm
-                    JOIN proyek p ON pm.id_proyek = p.id_proyek
-                    WHERE pm.id_mhs = m.id_mhs
-                    -- Urutkan dari tanggal terbaru, lalu ID terbesar
-                    ORDER BY p.tanggal_terbit_proyek DESC, p.id_proyek DESC
-                    LIMIT 3 -- BATASI CUMA 3
-                ) as temp_proyek
-            ) as list_proyek
-
-        FROM 
-            mhs_segeeks m
-        ORDER BY 
-            m.nama_mhs ASC
-        LIMIT $limit OFFSET $offset
-    ";
-    
+    $qMhs = "SELECT * FROM vw_mhs_full ORDER BY nama_mhs ASC LIMIT $limit OFFSET $offset";
     $rMhs = pg_query($conn, $qMhs);
 
     $qNav = "SELECT * FROM vw_nav";
@@ -152,7 +117,7 @@
                 <img src="img/background_index.jpg" alt="Lab Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title"> Daftar Mahasiswa SE Geeks </h1>
+                    <h1 class="hero-title">DAFTAR MAHASISWA SE GEEKS</h1>
                 </div>
             </div>
         </div>
@@ -161,12 +126,12 @@
 
     <div class="container my-5">
         
-        <h2 class="text-center fw-bold text-uppercase text-secondary mb-4" style="letter-spacing: 1px;">
+        <h2 class="text-center fw-bold text-uppercase mb-4">
             TERDAFTAR, TERLIBAT, BERKARYA
         </h2>
 
         <div class="table-responsive shadow-sm rounded">
-            <table class="table table-borderless mb-0">
+            <table class="table mb-0">
                 <thead>
                     <tr>
                         <th class="custom-header text-center" style="width: 5%;">NO</th>
@@ -174,26 +139,26 @@
                         <th class="custom-header text-center" style="width: 15%;">PRODI</th>
                         <th class="custom-header text-center" style="width: 10%;">ANGKATAN</th>
                         <th class="custom-header text-start" style="width: 20%;">BIDANG</th>
-                        <th class="custom-header text-start" style="width: 25%;">PROYEK Terbaru</th>
+                        <th class="custom-header text-start" style="width: 25%;">PROYEK</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     if (pg_num_rows($rMhs) > 0) {
-                        $no = $offset + 1; 
+                        $no = $offset + 1;
                         while ($row = pg_fetch_assoc($rMhs)) {
-                            $bidang = $row['list_bidang'] ? $row['list_bidang'] : '-';
-                            $proyek = $row['list_proyek'] ? $row['list_proyek'] : '-';
+                            $bidang = $row['daftar_keahlian'] ? $row['daftar_keahlian'] : '-';
+                            $proyek = $row['daftar_proyek'] ? $row['daftar_proyek'] : '-';
                     ?>
-                        <tr>
-                            <td class="text-center"><?php echo $no++; ?></td>
-                            <td class="fw-semibold"><?php echo htmlspecialchars($row['nama_mhs']); ?></td>
-                            <td class="text-center"><?php echo htmlspecialchars($row['prodi_mhs']); ?></td>
-                            <td class="text-center"><?php echo htmlspecialchars($row['angkatan_mhs']); ?></td>
-                            <td><?php echo htmlspecialchars($bidang); ?></td>
-                            <td><?php echo htmlspecialchars($proyek); ?></td>
-                        </tr>
-                    <?php 
+                            <tr>
+                                <td class="text-center"><?= $no++; ?></td>
+                                <td class="fw-semibold"><?= htmlspecialchars($row['nama_mhs']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['prodi_mhs']); ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['angkatan_mhs']); ?></td>
+                                <td><?= htmlspecialchars($bidang); ?></td>
+                                <td><?= htmlspecialchars($proyek); ?></td>
+                            </tr>
+                    <?php
                         }
                     } else {
                         echo '<tr><td colspan="6" class="text-center py-5 text-muted">Belum ada data mahasiswa.</td></tr>';
