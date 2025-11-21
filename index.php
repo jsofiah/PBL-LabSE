@@ -1,7 +1,6 @@
 <?php
     require 'config.php';
 
-    // QUERY NAV JGN DIHAPUS
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
@@ -39,19 +38,27 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-    // QUERY STATS
     $qStats = "SELECT * FROM get_statistik()";
     $rStats = pg_query($conn, $qStats);
     $rowStats = pg_fetch_assoc($rStats);
 
-    //QUERY VISI MISI
     $qVisi = "SELECT * FROM vw_visi_lab";
     $rVisi = pg_query($conn, $qVisi);
     $rowVisi = pg_fetch_assoc($rVisi);
 
     $qMisi = "SELECT * FROM vw_misi_lab";
     $rMisi = pg_query($conn, $qMisi);
-    $rowMisi = pg_fetch_assoc($rMisi);
+
+    $qMitra = "SELECT * FROM vw_mitra";
+    $rMitra = pg_query($conn, $qMitra);
+
+    $qSeGeeks = "SELECT * FROM deskripsi_segeeks";
+    $rSeGeeks = pg_query($conn, $qSeGeeks);
+    $rowSeGeeks = pg_fetch_assoc($rSeGeeks);
+
+    $qArtikel = "SELECT * FROM vw_artikel ORDER BY tanggal_terbit_artikel DESC LIMIT 3";
+    $rArtikel = pg_query($conn, $qArtikel);
+    $rowArtikel = pg_fetch_assoc($rArtikel);
 ?>
 
 <!DOCTYPE html>
@@ -66,11 +73,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleIndex.css">
+    <link rel="stylesheet" href="css/styleRoot.css">
+    <link rel="stylesheet" href="css/styleFooter.css">
 </head>
 <body>
-    <!-- BAGIAN NAV -->
     <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
@@ -116,7 +123,6 @@
         </a>
     <?php endif; ?>
 
-    <!-- BAGIAN BANNER -->
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
@@ -140,7 +146,7 @@
                         </svg>
 
                         <div class="stats-content">
-                            <div class="badge">Bergabung ↗</div>
+                            <a href="form_daftar.php" class="badge text-decoration-none">Bergabung ↗</a>
                             <ul class="stats-list">
                                 <li><?php echo htmlspecialchars($rowStats['jumlah_dosen']); ?> Dosen</li>
                                 <li><?php echo htmlspecialchars($rowStats['jumlah_mahasiswa']); ?> Mahasiswa</li>
@@ -153,12 +159,11 @@
         </div>
     </div>
     
-    <!-- BAGIAN VISI MISI -->
     <div class="visi_misi-container visi_misi justify-content-center">
-        <div class="row justify-content-center" style="gap: 50px;">
+        <div class="row justify-content-center mb-5" style="gap: 50px;">
             <div class="col-md-5 mb-4">
                 <h2 class="text-center fw-bold mb-4">VISI</h2>
-                <div class="visi-card bg-white shadow p-3 rounded">
+                <div class="visi-card bg-white shadow p-3 rounded pt-4">
                     <p><?php echo htmlspecialchars($rowVisi['isi_visi']); ?></p>
                 </div>
             </div>
@@ -174,8 +179,104 @@
         </div>
     </div>
 
+    <div class="mitra-section py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5" style="color: white;">MITRA KAMI</h2>
+            <div class="row justify-content-center align-items-center g-4">
+                <?php while ($rowMitra = pg_fetch_assoc($rMitra)): ?>
+                    <div class="col-6 col-md-2">
+                        <div class="mitra-card bg-white shadow rounded p-3 d-flex align-items-center justify-content-center" style="height: 120px;">
+                            <img src="<?php echo htmlspecialchars($rowMitra['url_gambar_mitra']); ?>" alt="Mitra" class="img-fluid" style="max-height: 80px;">
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+    </div>
 
-    <!-- JS FOOTER DROPDOWN -->
+    <div class="segeeks-section py-5 bg-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-5">SE GEEKS</h2>
+                    <p class="text-justify" style="line-height: 1.8; text-align: justify;">
+                        <?php echo htmlspecialchars($rowSeGeeks['isi_segeeks']); ?>
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="segeeks-image px-5">
+                        <img src="img/gedung_lab.png" alt="SE Geeks Building" class="img-fluid rounded shadow" style="width: 500px; height: 300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="artikel-section py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">ARTIKEL TERBARU</h2>
+            
+            <div class="artikel-container">
+                <?php pg_result_seek($rArtikel, 0); ?>
+                <?php while ($rowArtikel = pg_fetch_assoc($rArtikel)): ?>
+                <div class="artikel-card">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <div class="artikel-thumbnail">
+                                <?php if (!empty($rowArtikel['url_gambar_artikel'])): ?>
+                                    <img src="<?php echo htmlspecialchars($rowArtikel['url_gambar_artikel']); ?>"
+                                        alt="<?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>">
+                                <?php else: ?>
+                                    <div class="thumbnail-placeholder"></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-9">
+                            <div class="artikel-content">
+                                <h3 class="artikel-title">
+                                    <?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>
+                                </h3>
+                                
+                                <p class="artikel-excerpt">
+                                    <?php
+                                        $preview = strip_tags($rowArtikel['isi_artikel']);
+                                        echo htmlspecialchars(substr($preview, 0, 150)) . '...';
+                                    ?>
+                                </p>
+                                
+                                <div class="artikel-footer">
+                                    <div class="artikel-info">
+                                        <span class="artikel-date">
+                                            <i class="bi bi-calendar3 me-1"></i>
+                                            <?php echo date('d F Y', strtotime($rowArtikel['tanggal_terbit_artikel'])); ?>
+                                        </span>
+                                        <span class="artikel-badge"><?php echo htmlspecialchars($rowArtikel['nama_jenisartikel']); ?></span>
+                                        <a href="artikel_detail.php?id=<?php echo $rowArtikel['id_artikel']; ?>" 
+                                        class="artikel-read-more">
+                                            Baca selengkapnya
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endwhile; ?>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="artikel.php" class="btn-view-all">
+                    Lihat semua artikel
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
 
