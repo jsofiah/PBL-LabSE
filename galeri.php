@@ -51,7 +51,7 @@ $rMisi = pg_query($conn, $qMisi);
 $rowMisi = pg_fetch_assoc($rMisi);
 
 
-$limit = 14; 
+$limit = 14;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
@@ -60,7 +60,7 @@ $resultTotal = pg_query($conn, $queryTotal);
 $rowTotal = pg_fetch_assoc($resultTotal);
 $totalData = $rowTotal['total'];
 $totalPage = ceil($totalData / $limit);
-$query = "SELECT * FROM galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
+$query = "SELECT * FROM vw_galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
 $result = pg_query($conn, $query);
 ?>
 
@@ -70,22 +70,17 @@ $result = pg_query($conn, $query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorium Software Engineer - Galeri</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="css/styleRoot.css">
-    <link rel="stylesheet" href="css/styleIndex.css">
-    
+    <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleGalery.css">
 </head>
 <body>
-    
     <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
@@ -124,7 +119,6 @@ $result = pg_query($conn, $query);
         </ul>
     </nav>
 
-
     <?php if($rowLogo): ?>
         <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
             <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
@@ -134,24 +128,21 @@ $result = pg_query($conn, $query);
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/background_index.jpg" alt="Lab Background">
+                <img src="img/bggaleri.jpg" alt="Galeri Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                 <h1 class="hero-title">GALERI</h1>
             </div>
         </div>
     </div>
-    </div>
     
-    <div class="container py-5">
+    <div class="container py-3">
         <h2 class="gallery-title">Potret Kegiatan dan Prestasi Kami</h2>
-
         <div class="custom-grid-container">
-            
             <?php
             if (pg_num_rows($result) > 0) {
                 while($row = pg_fetch_assoc($result)) {
-                    $gambar = $row['url_gambar_galeri']; 
+                    $gambar = $row['url_gambar_galeri'];
                     $deskripsi = $row['deskripsi_galeri'];
             ?>
             
@@ -165,8 +156,8 @@ $result = pg_query($conn, $query);
                     </div>
                 </div>
 
-            <?php 
-                } 
+            <?php
+                }
             } else {
                 echo "<div style='grid-column: span 4; text-align: center; padding: 50px;'>Belum ada foto yang diunggah.</div>";
             }
@@ -196,15 +187,17 @@ $result = pg_query($conn, $query);
         </div>
         <?php endif; ?>
 
-    </div> <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-transparent border-0">
-          <div class="modal-body p-0 text-center position-relative">
-            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-            <img src="" id="modalImage" class="img-fluid rounded shadow-lg">
-          </div>
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 text-center position-relative">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <img src="" id="modalImage" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <div id="footer-container"></div>
