@@ -65,6 +65,7 @@
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleDaftarMhs.css">
+    <link rel="stylesheet" href="css/styleFooter.css">
 </head>
 <body>
     <div class="logo">
