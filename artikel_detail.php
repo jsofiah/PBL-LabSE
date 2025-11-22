@@ -46,7 +46,6 @@
         FROM public.artikel
         WHERE id_artikel != $1
         ORDER BY tanggal_terbit_artikel DESC
-        LIMIT 3
     ";
     $rArtikelLain = pg_query_params($conn, $qArtikelLain, array($id_artikel));
     $artikelLain = pg_fetch_all($rArtikelLain);
