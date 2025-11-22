@@ -129,6 +129,7 @@
 
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleArtikelDetail.css">
+    <link rel="stylesheet" href="css/styleFooter.css">
     
 </head>
 
@@ -268,7 +269,6 @@
     </div>
 
     <div id="footer-container"></div>
-
     <script src="js/footer.js"></script>
     <script src="js/dropdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
