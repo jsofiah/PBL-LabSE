@@ -89,27 +89,24 @@
   margin: 0;
 }
 
-/* --- GAYA ARTIKEL UTAMA --- */
-
-/* Wrapper Utama agar tidak tumpang tindih dengan hero lama */
+/* ====== WRAPPER KONTEN UTAMA ====== */
 .content-wrapper {
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 100px; /* Jarak dari Navbar */
+    padding-top: 100px;
 }
 
-/* Container untuk konten utama artikel, batas lebar */
 .artikel-container {
-    max-width: 900px; /* Lebar artikel sesuai gambar */
+    max-width: 900px;
     margin: 0 auto;
-    padding: 2.5rem 15px; /* Padding samping dan atas/bawah */
+    padding: 2.5rem 15px;
 }
 
-/* Header Frame untuk menampung gambar dan judul */
+/* ====== HEADER GAMBAR ARTIKEL ====== */
 .artikel-header-frame {
     position: relative;
     width: 100%;
-    height: 300px; /* Tinggi gambar */
+    height: 350px;
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 20px;
@@ -120,7 +117,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.9); /* Sedikit lebih cerah dari Hero lama */
+    filter: brightness(0.9);
 }
 
 .artikel-header-content {
@@ -133,51 +130,59 @@
 }
 
 .artikel-judul {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 800;
     color: white;
-    text-align: left;
-    line-height: 1.2;
-    margin: 0;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
 
-/* Metadata (Penulis & Tanggal) */
-.artikel-metadata {
-    font-size: 0.85rem;
-    text-align: right;
-    color: #4b5563;
-    margin-bottom: 30px;
-    padding-right: 20px;
-    line-height: 1.5;
+/* ====== ISI ARTIKEL ====== */
+.artikel-body {
+    padding: 20px;
 }
 
-.penulis-info {
-    font-weight: 600;
-    color: #1e3a8a; /* Warna Lab SE */
-}
-
-/* Isi Artikel */
 .isi-artikel p {
     line-height: 1.8;
-    margin-bottom: 20px;
     text-align: justify;
+    margin-bottom: 20px;
     font-size: 1rem;
     color: #374151;
 }
 
-/* Separator */
+/* ====== METADATA ====== */
+.artikel-metadata {
+    font-size: 0.85rem;
+    text-align: right;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.penulis-info {
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+/* Garis pemisah metadata */
+.artikel-metadata-divider {
+    border: none;
+    border-top: 2px solid #000;
+    max-width: 800px;
+    margin: 40px auto 20px auto;
+}
+
+/* Section divider */
 .section-divider {
     max-width: 900px;
     margin: 40px auto;
     border-top: 2px solid #e5e7eb;
 }
 
-/* --- GAYA ARTIKEL LAIN (CAROUSEL) --- */
-
+/* ====== ARTIKEL LAIN CAROUSEL ====== */
 .artikel-lain-section {
     padding: 40px 0;
-    /* background-color: #f9fafb; */ /* Jika perlu latar belakang berbeda */
+    position: relative;
+    z-index: 50;
 }
 
 .artikel-lain-title {
@@ -185,28 +190,41 @@
     font-weight: 700;
     text-align: center;
     margin-bottom: 30px;
-    color: #1f2937;
 }
 
+/* Wrapper carousel */
+.artikel-lain-wrapper {
+    position: relative;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+/* Cards wrapper */
 .artikel-cards-wrapper {
+    display: flex;
     gap: 20px;
-    /* Membuat scroll horizontal tersembunyi */
-    overflow-x: hidden; 
+    overflow-x: auto;
     scroll-behavior: smooth;
     padding: 10px 0;
+    scrollbar-width: none;
 }
 
+.artikel-cards-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+/* Card */
 .artikel-card-col {
-    flex: 0 0 33.333%; /* Membuat setiap kartu mengambil 1/3 lebar wrapper (untuk 3 kartu) */
-    min-width: 280px; /* Lebar minimum kartu */
+    flex: 0 0 33%;
+    min-width: 280px;
 }
 
 .artikel-card {
-    background-color: white;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    height: 100%; /* Agar semua kartu memiliki tinggi yang sama */
+    transition: .3s;
 }
 
 .artikel-card:hover {
@@ -217,11 +235,10 @@
 .artikel-card-img-container {
     height: 150px;
     overflow: hidden;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-radius: 8px 8px 0 0;
 }
 
-.artikel-card img {
+.artikel-card-img-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -235,231 +252,40 @@
     font-size: 1rem;
     font-weight: 600;
     color: #1e3a8a;
-    height: 48px; /* Batasi tinggi untuk 2 baris teks */
+    height: 48px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    margin-bottom: 10px;
 }
 
 .artikel-card-meta {
     font-size: 0.75rem;
     color: #6b7280;
-    margin-bottom: 0;
 }
 
-/* Gaya Tombol Navigasi (Panah Kiri/Kanan) */
-.nav-arrow {
-    background: #FFD601;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: background 0.3s;
-    color: #1f2937;
-}
-
-.nav-arrow:hover {
-    background: #ffc400;
-}
-
-/* Responsif untuk layar kecil */
-@media (max-width: 768px) {
-    .artikel-container {
-        padding: 1rem 15px;
-    }
-    .artikel-header-frame {
-        height: 200px;
-        border-radius: 10px;
-    }
-    .artikel-judul {
-        font-size: 1.8rem;
-        padding: 1rem 1.5rem;
-    }
-    .artikel-card-col {
-        flex: 0 0 100%; /* Satu kartu per baris di HP */
-        min-width: 90%;
-    }
-    .artikel-cards-wrapper {
-        justify-content: flex-start;
-        overflow-x: scroll; /* Aktifkan scroll di HP */
-    }
-    .nav-arrow {
-        display: none; /* Sembunyikan panah navigasi di HP, andalkan scroll sentuh */
-    }
-}
-
-.artikel-metadata-divider {
-    border: none; 
-    height: 0;    
-    background: none; 
-
-    /* INI KUNCI GARIS HITAM TEBAL */
-    border-top: 2px solid #000000; 
-
-    margin: 40px auto 20px auto; 
-    max-width: 800px; 
-}
-
-
-/* Jika Anda ingin garisnya lebih pendek/estetik */
-.artikel-body {
-    padding: 20px; /* Tambahkan padding ke body artikel */
-}
-
-.artikel-body .artikel-metadata-divider {
-    margin: 40px 0 20px 0; /* Jarak atas 40px, bawah 20px */
-    max-width: 800px; /* Batasi lebar garis agar tidak terlalu panjang */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Perbaikan tombol panah kiri tidak bisa diklik */
-.nav-arrow {
-    position: absolute;
-    z-index: 9999; /* pastikan tombol di atas wrapper */
-}
-
-.artikel-cards-wrapper {
-    position: relative;
-    z-index: 1; /* wrapper tetap di bawah tombol */
-}
-
-.nav-arrow {
-    pointer-events: auto;
-}
-
-#footer-container {
-    position: relative;
-    z-index: 1 !important; 
-}
-
-/* Supaya artikel lain berada di atas header */
-.artikel-lain-section {
-    position: relative;
-    z-index: 50;
-}
-
-/* Supaya tombol panah pasti berada paling atas */
-.nav-arrow {
-    position: relative !important;
-    z-index: 9999 !important;
-    pointer-events: auto !important;
-}
-
-.artikel-header-frame {
-    height: 350px !important;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.col-1.d-flex.align-items-center {
-    width: auto !important;
-    flex: 0 0 auto !important;
-    height: auto !important;
-}
-
-.nav-arrow {
-    z-index: 9999 !important;
-    position: relative !important;
-}
-
-/* ===== FIX STRUKTUR DAN Z-INDEX CAROUSEL ARTIKEL LAIN ===== */
-
-.artikel-lain-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 1050px;
-    margin: 0 auto;
-    padding: 0 60px; /* ruang untuk tombol kiri dan kanan */
-}
-
-.artikel-cards-wrapper {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 10px 0;
-    scrollbar-width: none;
-}
-
-.artikel-cards-wrapper::-webkit-scrollbar { 
-    display: none;
-}
-
-.arrow-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 99999 !important;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: none;
-    background: #FFD601;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-    font-size: 22px;
-}
-
-.arrow-btn.left {
-    left: 10px;
-}
-
-.arrow-btn.right {
-    right: 10px;
-}
-
-.arrow-btn:hover {
-    background: #ffc400;
-}
-
-@media (max-width: 768px) {
-    .arrow-btn {
-        display: none !important;
-    }
-}
-
+/* ====== PANAH NAVIGASI BARU ====== */
 .arrow-btn-new {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     background: white;
     border: 2px solid #ddd;
-    color: #000;
-    padding: 10px;
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    cursor: pointer;
     font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     z-index: 99;
-    transition: 0.2s ease;
+    transition: .2s;
 }
 
 .arrow-btn-new:hover {
-    background: #f0f0f0;
+    background: #ffea55;
 }
-.arrow-btn-new.left {
-    left: -55px;
-}
-.arrow-btn-new.right {
-    right: -55px;
-}
-
 
 .arrow-btn-new.left {
     left: 20px;
@@ -469,6 +295,18 @@
     right: 20px;
 }
 
-.arrow-btn-new:hover {
-    background: #ffea55;
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .artikel-card-col {
+        flex: 0 0 90%;
+    }
+
+    .artikel-cards-wrapper {
+        overflow-x: scroll;
+        padding-bottom: 10px;
+    }
+
+    .arrow-btn-new {
+        display: none !important;
+    }
 }
