@@ -1,0 +1,432 @@
+.hero-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+.hero-container {
+    border-radius: 25px;
+    padding: 2.5rem;
+}
+
+.hero-frame {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000;
+}
+
+.hero-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.65);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+}
+
+.hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1px;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.text-content h2 {
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.text-content p {
+    line-height: 1.8;
+    text-align: justify;
+    color: #333;
+    font-size: 16px;
+}
+
+.sejarah-section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 60px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.shape-wrapper {
+    flex: 0 0 32%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shape-wrapper svg {
+    width: 450px;
+    height: auto;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.text-content h2 {
+    font-weight: 700;
+    font-size: 32px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.text-content p {
+    line-height: 1.8;
+    text-align: justify;
+    color: #333;
+    font-size: 16px;
+}
+
+.riset-section {
+    background: #14286F;
+    color: white;
+    padding: 30px 20px;
+    margin-top: 50px;
+}
+
+.riset-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.riset-title {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    text-align: left;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.riset-items {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+}
+
+.riset-item {
+    padding: 0 30px;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    flex: 1;
+    position: relative;
+}
+
+.riset-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60px;
+    width: 3px;
+    background: white;
+}
+
+.peran-lab-section {
+    padding: 60px 20px;
+    background: #fff;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 50px;
+    letter-spacing: 1px;
+}
+
+.peran-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.peran-card {
+    background: white;
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.peran-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.peran-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #14286F;
+}
+
+.peran-icon i {
+    font-size: 60px;
+}
+
+.peran-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 25px;
+    min-height: 48px;
+    line-height: 1.5;
+}
+
+.btn-selengkapnya {
+    background: #FFD700;
+    color: #000;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-selengkapnya:hover {
+    background: #FFC700;
+    transform: scale(1.05);
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    background: #14286F;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    padding: 20px 30px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body {
+    padding: 30px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+}
+
+.modal-footer {
+    padding: 15px 30px;
+    border-top: 1px solid #dee2e6;
+}
+
+.modal-footer .btn-secondary {
+    background: #6c757d;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.modal-footer .btn-secondary:hover {
+    background: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .riset-content {
+        flex-direction: column;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .riset-title {
+        font-size: 28px;
+        align-self: center;
+        text-align: center;
+    }
+
+    .riset-items {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    .riset-item {
+        padding: 20px 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .riset-item:not(:last-child)::after {
+        right: auto;
+        top: auto;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 2px;
+        width: 80px;
+    }
+}
+
+@media (max-width: 992px) {
+    .peran-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
+
+    .peran-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .peran-card {
+        padding: 30px 20px;
+    }
+
+    .peran-icon i {
+        font-size: 50px;
+    }
+
+    .modal-body {
+        padding: 20px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .peran-lab-section {
+        padding: 40px 15px;
+    }
+
+    .section-title {
+        font-size: 24px;
+    }
+
+    .peran-title {
+        font-size: 15px;
+        min-height: auto;
+    }
+
+    .peran-icon i {
+        font-size: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .riset-section {
+        padding: 25px 15px;
+    }
+
+    .riset-title {
+        font-size: 24px;
+    }
+
+    .riset-item {
+        font-size: 14px;
+        padding: 15px 0;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .content-section {
+        flex-direction: column;
+    }
+
+    .shapes-container {
+        min-width: 250px;
+        height: 300px;
+    }
+
+    .shape-left, .shape-right {
+        width: 140px;
+        height: 240px;
+    }
+
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .riset-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .riset-items {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .sejarah-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 50px;
+    }
+
+    .shape-wrapper {
+        width: 60%;
+    }
+
+    .shape-wrapper svg {
+        width: 220px;
+    }
+}
