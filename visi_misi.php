@@ -125,7 +125,7 @@
     </div>
     
     <!-- BAGIAN VISI MISI -->
-    <div class="container my-5">
+    <div class="container py-3">
     
     <div class="row justify-content-center mb-4">
         <div class="col-auto">
