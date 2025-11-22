@@ -264,37 +264,6 @@
     color: #6b7280;
 }
 
-/* ====== PANAH NAVIGASI BARU ====== */
-.arrow-btn-new {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: white;
-    border: 2px solid #ddd;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    font-size: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 99;
-    transition: .2s;
-}
-
-.arrow-btn-new:hover {
-    background: #ffea55;
-}
-
-.arrow-btn-new.left {
-    left: 20px;
-}
-
-.arrow-btn-new.right {
-    right: 20px;
-}
-
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
     .artikel-card-col {
@@ -310,3 +279,32 @@
         display: none !important;
     }
 }
+
+/* Tombol slider SAME seperti fasilitas */
+.slide-btn {
+    background: none;
+    border: none;
+    font-size: 35px;
+    padding: 0 10px;
+    cursor: pointer;
+    color: #222;
+}
+
+.slide-btn:hover {
+    color: #000;
+}
+
+.slide-btn.left {
+    position: absolute;
+    left: -10px;    /* sesuaikan jika kurang pas */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.slide-btn.right {
+    position: absolute;
+    right: -10px;   /* sesuaikan jika kurang pas */
+    top: 50%;
+    transform: translateY(-50%);
+}
+

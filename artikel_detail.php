@@ -221,48 +221,40 @@
             <h2 class="artikel-lain-title">LIHAT ARTIKEL LAIN</h2>
             <div class="artikel-lain-wrapper">
 
-    <button class="arrow-btn-new left" onclick="scrollLeftNew()">
-    <i class="bi bi-arrow-left-circle"></i>
-</button>
 
-<button class="arrow-btn-new right" onclick="scrollRightNew()">
-    <i class="bi bi-arrow-right-circle"></i>
-</button>
+    <button class="slide-btn left" onclick="scrollLeftNew()">&#10094;</button>
 
+<div class="artikel-cards-wrapper">
+    <?php if (!empty($artikelLain)): ?>
+        <?php foreach ($artikelLain as $artikel): ?>
+            <div class="artikel-card-col">
+                <a href="artikel_detail.php?id=<?php echo $artikel['id_artikel']; ?>" class="text-decoration-none">
+                    <div class="artikel-card">
 
-    <div class="artikel-cards-wrapper">
-        <?php if (!empty($artikelLain)): ?>
-            <?php foreach ($artikelLain as $artikel): ?>
-                <div class="artikel-card-col">
-                    <a href="artikel_detail.php?id=<?php echo $artikel['id_artikel']; ?>" class="text-decoration-none">
-                        <div class="artikel-card">
-
-                            <div class="artikel-card-img-container">
-                                <img src="<?php echo htmlspecialchars($artikel['url_gambar_artikel']); ?>" 
-                                     alt="<?php echo htmlspecialchars($artikel['judul_artikel']); ?>">
-                            </div>
-
-                            <div class="artikel-card-body">
-                                <p class="artikel-card-title"><?php echo htmlspecialchars($artikel['judul_artikel']); ?></p>
-                                <p class="artikel-card-meta">
-                                    <?php echo formatTanggal($artikel['tanggal_terbit_artikel']); ?>.
-                                    <?php echo htmlspecialchars($artikel['penulis_artikel']); ?>
-                                </p>
-                            </div>
-
+                        <div class="artikel-card-img-container">
+                            <img src="<?php echo htmlspecialchars($artikel['url_gambar_artikel']); ?>" 
+                                 alt="<?php echo htmlspecialchars($artikel['judul_artikel']); ?>">
                         </div>
-                    </a>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p class="text-center w-100">Tidak ada artikel lain.</p>
-        <?php endif; ?>
-    </div>
-<button class="arrow-btn-new right" onclick="scrollRightNew()">
-    <i class="bi bi-arrow-right-circle"></i>
-</button>
 
+                        <div class="artikel-card-body">
+                            <p class="artikel-card-title"><?php echo htmlspecialchars($artikel['judul_artikel']); ?></p>
+                            <p class="artikel-card-meta">
+                                <?php echo formatTanggal($artikel['tanggal_terbit_artikel']); ?>.
+                                <?php echo htmlspecialchars($artikel['penulis_artikel']); ?>
+                            </p>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p class="text-center w-100">Tidak ada artikel lain.</p>
+    <?php endif; ?>
 </div>
+
+<button class="slide-btn right" onclick="scrollRightNew()">&#10095;</button>
+
 
             
         </div>
