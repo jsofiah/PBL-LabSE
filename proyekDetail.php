@@ -1,62 +1,78 @@
 <?php
-require 'config.php';
+    require 'config.php';
 
-$qNav = "SELECT * FROM vw_nav";
-$rNav = pg_query($conn, $qNav);
-$navItems = [];
-while ($row = pg_fetch_assoc($rNav)) {
-    $id = $row['id_nav'];
-    if (!isset($navItems[$id])) $navItems[$id] = ['nama' => $row['nama_nav'], 'url' => $row['url_nav'], 'sub' => []];
-    if ($row['id_subnav']) $navItems[$id]['sub'][] = ['nama' => $row['nama_subnav'], 'url' => $row['url_subnav']];
-}
+    $qNav = "SELECT * FROM vw_nav";
+    $rNav = pg_query($conn, $qNav);
+    $navItems = [];
+    while ($row = pg_fetch_assoc($rNav)) {
+        $id = $row['id_nav'];
+        if (!isset($navItems[$id])) $navItems[$id] = ['nama' => $row['nama_nav'], 'url' => $row['url_nav'], 'sub' => []];
+        if ($row['id_subnav']) $navItems[$id]['sub'][] = ['nama' => $row['nama_subnav'], 'url' => $row['url_subnav']];
+    }
 
-$qDosenMenu = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
-$rDosenMenu = pg_query($conn, $qDosenMenu);
-while ($d = pg_fetch_assoc($rDosenMenu)) {
-    $navItems[3]['sub'][] = ['nama' => $d['nama_dosen'], 'url' => "dosen_detail.php?id=" . $d['id_dosen']];
-}
+    $qDosenMenu = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
+    $rDosenMenu = pg_query($conn, $qDosenMenu);
+    while ($d = pg_fetch_assoc($rDosenMenu)) {
+        $navItems[3]['sub'][] = ['nama' => $d['nama_dosen'], 'url' => "dosen_detail.php?id=" . $d['id_dosen']];
+    }
 
-$rLogo = pg_query($conn, "SELECT * FROM vw_logo_cta");
-$rowLogo = pg_fetch_assoc($rLogo);
+    $rLogo = pg_query($conn, "SELECT * FROM vw_logo_cta");
+    $rowLogo = pg_fetch_assoc($rLogo);
 
-$id_proyek = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    $id_proyek = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-$qDetail = "SELECT * FROM vw_proyek WHERE id_proyek = $id_proyek";
-$rDetail = pg_query($conn, $qDetail);
-$data    = pg_fetch_assoc($rDetail);
+    $qDetail = "SELECT * FROM vw_proyek WHERE id_proyek = $id_proyek";
+    $rDetail = pg_query($conn, $qDetail);
+    $data    = pg_fetch_assoc($rDetail);
 
-if (!$data) {
-    header("Location: proyek.php");
-    exit;
-}
+    if (!$data) {
+        header("Location: proyek.php");
+        exit;
+    }
 
-$judul   = htmlspecialchars($data['judul_proyek']);
-$isi     = nl2br($data['isi_proyek']);
-$penulis = htmlspecialchars($data['penulis_proyek']);
-$tanggal = date('l, d M Y H:i', strtotime($data['tanggal_terbit_proyek'])) . ' WIB';
+    $judul   = htmlspecialchars($data['judul_proyek']);
+    $isi     = nl2br($data['isi_proyek']);
+    $penulis = htmlspecialchars($data['penulis_proyek']);
 
-$img1 = htmlspecialchars($data['url_gambar_proyek1']);
-$img2 = !empty($data['url_gambar_proyek2']) ? htmlspecialchars($data['url_gambar_proyek2']) : $img1;
-$img3 = !empty($data['url_gambar_proyek3']) ? htmlspecialchars($data['url_gambar_proyek3']) : $img1;
+    $img1 = htmlspecialchars($data['url_gambar_proyek1']);
+    $img2 = !empty($data['url_gambar_proyek2']) ? htmlspecialchars($data['url_gambar_proyek2']) : $img1;
+    $img3 = !empty($data['url_gambar_proyek3']) ? htmlspecialchars($data['url_gambar_proyek3']) : $img1;
 
-$qDosenP = "SELECT d.nama_dosen FROM proyek_dosen pd JOIN dosen d ON pd.id_dosen = d.id_dosen WHERE pd.id_proyek = $id_proyek LIMIT 1";
-$rDosenP = pg_query($conn, $qDosenP);
-$dosen   = pg_fetch_assoc($rDosenP);
-$namaDosen = $dosen ? $dosen['nama_dosen'] : "Belum Ditentukan";
+    $qDosenP = "SELECT d.nama_dosen FROM proyek_dosen pd JOIN dosen d ON pd.id_dosen = d.id_dosen WHERE pd.id_proyek = $id_proyek LIMIT 1";
+    $rDosenP = pg_query($conn, $qDosenP);
+    $dosen   = pg_fetch_assoc($rDosenP);
+    $namaDosen = $dosen ? $dosen['nama_dosen'] : "Belum Ditentukan";
+    $tanggal = formatTanggalIndonesia($data['tanggal_terbit_proyek']);
 
-$qMhs = "SELECT m.nama_mhs FROM proyek_mhs pm JOIN mhs_segeeks m ON pm.id_mhs = m.id_mhs WHERE pm.id_proyek = $id_proyek";
-$rMhs = pg_query($conn, $qMhs);
-$listAnggota = [];
-while ($m = pg_fetch_assoc($rMhs)) {
-    $listAnggota[] = $m['nama_mhs'];
-}
+    $qMhs = "SELECT m.nama_mhs FROM proyek_mhs pm JOIN mhs_segeeks m ON pm.id_mhs = m.id_mhs WHERE pm.id_proyek = $id_proyek";
+    $rMhs = pg_query($conn, $qMhs);
+    $listAnggota = [];
+    while ($m = pg_fetch_assoc($rMhs)) {
+        $listAnggota[] = $m['nama_mhs'];
+    }
 
-$qLain = "SELECT id_proyek, judul_proyek FROM vw_proyek WHERE id_proyek != $id_proyek ORDER BY tanggal_terbit_proyek DESC LIMIT 3";
-$rLain = pg_query($conn, $qLain);
-$listLain = [];
-while ($l = pg_fetch_assoc($rLain)) {
-    $listLain[] = $l;
-}
+    $qLain = "SELECT id_proyek, judul_proyek FROM vw_proyek WHERE id_proyek != $id_proyek ORDER BY tanggal_terbit_proyek DESC LIMIT 3";
+    $rLain = pg_query($conn, $qLain);
+    $listLain = [];
+    while ($l = pg_fetch_assoc($rLain)) {
+        $listLain[] = $l;
+    }
+    
+    function formatTanggalIndonesia($tanggal) {
+        $bulan = array(
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        );
+        
+        $timestamp = strtotime($tanggal);
+        if ($timestamp) {
+            $hari = date('d', $timestamp);
+            $bulanAngka = (int)date('n', $timestamp);
+            $tahun = date('Y', $timestamp);
+            return $hari . ' ' . $bulan[$bulanAngka] . ' ' . $tahun;
+        }
+        return $tanggal;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -152,8 +168,10 @@ while ($l = pg_fetch_assoc($rLain)) {
                     <div class="dosen-name">
                         <?php echo htmlspecialchars($namaDosen); ?>
                     </div>
-
+                    <div class="text-muted small mb-2">Dosen Pembimbing</div>
+                    
                     <hr class="sidebar-divider">
+                    
                     <h6 class="sidebar-subtitle">Anggota Proyek</h6>
                     <ul class="member-list">
                         <?php if (!empty($listAnggota)): ?>
