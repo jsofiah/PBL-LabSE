@@ -1,0 +1,388 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+}
+
+.dashboard-label i {
+    margin-right: 10px;
+}
+
+.admin-profile i {
+    margin-right: 10px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+    color: white;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+}
+
+.sidebar-menu {
+    padding: 10px 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+}
+
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.dashboard-label {
+    padding: 15px 20px;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.dashboard-label:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fbbf24;
+}
+
+
+.sidebar-menu {
+    padding: 10px 0;
+}
+
+.menu-item {
+    margin-bottom: 5px;
+}
+
+.menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.menu-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.menu-link.active {
+    background: rgba(255,255,255,0.15);
+    border-left: 4px solid #fbbf24;
+}
+
+.menu-link i {
+    margin-right: 12px;
+    width: 20px;
+}
+
+.menu-text {
+    flex: 1;
+}
+
+.submenu {
+    background: rgba(0,0,0,0.2);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.submenu.show {
+    max-height: 500px;
+}
+
+.submenu-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px 10px 52px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.submenu-link i {
+    margin-right: 10px;
+    width: 16px;
+    font-size: 13px;
+}
+
+.submenu-link:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    padding-left: 56px;
+}
+
+.admin-profile {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.3);
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.profile-content {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.profile-content:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.profile-role {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+}
+
+.profile-dropdown {
+    position: absolute;
+    bottom: 80px;
+    left: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    overflow: hidden;
+    z-index: 2000;
+}
+
+.profile-dropdown.show {
+    display: block;
+}
+
+.profile-item {
+    padding: 12px 16px;
+    color: #1e3a8a;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.profile-item:hover {
+    background: #1e3a8a;
+    color: #fff;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    color: #1e3a8a;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.dropdown-item:hover {
+    background: #f0f2f5;
+}
+
+.dropdown-item i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    background: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.chevron {
+    transition: transform 0.3s;
+}
+
+.chevron.rotate {
+    transform: rotate(90deg);
+}
+
+.content-area {
+    margin-left: 300px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.submenu-panel {
+    position: fixed;
+    top: 0;
+    left: 80px; /* tepat di samping sidebar kecil */
+    width: 220px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.15);
+    display: none;
+    padding-top: 90px; /* agar tidak nutup header */
+    z-index: 999;
+}
+
+.submenu-panel a {
+    display: block;
+    padding: 12px 20px;
+    color: #1e3a8a;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.submenu-panel a:hover {
+    background: #1e3a8a;
+    color: #fff;
+}
+
+.profile-content img.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;
+        transform: translateX(0);
+    }
+
+    .content-area {
+        margin-left: 80px;
+    }
+
+    .menu-text,
+    .dashboard-label h4,
+    .profile-info,
+    .sidebar-header h4,
+    .chevron {
+        display: none;
+    }
+
+    .dashboard-label {
+        text-align: center;
+    }
+
+    .menu-link {
+        justify-content: center;
+    }
+
+    .menu-link i {
+        margin: 0;
+    }
+
+    .submenu {
+        display: none !important;
+    }
+
+    .profile-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    #toggleBtn,
+    #overlay {
+        display: none !important;
+    }
+
+    .dashboard-label {
+        text-align: center;
+        padding: 18px 0;
+    }
+
+    .dashboard-label i {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .dashboard-label {
+        font-size: 0;
+    }
+
+    .dashboard-label::after {
+        content: "";
+    }
+
+    .sidebar-header h4 {
+        display: none !important;
+    }
+
+    .sidebar-header .logo img {
+        height: 45px !important;
+        margin: 0 auto;
+        display: block;
+    }
+}
