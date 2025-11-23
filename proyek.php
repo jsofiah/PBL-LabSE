@@ -139,14 +139,13 @@
                 <img src="img/background_index.jpg" alt="Lab Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">PROJEK</h1>
+                    <h1 class="hero-title">PROYEK</h1>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="content-wrapper">
-        
+    <div class="content-wrapper mx-5 py-3">
         <div class="row mb-5 align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="d-flex gap-3">
@@ -196,7 +195,7 @@
                                     </p>
                                 </div>
                                 
-                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="d-flex align-items-center gap-3">
                                     <span class="project-date">
                                         <i class="bi bi-calendar3 me-1"></i> <?php echo $p['tgl_indo']; ?>
                                     </span>

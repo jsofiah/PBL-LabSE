@@ -2,8 +2,9 @@
     max-width: 1400px;
     margin: 0 auto;  
     padding: 0 2.5rem; 
-    margin-top: 3rem;
+    margin-top: 0rem;
     margin-bottom: 5rem;
+    max-width: 1400px;
 }
 @media (max-width: 768px) {
     .content-wrapper {
@@ -156,11 +157,15 @@
     padding: 6px 18px;
     border-radius: 50px;
     text-decoration: none;
-    transition: background 0.3s;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    display: inline-block;
 }
 
 .btn-read-more:hover {
     background-color: #ffca28;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(255, 214, 0, 0.4);
 }
 
 .btn-pagination {
