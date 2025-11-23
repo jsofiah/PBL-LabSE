@@ -1,13 +1,13 @@
 <?php
     require 'config.php';
 
-    // --- NAVIGASI (tetap) ---
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
     $navItems = [];
     while ($rowNav = pg_fetch_assoc($rNav)) {
         $id_nav = $rowNav['id_nav'];
+        
         if (!isset($navItems[$id_nav])) {
             $navItems[$id_nav] = [
                 'nama_nav' => $rowNav['nama_nav'],
@@ -15,6 +15,7 @@
                 'subnav' => []
             ];
         }
+        
         if ($rowNav['id_subnav']) {
             $navItems[$id_nav]['subnav'][] = [
                 'nama_subnav' => $rowNav['nama_subnav'],
@@ -22,20 +23,17 @@
             ];
         }
     }
-
-    // Tambahkan submenu dosen (sama seperti yang sudah kamu miliki)
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
+
     while ($d = pg_fetch_assoc($rDosen)) {
         $url = "dosen_detail.php?id=" . $d['id_dosen'];
-        // pastikan index 3 ada; jika tidak, cari index yang tepat atau tambahkan kondisi
         $navItems[3]['subnav'][] = [
             'nama_subnav' => $d['nama_dosen'],
             'url_subnav' => $url
         ];
     }
-
-    // Logo/CTA
+    
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
@@ -55,21 +53,28 @@
 
     // Ambil publikasi dosen (gunakan view vw_publikasi_dosen)
     $qPublikasi = "SELECT id_publikasi, judul_publikasi, tahun_publikasi, nama_jenispublikasi
-                   FROM vw_publikasi_dosen
-                   WHERE id_dosen = $id
-                   ORDER BY nama_jenispublikasi, tahun_publikasi DESC, judul_publikasi";
+                     FROM vw_publikasi_dosen
+                     WHERE id_dosen = $id
+                     ORDER BY nama_jenispublikasi, tahun_publikasi DESC, judul_publikasi";
     $rPublikasi = pg_query($conn, $qPublikasi);
 
     // Kelompokkan publikasi menurut jenis (Jurnal, Buku, Media, Lainnya)
     $publikasiGroup = [];
-    while ($p = pg_fetch_assoc($rPublikasi)) {
-        $jenis = $p['nama_jenispublikasi'] ? $p['nama_jenispublikasi'] : 'Lainnya';
-        if (!isset($publikasiGroup[$jenis])) $publikasiGroup[$jenis] = [];
-        $publikasiGroup[$jenis][] = $p;
+    if ($rPublikasi) { // Pastikan query berhasil
+        while ($p = pg_fetch_assoc($rPublikasi)) {
+            $jenis = $p['nama_jenispublikasi'] ? $p['nama_jenispublikasi'] : 'Lainnya';
+            if (!isset($publikasiGroup[$jenis])) $publikasiGroup[$jenis] = [];
+            $publikasiGroup[$jenis][] = $p;
+        }
+    } else {
+        // DEBUG: Tampilkan error jika query gagal
+        // echo "<script>console.error('Publikasi Query Error: " . pg_last_error($conn) . "');</script>";
+        // Anda harus memastikan view vw_publikasi_dosen sudah didefinisikan dengan benar.
     }
 
-    // Default avatar (pakai file yang kamu upload). Developer note: path lokal yang ada di environment:
-    $default_avatar = '/mnt/data/Dosen.png'; // sesuaikan path webserver nanti jika perlu (mis. img/default_dosen.png)
+    // Default avatar (pakai file yang kamu upload).
+    $default_avatar = 'img/default_dosen.png'; 
+    // Pastikan path ini benar di folder img/ Anda, atau ganti ke path yang benar.
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -78,12 +83,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Publikasi Dosen - Laboratorium SE</title>
 
-    <!-- Bootstrap dan icon -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Style khusus -->
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/stylePublikasi.css">
     <link rel="stylesheet" href="css/styleFooter.css">
@@ -98,8 +103,7 @@
     </style>
 </head>
 <body>
-    <!-- LOGO & NAV -->
-    <div class="logo">
+   <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
         <?php else: ?>
@@ -108,34 +112,78 @@
     </div>
 
     <nav>
-        <ul id="nav-list" class="nav-collapse">
-            <?php foreach ($navItems as $nav): ?>
-                <?php if (count($nav['subnav']) > 0): ?>
-                    <li class="dropdown">
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                            <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <div class="dropdown-content">
-                            <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
-                                <?php foreach ($nav['subnav'] as $sub): ?>
-                                    <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
-                                        <?php echo htmlspecialchars($sub['nama_subnav']); ?>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
+    <ul id="nav-list" class="nav-collapse">
+        <?php foreach ($navItems as $nav): ?>
+            <?php if (count($nav['subnav']) > 0): ?>
+                <li class="dropdown">
+
+                    <!-- TOMBOL UTAMA — TIDAK PINDAH HALAMAN -->
+                    <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
+                        <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                        <i class="bi bi-chevron-down"></i>
+                    </a>
+
+                    <div class="dropdown-content">
+                        <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+                            <?php foreach ($nav['subnav'] as $sub): ?>
+                                <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
+                                    <?php echo htmlspecialchars($sub['nama_subnav']); ?>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
-                    </li>
-                <?php else: ?>
-                    <li>
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                        </a>
-                    </li>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
+                    </div>
+
+                </li>
+            <?php else: ?>
+                <li>
+                    <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                        <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                    </a>
+                </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
+</nav>
+
+<script>
+function toggleDropdown(event) {
+    event.preventDefault();
+
+    // Tutup semua dropdown lain dulu
+    document.querySelectorAll(".dropdown").forEach(d => {
+        if (d !== event.target.closest(".dropdown")) {
+            d.classList.remove("show-dropdown");
+        }
+    });
+
+    // Baru toggle dropdown yang diklik
+    const parent = event.target.closest(".dropdown");
+    parent.classList.toggle("show-dropdown");
+}
+
+// Tutup semua dropdown kalau klik di luar navbar
+document.addEventListener("click", function(e) {
+    if (!e.target.closest("nav")) {
+        document.querySelectorAll(".dropdown").forEach(d => {
+            d.classList.remove("show-dropdown");
+        });
+    }
+});
+
+</script>
+
+<style>
+/* Biar sama kaya index */
+.dropdown-content {
+    display: none;
+}
+.show-dropdown .dropdown-content {
+    display: block;
+}
+</style>
+
+
+
 
     <?php if($rowLogo): ?>
         <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
@@ -143,23 +191,20 @@
         </a>
     <?php endif; ?>
 
-    <!-- HERO / BANNER -->
     <div class="hero-wrapper">
-      <div class="hero-container">
-        <div class="hero-frame">
-          <img src="img/background_index.jpg" alt="Lab Background">
-          <div class="hero-overlay"></div>
-          <div class="hero-content">
+        <div class="hero-container">
+            <div class="hero-frame">
+                <img src="img/background_index.jpg" alt="Lab Background">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
             <h1 class="hero-title">PROFIL DOSEN</h1>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="container-main mt-4">
       <div class="d-flex gap-4">
-        <!-- LEFT SIDEBAR -->
         <aside class="side-left">
           <div class="profile-nav mb-3">
             <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-nav">Profil</a>
@@ -168,12 +213,10 @@
           </div>
         </aside>
 
-        <!-- RIGHT CONTENT -->
         <main class="content-right">
           <a href="javascript:history.back()" class="back-link mb-3"><i class="bi bi-arrow-left-circle"></i> Kembali</a>
           <h3 class="mb-3">PUBLIKASI</h3>
 
-          <!-- DOSEN INFO BOX -->
           <div class="card card-rounded mb-3 dosen-info p-3 d-flex align-items-center gap-3">
             <div style="width:120px; text-align:center;">
               <?php
@@ -199,7 +242,6 @@
             </div>
           </div>
 
-          <!-- PUBLIKASI GROUPED -->
           <?php if (empty($publikasiGroup)): ?>
             <div class="card card-rounded p-3">
               Tidak ada publikasi untuk dosen ini.
@@ -218,23 +260,28 @@
                         </span>
                       </div>
                       <div class="publikasi-authors">
-                        <!-- Kalau ingin menampilkan daftar kontributor lain, bisa query vw_kontributor_publikasi -->
                         <?php
-                          // Ambil kontributor publikasi (opsional)
+                          // Ambil kontributor publikasi
                           $idpub = intval($it['id_publikasi']);
+                          
+                          // Pastikan view vw_kontributor_publikasi tersedia dan benar
                           $qKontrib = "SELECT d.nama_dosen FROM vw_kontributor_publikasi vk
-                                       JOIN dosen d ON d.id_dosen = vk.id_dosen
-                                       WHERE vk.id_publikasi = $idpub";
+                                           JOIN dosen d ON d.id_dosen = vk.id_dosen
+                                           WHERE vk.id_publikasi = $idpub";
                           $rKontrib = pg_query($conn, $qKontrib);
                           $authors = [];
-                          while ($rowK = pg_fetch_assoc($rKontrib)) {
-                              $authors[] = $rowK['nama_dosen'];
+                          
+                          if ($rKontrib) {
+                              while ($rowK = pg_fetch_assoc($rKontrib)) {
+                                  $authors[] = $rowK['nama_dosen'];
+                              }
                           }
-                          // jika kosong, tampilkan nama dosen saja
+
                           if (count($authors) > 0) {
                               echo implode(' — ', array_map('htmlspecialchars', $authors));
-                          } else {
-                              echo htmlspecialchars($rowDosen['nama_dosen']);
+                          } else if ($rowDosen) { 
+                              // jika kontributor tidak ada di view, tampilkan nama dosen utama
+                              echo htmlspecialchars($rowDosen['nama_dosen']) . ' (Penulis Tunggal/Kontributor Tidak Terdata)';
                           }
                         ?>
                       </div>
@@ -249,7 +296,6 @@
       </div>
     </div>
 
-    <!-- FOOTER (dimuat via js footer yang sama seperti di project) -->
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

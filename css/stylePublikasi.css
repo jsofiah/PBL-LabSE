@@ -165,3 +165,55 @@
   .side-left { display: none; } /* sidebar disembunyikan di mobile */
   .hero-wrapper { padding-top: 40px; }
 }
+
+/* FIX NAVBAR DROPWDOWN */
+nav {
+    position: relative;
+    z-index: 9999;
+}
+
+/* Style dropdown container */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #fff;
+    min-width: 200px;
+    padding: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 99999;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #fff;
+    min-width: 200px;
+    padding: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 99999;
+}
+
+.dropdown.active .dropdown-content {
+    display: block !important;
+}
+
+
+
+/* Biar tidak tertutup section/hero */
+header, .hero-wrapper, main, section {
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+}
+
+/* Scroll box */
+.dropdown-scroll {
+    max-height: 250px;
+    overflow-y: auto;
+}
