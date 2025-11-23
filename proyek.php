@@ -135,8 +135,8 @@
 
     <div class="hero-wrapper">
         <div class="hero-container">
-            <div class="hero-frame" style="height: 230px;">
-                <img src="img/background_index.jpg" alt="Lab Background">
+            <div class="hero-frame">
+                <img src="img/bgproyek.jpg" alt="Proyek Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                     <h1 class="hero-title">PROYEK</h1>

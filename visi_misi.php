@@ -52,7 +52,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorium Software Engineer</title>
+    <title>Visi Misi - Laboratorium Software Engineer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -114,7 +114,7 @@
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/background_visimisi.png" alt="Lab Background">
+                <img src="img/background_visimisi.png" alt="VisiMisi Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                 <h1 class="hero-title">
@@ -135,7 +135,7 @@
     
     <div class="row align-items-center mb-5 gy-4">
         <div class="col-md-6">
-            <img src="img/background_visimisi.png" alt="Visi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
+            <img src="img/visi.jpg" alt="Visi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
         </div>
         <div class="col-md-6">
             <p><?php echo htmlspecialchars($rowVisi['isi_visi']); ?></p>
@@ -157,7 +157,7 @@
             <?php endwhile; ?>
         </div>
         <div class="col-md-6">
-            <img src="img/background_visimisi.png" alt="Misi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
+            <img src="img/misi.jpg" alt="Misi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
         </div>
     </div>
 

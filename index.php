@@ -58,7 +58,22 @@
 
     $qArtikel = "SELECT * FROM vw_artikel ORDER BY tanggal_terbit_artikel DESC LIMIT 3";
     $rArtikel = pg_query($conn, $qArtikel);
-    $rowArtikel = pg_fetch_assoc($rArtikel);
+    // $rowArtikel = pg_fetch_assoc($rArtikel);
+
+    function formatTanggalIndonesia($tanggal) {
+        $bulan = array(
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        );
+        $timestamp = strtotime($tanggal);
+        if ($timestamp) {
+            $hari = date('d', $timestamp);
+            $bulanAngka = (int)date('n', $timestamp);
+            $tahun = date('Y', $timestamp);
+            return $hari . ' ' . $bulan[$bulanAngka] . ' ' . $tahun;
+        }
+        return $tanggal;
+    }
 ?>
 
 <!DOCTYPE html>
@@ -217,62 +232,75 @@
             <h2 class="text-center fw-bold mb-5">ARTIKEL TERBARU</h2>
             
             <div class="artikel-container">
-                <?php pg_result_seek($rArtikel, 0); ?>
+                <?php if (pg_num_rows($rArtikel) > 0): ?>
                 <?php while ($rowArtikel = pg_fetch_assoc($rArtikel)): ?>
-                <div class="artikel-card">
-                    <div class="row g-0">
-                        <div class="col-md-3">
-                            <div class="artikel-thumbnail">
-                                <?php if (!empty($rowArtikel['url_gambar_artikel'])): ?>
-                                    <img src="<?php echo htmlspecialchars($rowArtikel['url_gambar_artikel']); ?>"
-                                        alt="<?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>">
-                                <?php else: ?>
-                                    <div class="thumbnail-placeholder"></div>
-                                <?php endif; ?>
+                    <div class="artikel-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <div class="artikel-thumbnail">
+                                    <?php if (!empty($rowArtikel['url_gambar_artikel'])): ?>
+                                        <img src="<?php echo htmlspecialchars($rowArtikel['url_gambar_artikel']); ?>"
+                                            alt="<?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>">
+                                    <?php else: ?>
+                                        <div class="thumbnail-placeholder">
+                                            <i class="bi bi-image text-white fs-1"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-9">
-                            <div class="artikel-content">
-                                <h3 class="artikel-title">
-                                    <?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>
-                                </h3>
-                                
-                                <p class="artikel-excerpt">
-                                    <?php
-                                        $preview = strip_tags($rowArtikel['isi_artikel']);
-                                        echo htmlspecialchars(substr($preview, 0, 150)) . '...';
-                                    ?>
-                                </p>
-                                
-                                <div class="artikel-footer">
-                                    <div class="artikel-info">
-                                        <span class="artikel-date">
-                                            <i class="bi bi-calendar3 me-1"></i>
-                                            <?php echo date('d F Y', strtotime($rowArtikel['tanggal_terbit_artikel'])); ?>
-                                        </span>
-                                        <span class="artikel-badge"><?php echo htmlspecialchars($rowArtikel['nama_jenisartikel']); ?></span>
-                                        <a href="artikel_detail.php?id=<?php echo $rowArtikel['id_artikel']; ?>" 
-                                        class="artikel-read-more">
-                                            Baca selengkapnya
-                                        </a>
+                            
+                            <div class="col-md-8">
+                                <div class="artikel-content">
+                                    <div>
+                                        <h3 class="artikel-title">
+                                            <?php echo htmlspecialchars($rowArtikel['judul_artikel']); ?>
+                                        </h3>
+                                        
+                                        <p class="artikel-excerpt">
+                                            <?php
+                                                $preview = strip_tags($rowArtikel['isi_artikel']);
+                                                if (strlen($preview) > 150) {
+                                                    echo htmlspecialchars(substr($preview, 0, 150)) . '...';
+                                                } else {
+                                                    echo htmlspecialchars($preview);
+                                                }
+                                            ?>
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="artikel-footer">
+                                        <div class="artikel-info">
+                                            <span class="artikel-date">
+                                                <i class="bi bi-calendar3 me-1"></i>
+                                                <?php echo formatTanggalIndonesia($rowArtikel['tanggal_terbit_artikel']); ?>
+                                            </span>
+                                            <span class="artikel-badge">
+                                                <?php echo htmlspecialchars($rowArtikel['nama_jenisartikel']); ?>
+                                            </span>
+                                            <a href="artikel_detail.php?id=<?php echo $rowArtikel['id_artikel']; ?>" 
+                                            class="artikel-read-more">
+                                                Baca selengkapnya
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endwhile; ?>
-            </div>
-            
-            <div class="text-center mt-5">
-                <a href="artikel.php" class="btn-view-all">
-                    Lihat semua artikel
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
-            </div>
+            <?php else: ?>
+                <div class="alert alert-light text-center py-5 shadow-sm">
+                        <h4 class="text-muted"><i class="bi bi-folder-x me-2"></i>Artikel tidak ditemukan.</h4>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="text-center my-5">
+            <a href="artikel.php" class="btn-view-all">
+                Lihat semua artikel
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
         </div>
     </div>
     
