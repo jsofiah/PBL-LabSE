@@ -3,37 +3,28 @@
 
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
-
     $navItems = [];
     while ($rowNav = pg_fetch_assoc($rNav)) {
         $id_nav = $rowNav['id_nav'];
-        
         if (!isset($navItems[$id_nav])) {
-            $navItems[$id_nav] = [
-                'nama_nav' => $rowNav['nama_nav'],
-                'url_nav' => $rowNav['url_nav'],
-                'subnav' => []
-            ];
+            $navItems[$id_nav] = ['nama_nav' => $rowNav['nama_nav'], 'url_nav' => $rowNav['url_nav'], 'subnav' => []];
         }
-        
         if ($rowNav['id_subnav']) {
-            $navItems[$id_nav]['subnav'][] = [
-                'nama_subnav' => $rowNav['nama_subnav'],
-                'url_subnav' => $rowNav['url_subnav']
-            ];
+            $navItems[$id_nav]['subnav'][] = ['nama_subnav' => $rowNav['nama_subnav'], 'url_subnav' => $rowNav['url_subnav']];
         }
     }
+
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
-
     while ($d = pg_fetch_assoc($rDosen)) {
-        $url = "dosen_detail.php?id=" . $d['id_dosen'];
-        $navItems[3]['subnav'][] = [
-            'nama_subnav' => $d['nama_dosen'],
-            'url_subnav' => $url
-        ];
+        $navItems[3]['subnav'][] = ['nama_subnav' => $d['nama_dosen'], 'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']];
     }
 
+    $qLogo = "SELECT * FROM vw_logo_cta";
+    $rLogo = pg_query($conn, $qLogo);
+    $rowLogo = pg_fetch_assoc($rLogo);
+
+    // fungsi proyek
     $filter = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
     $cari   = isset($_GET['cari']) ? pg_escape_string($conn, $_GET['cari']) : '';
     $orderDirection = ($filter == 'terlama') ? 'ASC' : 'DESC';
@@ -53,22 +44,34 @@
     $totalData = $rowTotal['total'];
     $totalPages = ceil($totalData / $limit);
 
-
     $qProyek = "SELECT * FROM vw_proyek 
                 $whereClause 
                 ORDER BY tanggal_terbit_proyek $orderDirection 
                 LIMIT $limit OFFSET $start";
     $rProyek = pg_query($conn, $qProyek);
 
-
     $listProyek = [];
     while ($row = pg_fetch_assoc($rProyek)) {
-
-        $row['tgl_formatted'] = date('d F Y', strtotime($row['tanggal_terbit_proyek']));
+        $row['tgl_indo'] = formatTanggalIndonesia($row['tanggal_terbit_proyek']);
+        
         $previewRaw = strip_tags($row['isi_proyek']);
-        $row['preview_formatted'] = htmlspecialchars(substr($previewRaw, 0, 150)) . '...';
+        $row['preview_fmt'] = htmlspecialchars(substr($previewRaw, 0, 150)) . '...';
         
         $listProyek[] = $row;
+    }
+    function formatTanggalIndonesia($tanggal) {
+        $bulan = array(
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        );
+        $timestamp = strtotime($tanggal);
+        if ($timestamp) {
+            $hari = date('d', $timestamp);
+            $bulanAngka = (int)date('n', $timestamp);
+            $tahun = date('Y', $timestamp);
+            return $hari . ' ' . $bulan[$bulanAngka] . ' ' . $tahun;
+        }
+        return $tanggal;
     }
 ?>
 
@@ -88,7 +91,6 @@
     <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleProyek.css">
-
 </head>
 <body>
 
@@ -179,7 +181,9 @@
                     <div class="row g-0 align-items-center h-100">
                         <div class="col-md-4">
                             <div class="project-img-wrapper">
-                                <img src="<?php echo htmlspecialchars($p['url_gambar_proyek1']); ?>" class="project-img" alt="Thumbnail">
+                                <img src="<?php echo htmlspecialchars($p['url_gambar_proyek1']); ?>" 
+                                     class="project-img" 
+                                     alt="<?php echo htmlspecialchars($p['judul_proyek']); ?>">
                             </div>
                         </div>
                         
@@ -188,16 +192,16 @@
                                 <div>
                                     <h4 class="project-title"><?php echo htmlspecialchars($p['judul_proyek']); ?></h4>
                                     <p class="project-desc">
-                                        <?php echo $p['preview_formatted']; ?>
+                                        <?php echo $p['preview_fmt']; ?>
                                     </p>
                                 </div>
                                 
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <span class="project-date">
-                                        <i class="bi bi-calendar3 me-1"></i> <?php echo $p['tgl_formatted']; ?>
+                                        <i class="bi bi-calendar3 me-1"></i> <?php echo $p['tgl_indo']; ?>
                                     </span>
                                     
-                                    <a href="detail_proyek.php?id=<?php echo $p['id_proyek']; ?>" class="btn-read-more">Baca selengkapnya</a>
+                                    <a href="proyekDetail.php?id=<?php echo $p['id_proyek']; ?>" class="btn-read-more">Baca selengkapnya</a>
                                 </div>
                             </div>
                         </div>
@@ -250,5 +254,5 @@
 </html>
 
 <?php
-pg_close($conn);
+    pg_close($conn);
 ?>
