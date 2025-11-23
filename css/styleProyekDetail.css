@@ -1,22 +1,18 @@
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #ffffff;
-    color: #333;
-}
-
 .detail-wrapper {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 0 20px;
-    margin-top: 100px;
+    padding: 0 2.5rem;
+    margin-top: 120px;
     margin-bottom: 80px;
+    position: relative;
+    z-index: 1;
 }
 
 .gallery-grid {
     display: grid;
     grid-template-columns: 1fr 1fr; 
-    grid-template-rows: 350px 250px; 
-    gap: 7px;
+    grid-template-rows: 280px 200px;
+    gap: 10px;
     margin-bottom: 40px;
 }
 
@@ -177,10 +173,15 @@ body {
 }
 
 @media (max-width: 768px) {
+    .detail-wrapper {
+        padding: 0 1.5rem;
+        margin-top: 140px;
+    }
+
     .gallery-grid {
         grid-template-columns: 1fr;
         grid-template-rows: auto;
-        gap: 20px; 
+        gap: 15px; 
     }
     
     .img-main, .img-sub-left, .img-sub-right {
