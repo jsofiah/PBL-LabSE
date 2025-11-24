@@ -33,10 +33,10 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="home">
-                    <a href="#" class="submenu-link"><i class="fas fa-bars"></i> Nav</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-layer-group"></i> Subnav</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-shoe-prints"></i> Footer</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-bullhorn"></i> Logo CTA</a>
+                    <a href="kelola_nav.php" class="submenu-link"><i class="fas fa-bars"></i> Nav & Subnav</a>
+                    <a href="kelola_footer.php" class="submenu-link"><i class="fas fa-shoe-prints"></i> Footer</a>
+                    <a href="kelola_logoCTA.php" class="submenu-link"><i class="fas fa-bullhorn"></i> Logo CTA</a>
+                    <a href="kelola_admin.php" class="submenu-link"><i class="fas fa-circle-user"></i> Admin</a>
                 </div>
             </div>
 
@@ -46,14 +46,14 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="profil">
-                    <a href="#" class="submenu-link"><i class="fas fa-info-circle"></i> Tentang Lab</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-bullseye"></i> Visi Misi</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-road"></i> Roadmap</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-door-open"></i> Fasilitas</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-handshake"></i> Mitra</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-images"></i> Galeri</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-list-ul"></i> Jenis Fasilitas</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-list-alt"></i> Jenis Mitra</a>
+                    <a href="kelola_tentang.php" class="submenu-link"><i class="fas fa-info-circle"></i> Tentang Lab</a>
+                    <a href="kelola_visimisi.php" class="submenu-link"><i class="fas fa-bullseye"></i> Visi Misi</a>
+                    <a href="kelola_roadmap.php" class="submenu-link"><i class="fas fa-road"></i> Roadmap</a>
+                    <a href="kelola_fasilitas.php" class="submenu-link"><i class="fas fa-door-open"></i> Fasilitas</a>
+                    <a href="kelola_mitra.php" class="submenu-link"><i class="fas fa-handshake"></i> Mitra</a>
+                    <a href="kelola_galeri.php" class="submenu-link"><i class="fas fa-images"></i> Galeri</a>
+                    <a href="kelola_jenisFasilitas.php" class="submenu-link"><i class="fas fa-list-ul"></i> Jenis Fasilitas</a>
+                    <a href="kelola_jenisMitra.php" class="submenu-link"><i class="fas fa-list-alt"></i> Jenis Mitra</a>
                 </div>
             </div>
 
@@ -63,12 +63,12 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="dosen">
-                    <a href="#" class="submenu-link"><i class="fas fa-user-tie"></i> Profil</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-user-graduate"></i> Riwayat Pendidikan</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-certificate"></i> Sertifikasi</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-flask"></i> Penelitian</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-book"></i> Publikasi</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-book-open"></i> Jenis Publikasi</a>
+                    <a href="kelola_profil.php" class="submenu-link"><i class="fas fa-user-tie"></i> Profil</a>
+                    <a href="kelola_pendidikan.php" class="submenu-link"><i class="fas fa-user-graduate"></i> Riwayat Pendidikan</a>
+                    <a href="kelola_sertifikasi.php" class="submenu-link"><i class="fas fa-certificate"></i> Sertifikasi</a>
+                    <a href="kelola_penelitian.php" class="submenu-link"><i class="fas fa-flask"></i> Penelitian</a>
+                    <a href="kelola_publikasi.php" class="submenu-link"><i class="fas fa-book"></i> Publikasi</a>
+                    <a href="kelola_jenisPublikasi.php" class="submenu-link"><i class="fas fa-book-open"></i> Jenis Publikasi</a>
                 </div>
             </div>
 
@@ -78,9 +78,9 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="bidang">
-                    <a href="#" class="submenu-link"><i class="fas fa-clipboard-list"></i> Daftar Bidang Keahlian</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-chalkboard"></i> Dosen per Bidang</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-user-friends"></i> Mahasiswa per Bidang</a>
+                    <a href="kelola_keahlian.php" class="submenu-link"><i class="fas fa-clipboard-list"></i> Daftar Bidang Keahlian</a>
+                    <a href="kelola_dosenKeahlian.php" class="submenu-link"><i class="fas fa-chalkboard"></i> Dosen per Bidang</a>
+                    <a href="kelola_mhsKeahlian.php" class="submenu-link"><i class="fas fa-user-friends"></i> Mahasiswa per Bidang</a>
                 </div>
             </div>
 
@@ -90,10 +90,10 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="geeks">
-                    <a href="#" class="submenu-link"><i class="fas fa-user-graduate"></i> Daftar Mahasiswa</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-user-plus"></i> Pendaftaran SE Geeks</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-project-diagram"></i> Proyek SE Geeks</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-tasks"></i> Status Pendaftaran</a>
+                    <a href="kelola_mhs.php" class="submenu-link"><i class="fas fa-user-graduate"></i> Daftar Mahasiswa</a>
+                    <a href="kelola_pendaftaran.php" class="submenu-link"><i class="fas fa-user-plus"></i> Pendaftaran SE Geeks</a>
+                    <a href="kelola_proyek.php" class="submenu-link"><i class="fas fa-project-diagram"></i> Proyek SE Geeks</a>
+                    <a href="kelola_statusPendaftaran.php" class="submenu-link"><i class="fas fa-tasks"></i> Status Pendaftaran</a>
                 </div>
             </div>
 
@@ -103,8 +103,8 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                     <i class="fas fa-chevron-right chevron"></i>
                 </div>
                 <div class="submenu" id="artikel">
-                    <a href="#" class="submenu-link"><i class="fas fa-newspaper"></i> Artikel</a>
-                    <a href="#" class="submenu-link"><i class="fas fa-tag"></i> Jenis Artikel</a>
+                    <a href="kelola_artikel.php" class="submenu-link"><i class="fas fa-newspaper"></i> Artikel</a>
+                    <a href="kelola_jenisArtikel.php" class="submenu-link"><i class="fas fa-tag"></i> Jenis Artikel</a>
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
 
         <div class="admin-profile">
             <div class="profile-dropdown" id="profileDropdown">
-                <a href="#" class="profile-item">
+                <a href="kelola_profil.php" class="profile-item">
                     <i class="fas fa-user"></i> Profile
                 </a>
                 <a href="logout.php" class="profile-item">

@@ -272,7 +272,8 @@ body {
 }
 
 .content-area {
-    margin-left: 300px;
+    margin-left: 275px;
+    max-width: 1080px;
     padding: 20px;
     transition: margin-left 0.3s ease;
 }
@@ -284,13 +285,13 @@ body {
 .submenu-panel {
     position: fixed;
     top: 0;
-    left: 80px; /* tepat di samping sidebar kecil */
+    left: 80px;
     width: 220px;
     height: 100vh;
     background: #ffffff;
     box-shadow: 4px 0 10px rgba(0,0,0,0.15);
     display: none;
-    padding-top: 90px; /* agar tidak nutup header */
+    padding-top: 90px;
     z-index: 999;
 }
 
