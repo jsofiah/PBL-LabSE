@@ -1,0 +1,116 @@
+@media screen and (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-sm i {
+        margin-right: 2px;
+    }
+
+    td .btn-sm {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    td .btn-sm:last-child {
+        margin-bottom: 0;
+    }
+}
+    
+@media screen and (max-width: 576px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .table {
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 0.5rem 0.25rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-sm i {
+        margin-right: 2px;
+    }
+
+    td .btn-sm {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    td .btn-sm:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-group {
+        margin-bottom: 0.5rem;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #666;
+        font-size: 0.75rem;
+    }
+        }
+        
+        @media screen and (max-width: 576px) {
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .table {
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 0.5rem 0.25rem;
+    }
+}
+        
+.text-truncate-custom {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.link-truncate {
+    display: inline-block;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-fixed {
+    table-layout: fixed !important;
+    width: 100%;
+}
+
+.table-fixed th,
+.table-fixed td {
+    width: inherit !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
