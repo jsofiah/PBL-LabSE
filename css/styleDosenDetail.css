@@ -1,0 +1,192 @@
+/* GLOBAL & PAGE WRAPPER */
+
+body {
+    background: #f7f9fc;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* HERO SECTION (HEADER FOTO GEDUNG) */
+.hero-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+.hero-container {
+    padding: 2rem;
+    border-radius: 25px;
+}
+
+.hero-frame {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.hero-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.35));
+}
+
+.hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+}
+
+/* SIDEBAR (Profil / Penelitian / Publikasi) */
+
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: sticky;
+    top: 120px;
+}
+
+.side-menu button {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: .2s ease;
+}
+
+.side-menu .btn-primary {
+    background: #133A94;
+    border: none;
+    font-weight: 600;
+}
+
+.side-menu .btn-outline-primary {
+    border-radius: 12px;
+    border-width: 2px;
+}
+
+/* PROFIL CARD */
+
+.profil-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.profil-img {
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #dcdcdc;
+}
+
+/* Nama dosen */
+.profil-card h4 {
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.profil-card p {
+    margin: 1px 0;
+    color: #444;
+}
+
+.profil-label {
+    font-weight: 700;
+    color: #222;
+}
+
+/* SECTION CARD (Keahlian / Pendidikan / Sertifikasi) */
+
+.section-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    margin-top: 25px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.section-card h5 {
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+/* List */
+.section-card ul {
+    margin-left: 18px;
+    line-height: 1.6;
+}
+
+/* TABEL RIWAYAT PENDIDIKAN */
+
+.section-card table {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+}
+
+.section-card table thead {
+    background: #133A94;
+    color: white;
+}
+
+.section-card table th {
+    font-weight: 600;
+}
+
+.section-card table td {
+    background: #fff;
+}
+
+/* RESPONSIVE MODE */
+
+@media (max-width: 992px) {
+    .profil-card {
+        text-align: center;
+    }
+    .profil-card .d-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+    .profil-img {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .side-menu {
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 20px;
+        position: static;
+    }
+    .side-menu button {
+        width: auto;
+        flex: 1;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 32px;
+    }
+}
