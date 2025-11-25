@@ -7,22 +7,23 @@
     $navItems = [];
     while ($rowNav = pg_fetch_assoc($rNav)) {
         $id_nav = $rowNav['id_nav'];
-        
+
         if (!isset($navItems[$id_nav])) {
             $navItems[$id_nav] = [
                 'nama_nav' => $rowNav['nama_nav'],
-                'url_nav' => $rowNav['url_nav'],
-                'subnav' => []
+                'url_nav'  => $rowNav['url_nav'],
+                'subnav'   => []
             ];
         }
-        
+
         if ($rowNav['id_subnav']) {
             $navItems[$id_nav]['subnav'][] = [
                 'nama_subnav' => $rowNav['nama_subnav'],
-                'url_subnav' => $rowNav['url_subnav']
+                'url_subnav'  => $rowNav['url_subnav']
             ];
         }
     }
+
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
 
@@ -30,13 +31,34 @@
         $url = "dosen_detail.php?id=" . $d['id_dosen'];
         $navItems[3]['subnav'][] = [
             'nama_subnav' => $d['nama_dosen'],
-            'url_subnav' => $url
+            'url_subnav'  => $url
         ];
     }
 
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
+
+    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    if ($id <= 0) {
+        header('Location: daftar_dosen.php');
+        exit;
+    }
+
+    $qDosenDetail = "SELECT * FROM vw_detail_dosen WHERE id_dosen = $id";
+    $rDosenDetail = pg_query($conn, $qDosenDetail);
+    $rowDosen = pg_fetch_assoc($rDosenDetail);
+
+    $emailDosen = $rowDosen['email_dosen'] ?? '';
+
+    $qPendidikan = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC LIMIT 1";
+    $rPendidikan = pg_query($conn, $qPendidikan);
+    $pendidikanTerakhir = pg_fetch_assoc($rPendidikan);
+
+    $qPenelitian = "SELECT * FROM vw_penelitian_dosen WHERE id_dosen = $id ORDER BY tahun_penelitian DESC";
+    $rPenelitian = pg_query($conn, $qPenelitian);
+
+    $default_avatar = 'img/default_dosen.png';
 ?>
 
 <!DOCTYPE html>
@@ -44,19 +66,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorium Software Engineer</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Penelitian Dosen - Laboratorium SE</title>
     <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleDosenPenelitian.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
     <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
@@ -70,12 +90,11 @@
             <?php foreach ($navItems as $nav): ?>
                 <?php if (count($nav['subnav']) > 0): ?>
                     <li class="dropdown">
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                            <i class="bi bi-chevron-down"></i>
+                        <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?> <i class="bi bi-chevron-down"></i>
                         </a>
                         <div class="dropdown-content">
-                            <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+                            <div class="dropdown-scroll overflow-auto" style="max-height:250px;">
                                 <?php foreach ($nav['subnav'] as $sub): ?>
                                     <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
                                         <?php echo htmlspecialchars($sub['nama_subnav']); ?>
@@ -95,7 +114,6 @@
         </ul>
     </nav>
 
-
     <?php if($rowLogo): ?>
         <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
             <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
@@ -108,93 +126,69 @@
                 <img src="img/background_index.jpg" alt="Lab Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                <h1 class="hero-title"> PENELITIAN </h1>
+                    <h1 class="hero-title"> PENELITIAN </h1>
+                </div>
             </div>
         </div>
     </div>
-    
-     <div class="container main-container">
-        <div class="row">
 
-            <div class="col-lg-2 d-none d-lg-block sidebar-wrapper">
-                <div class="d-flex flex-column gap-2">
-                    <a href="#" class="btn-menu">Profil</a>
-                    <a href="#" class="btn-menu active">Penelitian</a>
-                    <a href="#" class="btn-menu">Publikasi</a>
+    <div class="page-container">
+        <div class="sidebar-wrapper">
+            <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-menu">Profil</a>
+            <a href="dosen_penelitian.php?id=<?php echo $id; ?>" class="btn-menu active">Penelitian</a>
+            <a href="publikasi.php?id=<?php echo $id; ?>" class="btn-menu">Publikasi</a>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="d-flex align-items-center mb-4">
+                <a href="dosen_detail.php" class="btn-back me-3"><i class="bi bi-arrow-left"></i></a>
+                <h2 class="page-title">PENELITIAN</h2>
+            </div>
+
+            <div class="card content-card mb-4">
+                <div class="card-body p-4">
+                    <div class="dosen-profile-header d-flex al ign-items-center">
+                        <div class="profile-img-wrapper me-4">
+                            <img src="<?php echo htmlspecialchars(($rowDosen && $rowDosen['url_foto_dosen']) ? $rowDosen['url_foto_dosen'] : $default_avatar); ?>" class="profile-img">
+                        </div>
+                        <div class="profile-info">
+                            <h6 class="text-primary fw-bold mb-1">
+                                <?php if($pendidikanTerakhir) echo htmlspecialchars($pendidikanTerakhir['jenjang'] . ' - ' . $pendidikanTerakhir['universitas']); ?>
+                            </h6>
+                            <h4 class="fw-bold mb-1"><?php echo htmlspecialchars($rowDosen['nama_dosen'] ?? 'Dosen Tidak Ditemukan'); ?></h4>
+                            <p class="text-muted mb-0"><?php echo htmlspecialchars($emailDosen); ?></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-lg-9 content-wrapper">
-
-                <div class="d-flex align-items-center mb-4">
-                    <a href="#" class="btn-back me-3"><i class="bi bi-arrow-left"></i></a>
-                    <h2 class="page-title">PENELITIAN</h2>
-                </div>
-
-                <div class="card content-card mb-4">
-                    <div class="card-body p-4">
-                        <div class="dosen-profile-header d-flex align-items-center">
-                            <div class="profile-img-wrapper me-4">
-                                <img src="img/artikel/artikel1.jpg" class="profile-img">
-                            </div>
-                            <div class="profile-info">
-                                <h6 class="text-primary fw-bold mb-1">Program Studi S-2 Rekayasa TI</h6>
-                                <h4 class="fw-bold mb-1">Yan Watequlis Syaifudin, S.T., M.MT, Ph.D.</h4>
-                                <p class="text-muted mb-0">qulis@polinema.ac.id</p>
+            <?php if($rPenelitian && pg_num_rows($rPenelitian) > 0): ?>
+                <?php while($pen = pg_fetch_assoc($rPenelitian)): ?>
+                    <div class="research-card">
+                        <div class="research-icon-wrapper">
+                            <div class="icon-box"><i class="bi bi-journal-text"></i></div>
+                        </div>
+                        <div class="research-info">
+                            <h5 class="research-title"><?php echo htmlspecialchars($pen['judul_penelitian']); ?></h5>
+                            <div class="research-details">
+                                Ketua Peneliti : <?php echo htmlspecialchars($rowDosen['nama_dosen']); ?><br>
+                                Tahun : <?php echo htmlspecialchars($pen['tahun_penelitian']); ?>
                             </div>
                         </div>
                     </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="card card-rounded p-3">
+                    Tidak ada penelitian untuk dosen ini.
                 </div>
-
-                <div class="research-card">
-                    <div class="research-icon-wrapper">
-                        <div class="icon-box"><i class="bi bi-journal-text"></i></div>
-                    </div>
-                    <div class="research-info">
-                        <h5 class="research-title">Inovasi Platform Interaktif Berbasis Web untuk Optimalisasi Pembelajaran Berkelanjutan</h5>
-                        <div class="research-details">
-                            Ketua Peneliti : Rudy Ariyanto, ST., M.Cs.<br>
-                            Tahun : 2023
-                        </div>
-                    </div>
-                </div>
-
-                <div class="research-card">
-                    <div class="research-icon-wrapper">
-                        <div class="icon-box"><i class="bi bi-journal-text"></i></div>
-                    </div>
-                    <div class="research-info">
-                        <h5 class="research-title">Penerapan Big Data dan Collaborative Filtering pada Sistem Rekomendasi E-Learning</h5>
-                        <div class="research-details">
-                            Ketua Peneliti : Rudy Ariyanto, ST., M.Cs.<br>
-                            Tahun : 2023
-                        </div>
-                    </div>
-                </div>
-
-                <div class="research-card">
-                    <div class="research-icon-wrapper">
-                        <div class="icon-box"><i class="bi bi-journal-text"></i></div>
-                    </div>
-                    <div class="research-info">
-                        <h5 class="research-title">Pengembangan Sistem Keamanan Jaringan Berbasis AI untuk Infrastruktur Kampus</h5>
-                        <div class="research-details">
-                            Ketua Peneliti : Yan Watequlis S., ST., M.MT<br>
-                            Tahun : 2024
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <?php endif; ?>
 
         </div>
     </div>
-    
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/dropdown.js"></script>
 </body>
 </html>
+
