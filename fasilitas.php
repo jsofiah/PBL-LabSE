@@ -154,7 +154,9 @@ function getFasilitas($conn, $jenis) {
 
         <h3>FASILITAS NON AKADEMIK</h3>
         <div class="fasilitas-slider">
-            <button class="slide-btn left" onclick="slideLeft('non')">&#10094;</button>
+            <button class="slide-btn left" onclick="slideLeft('akad')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
                 <div class="fasilitas-track" id="track-non">
                     <?php $r = getFasilitas($conn, 2); while ($row = pg_fetch_assoc($r)): ?>
                         <div class="fasilitas-card">
@@ -164,13 +166,17 @@ function getFasilitas($conn, $jenis) {
                         </div>
                     <?php endwhile; ?>
                 </div>
-            <button class="slide-btn right" onclick="slideRight('non')">&#10095;</button>
+            <button class="slide-btn right" onclick="slideRight('akad')">
+                <i class="bi bi-chevron-right"></i>
+            </button>
         </div>
         <hr class="my-5">
 
         <h3>FASILITAS ADMINISTRASI</h3>
         <div class="fasilitas-slider">
-            <button class="slide-btn left" onclick="slideLeft('adm')">&#10094;</button>
+            <button class="slide-btn left" onclick="slideLeft('akad')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
                 <div class="fasilitas-track" id="track-adm">
                     <?php $r = getFasilitas($conn, 3); while ($row = pg_fetch_assoc($r)): ?>
                         <div class="fasilitas-card">
@@ -180,7 +186,9 @@ function getFasilitas($conn, $jenis) {
                         </div>
                     <?php endwhile; ?>
                 </div>
-            <button class="slide-btn right" onclick="slideRight('adm')">&#10095;</button>
+            <button class="slide-btn right" onclick="slideRight('akad')">
+                <i class="bi bi-chevron-right"></i>
+            </button>   
         </div>
     </div>
 
