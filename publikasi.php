@@ -98,8 +98,24 @@
       .side-left { width: 260px; }
       .content-right { flex: 1; }
       .card-rounded { border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
-      .dosen-avatar-img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; }
       .back-link { display:inline-flex; align-items:center; gap:.5rem; color: #222; text-decoration:none; }
+      .dosen-info {
+          display: flex; /* Paksa Flexbox diterapkan */
+          flex-direction: row; /* Paksa elemen sejajar baris */
+          justify-content: flex-start; /* Paksa konten mulai dari kiri */
+      }
+      .dosen-avatar-container { 
+          width: 100px; 
+          height: 100px; 
+      }
+      .dosen-avatar-img { 
+          width: 100px; 
+          height: 100px; 
+          object-fit: cover; 
+          border-radius: 10px; 
+          display: block; 
+      }
+      /* ----
     </style>
 </head>
 <body>
@@ -218,7 +234,7 @@ document.addEventListener("click", function(e) {
           <h3 class="mb-3">PUBLIKASI</h3>
 
           <div class="card card-rounded mb-3 dosen-info p-3 d-flex align-items-center gap-3">
-            <div style="width:120px; text-align:center;">
+           <div class="dosen-avatar-container">
               <?php
                 // pakai foto jika tersedia, jika tidak pakai default avatar lokal
                 $foto = ($rowDosen && $rowDosen['url_foto_dosen']) ? $rowDosen['url_foto_dosen'] : $default_avatar;

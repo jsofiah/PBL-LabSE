@@ -121,6 +121,21 @@
   background: linear-gradient(180deg,#ffffff,#fbfbfb);
   padding: 18px;
 }
+/* Kontainer Gambar Dosen */
+.dosen-avatar-container {
+    width: 100px; /* Lebar yang sama dengan gambar */
+    height: 100px; /* Tinggi yang sama dengan gambar */
+    /* Menghilangkan text-align:center dari elemen induk sebelumnya */
+}
+
+/* Gambar Dosen */
+.dosen-avatar-img { 
+    width: 100px; 
+    height: 100px; 
+    object-fit: cover; 
+    border-radius: 10px; 
+    display: block; /* Pastikan gambar sebagai block agar tidak ada spasi di bawahnya */
+}
 
 /* Publikasi card */
 .content-box {
@@ -274,3 +289,17 @@ header, .hero-wrapper, main, section {
     height: 30px;
     object-fit: contain;
 }
+
+.dosen-info .dosen-avatar-container {
+  width: 100px;
+  height: 100px;
+}
+
+.dosen-info .dosen-avatar-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
