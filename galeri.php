@@ -38,19 +38,6 @@ $qLogo = "SELECT * FROM vw_logo_cta";
 $rLogo = pg_query($conn, $qLogo);
 $rowLogo = pg_fetch_assoc($rLogo);
 
-$qStats = "SELECT * FROM get_statistik()";
-$rStats = pg_query($conn, $qStats);
-$rowStats = pg_fetch_assoc($rStats);
-
-$qVisi = "SELECT * FROM vw_visi_lab";
-$rVisi = pg_query($conn, $qVisi);
-$rowVisi = pg_fetch_assoc($rVisi);
-
-$qMisi = "SELECT * FROM vw_misi_lab";
-$rMisi = pg_query($conn, $qMisi);
-$rowMisi = pg_fetch_assoc($rMisi);
-
-
 $limit = 14;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $start = ($page > 1) ? ($page * $limit) - $limit : 0;
