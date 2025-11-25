@@ -38,11 +38,11 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-    $qDeskripsi = "SELECT * FROM vw_deskripsi_seGeeks";
-    $rDeskripsi = pg_query($conn, $qDeskripsi);
-    $rowDeskripsi = pg_fetch_assoc($rDeskripsi);
+    $qSejarah = "SELECT * FROM vw_konten_lab where judul_konten = 'Sejarah Laboratorium'";
+    $rSejarah = pg_query($conn, $qSejarah);
+    $rowSejarah = pg_fetch_assoc($rSejarah);
 
-    $qRiset = "SELECT * FROM vw_fokus_riset";
+    $qRiset = "SELECT * FROM vw_konten_lab where judul_konten = 'Fokus Riset'";
     $rRiset = pg_query($conn, $qRiset);
 
     $qPeran = "SELECT * FROM vw_peran_lab";
@@ -147,7 +147,7 @@
 
         <div class="text-content">
             <h2>SEJARAH</h2>
-            <p><?php echo htmlspecialchars($rowDeskripsi['isi_segeeks']); ?></p>
+            <p><?php echo htmlspecialchars($rowSejarah['isi_konten']); ?></p>
         </div>
     </div>
 
@@ -160,7 +160,7 @@
             <div class="riset-items">
                 <?php while ($rowRiset = pg_fetch_assoc($rRiset)): ?>
                     <div class="riset-item">
-                        <?php echo htmlspecialchars($rowRiset['nama_fokus']); ?>
+                        <?php echo htmlspecialchars($rowRiset['isi_konten']); ?>
                     </div>
                 <?php endwhile; ?>
             </div>

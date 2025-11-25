@@ -42,17 +42,17 @@
     $rStats = pg_query($conn, $qStats);
     $rowStats = pg_fetch_assoc($rStats);
 
-    $qVisi = "SELECT * FROM vw_visi_lab";
+    $qVisi = "SELECT * FROM vw_konten_lab where judul_konten = 'Visi Lab'";
     $rVisi = pg_query($conn, $qVisi);
     $rowVisi = pg_fetch_assoc($rVisi);
 
-    $qMisi = "SELECT * FROM vw_misi_lab";
+    $qMisi = "SELECT * FROM vw_konten_lab where judul_konten = 'Misi Lab'";
     $rMisi = pg_query($conn, $qMisi);
 
     $qMitra = "SELECT * FROM vw_mitra";
     $rMitra = pg_query($conn, $qMitra);
 
-    $qSeGeeks = "SELECT * FROM deskripsi_segeeks";
+    $qSeGeeks = "SELECT * FROM vw_konten_lab where judul_konten = 'Deskripsi SE Geeks'";
     $rSeGeeks = pg_query($conn, $qSeGeeks);
     $rowSeGeeks = pg_fetch_assoc($rSeGeeks);
 
@@ -179,7 +179,7 @@
             <div class="col-md-5 mb-4">
                 <h2 class="text-center fw-bold mb-4">VISI</h2>
                 <div class="visi-card bg-white shadow p-3 rounded pt-4">
-                    <p><?php echo htmlspecialchars($rowVisi['isi_visi']); ?></p>
+                    <p><?php echo htmlspecialchars($rowVisi['isi_konten']); ?></p>
                 </div>
             </div>
 
@@ -187,7 +187,7 @@
                 <h2 class="text-center fw-bold mb-4">MISI</h2>
                 <?php while ($rowMisi = pg_fetch_assoc($rMisi)): ?>
                     <div class="misi-item">
-                        <?php echo htmlspecialchars($rowMisi['isi_misi']); ?>
+                        <?php echo htmlspecialchars($rowMisi['isi_konten']); ?>
                     </div>
                 <?php endwhile; ?>
             </div>
@@ -215,7 +215,7 @@
                 <div class="col-lg-6 mb-4 mb-lg-0">
                     <h2 class="fw-bold mb-5">SE GEEKS</h2>
                     <p class="text-justify" style="line-height: 1.8; text-align: justify;">
-                        <?php echo htmlspecialchars($rowSeGeeks['isi_segeeks']); ?>
+                        <?php echo htmlspecialchars($rowSeGeeks['isi_konten']); ?>
                     </p>
                 </div>
                 <div class="col-lg-6">
