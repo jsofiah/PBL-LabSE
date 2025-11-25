@@ -217,3 +217,60 @@ header, .hero-wrapper, main, section {
     max-height: 250px;
     overflow-y: auto;
 }
+
+/* Styling Baru untuk Elemen Publikasi */
+.publikasi-item {
+  position: relative; 
+  padding: 10px 6px;
+  border-bottom: 1px dashed #f0f0f0;
+  padding-left: 105px;
+  overflow: hidden; 
+}
+
+.publikasi-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px; 
+    height: 100%;
+    background: linear-gradient(to right, #ffe084, #ffffff); 
+    border-radius: 8px 0 0 8px; 
+    z-index: 0; 
+}
+
+.publikasi-item > div {
+    position: relative; 
+    z-index: 1;
+}
+
+/* Update list-unstyled publikasi-list */
+.publikasi-list {
+    padding-left: 0; 
+}
+
+/* Styling Ikon Buku */
+.publikasi-icon-wrapper {
+    position: absolute;
+    top: 50px; 
+    left: -60px;
+    transform: translate(-50%, -50%); 
+    
+    /* Box putih di sekitar ikon */
+    width: 45px; 
+    height: 45px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2; 
+}
+
+.publikasi-icon-img {
+    width: 30px; 
+    height: 30px;
+    object-fit: contain;
+}

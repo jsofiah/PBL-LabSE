@@ -253,6 +253,9 @@ document.addEventListener("click", function(e) {
                 <ul class="list-unstyled publikasi-list mb-0">
                   <?php foreach ($items as $it): ?>
                     <li class="publikasi-item mb-3">
+                      <div class="publikasi-icon-wrapper">
+                            <img src="img/publikasi/bukulogo.png" alt="Ikon Buku Jurnal" class="publikasi-icon-img">
+                        </div>
                       <div class="publikasi-title">
                         <?php echo htmlspecialchars($it['judul_publikasi']); ?>
                         <span style="color:#6c757d;font-size:.85rem;font-weight:600;margin-left:8px;">
