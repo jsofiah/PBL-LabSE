@@ -85,17 +85,32 @@ h3 {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    gap: 25px;
-    padding: 10px 5px;
+    gap: 20px;
+    padding: 10px 5px 20px 5px;
+    width: 100%;
+    scrollbar-width: thin; 
+    scrollbar-color: #c1c1c1 #f0f0f0;
 }
 
 .fasilitas-track::-webkit-scrollbar {
-    height: 10px;
+    height: 8px;
+    display: block;
+}
+
+.fasilitas-track::-webkit-scrollbar-track {
+    background: #f0f0f0; 
+    border-radius: 10px;
+    margin: 0px 20px;
 }
 
 .fasilitas-track::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background-color: #c1c1c1;
     border-radius: 10px;
+    border: 2px solid #f0f0f0;
+}
+
+.fasilitas-track::-webkit-scrollbar-thumb:hover {
+    background-color: #a0a0a0;
 }
 
 /* ------------------------------------------
@@ -141,18 +156,18 @@ h3 {
 .slide-btn {
     background: none;
     border: none;
-    font-size: 35px;
-    padding: 0 10px;
+    font-size: 40px;
     cursor: pointer;
-    color: #222;
+    color: #000;
+    font-weight: bold;
+    padding: 0 15px;
+    z-index: 2;
+    transition: color 0.3s;
 }
 
 .slide-btn:hover {
-    color: #000;
+    color: #233d86;
 }
-
-.slide-btn.left { margin-right: 5px; }
-.slide-btn.right { margin-left: 5px; }
 
 /* ------------------------------------------
    RESPONSIVE MODE

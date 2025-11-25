@@ -132,18 +132,24 @@ function getFasilitas($conn, $jenis) {
         <h2 class="fw-bold text-center mb-5">SARANA DAN PRASARANA PENDUKUNG</h2>
         <h3>FASILITAS AKADEMIK</h3>
         <div class="fasilitas-slider">
-            <button class="slide-btn left" onclick="slideLeft('akad')">&#10094;</button>
-                <div class="fasilitas-track" id="track-akad">
-                    <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
-                        <div class="fasilitas-card">
-                            <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
-                            <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
-                            <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-            <button class="slide-btn right" onclick="slideRight('akad')">&#10095;</button>
-        </div>
+    <button class="slide-btn left" onclick="slideLeft('akad')">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    
+    <div class="fasilitas-track" id="track-akad">
+        <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
+            <div class="fasilitas-card">
+                <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
+                <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
+                <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
+            </div>
+        <?php endwhile; ?>
+    </div>
+
+    <button class="slide-btn right" onclick="slideRight('akad')">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+</div>
         <hr class="my-5">
 
         <h3>FASILITAS NON AKADEMIK</h3>
