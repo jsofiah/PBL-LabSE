@@ -105,20 +105,9 @@ function getSertifikasi($conn, $id_dosen) {
     return fetch_all($conn, $sql, [$id_dosen]) ?: [];
 }
 
-function getPenelitian($conn, $id_dosen) {
-    $sql = "
-        SELECT judul_penelitian, tahun, abstrak
-        FROM penelitian
-        WHERE id_dosen = $1
-        ORDER BY tahun DESC NULLS LAST
-    ";
-    return fetch_all($conn, $sql, [$id_dosen]) ?: [];
-}
-
 $keahlian    = getKeahlian($conn, $id);
 $pendidikan  = getPendidikan($conn, $id);
 $sertifikasi = getSertifikasi($conn, $id);
-$penelitian  = getPenelitian($conn, $id);
 
 /* ========== Helper escape ========= */
 function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
@@ -237,21 +226,35 @@ function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
                 <!-- CARD PROFIL -->
                 <div class="profil-card mb-4">
                     <div class="d-flex">
-                        <img class="profil-img me-4" src="<?= h($profil['url_foto_dosen'] ?: 'img/avatar-placeholder.png') ?>" alt="<?= h($profil['nama_dosen']) ?>">
-                        <div>
+
+                        <!-- FOTO DOSEN (KOTAK + ROUNDED 25PX) -->
+                        <div class="profil-img-wrapper me-4">
+                            <img class="profil-img"
+                                src="<?= h($profil['url_foto_dosen'] ?: 'img/avatar-placeholder.png') ?>"
+                                alt="<?= h($profil['nama_dosen']) ?>">
+                        </div>
+
+                        <!-- TEKS PROFIL -->
+                        <div class="profil-text">
                             <?php if (!empty($profil['program_studi'])): ?>
-                                <div class="text-muted" style="font-weight:600; color:#133A94;"><?= h($profil['program_studi']) ?></div>
+                                <div class="text-muted" style="font-weight:600; color:#133A94;">
+                                    <?= h($profil['program_studi']) ?>
+                                </div>
                             <?php endif; ?>
+
                             <h4 class="mt-1"><?= h($profil['nama_dosen']) ?></h4>
+
                             <?php if (!empty($profil['email_dosen'])): ?>
-                                <p class="mb-1"><?= h($profil['email_dosen']) ?></p>
+                                <p><?= h($profil['email_dosen']) ?></p>
                             <?php endif; ?>
+
                             <?php if (!empty($profil['jabatan_lab'])): ?>
-                                <p class="mb-0"><strong>Jabatan Lab:</strong> <?= h($profil['jabatan_lab']) ?></p>
+                                <p><strong>Jabatan Lab:</strong> <?= h($profil['jabatan_lab']) ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- KEAHLIAN -->
                 <div class="section-card">
@@ -313,25 +316,6 @@ function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
                         <p class="text-muted mb-0">Belum ada data sertifikasi.</p>
                     <?php endif; ?>
                 </div>
-
-                <!-- (Optional) PENELITIAN -->
-                <div class="section-card mt-4">
-                    <h5>Penelitian</h5>
-                    <?php if (!empty($penelitian)): ?>
-                        <ul>
-                            <?php foreach ($penelitian as $pen): ?>
-                                <li><strong><?= h($pen['judul_penelitian']) ?></strong> <?= $pen['tahun'] ? '(' . h($pen['tahun']) . ')' : '' ?>
-                                    <?php if (!empty($pen['abstrak'])): ?>
-                                        <div class="text-muted small mt-1"><?= h($pen['abstrak']) ?></div>
-                                    <?php endif; ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p class="text-muted mb-0">Belum ada data penelitian.</p>
-                    <?php endif; ?>
-                </div>
-
             </div>
         </div>
     </div>

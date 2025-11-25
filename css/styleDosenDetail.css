@@ -58,10 +58,12 @@ body {
 .side-menu {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    position: sticky;
-    top: 120px;
-}
+    gap: 12px;
+    position: fixed;
+    top: 425px;        /* sesuaikan agar tidak menabrak navbar */
+    left: 90px;
+    width: 200px;
+    }
 
 .side-menu button {
     width: 100%;
@@ -91,22 +93,35 @@ body {
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-.profil-img {
-    width: 145px;
-    height: 145px;
-    border-radius: 50%;
-    object-fit: cover;
+/* WRAPPER FOTO PROFIL */
+.profil-img-wrapper {
+    width: 150px;            
+    height: 190px;           
+    border-radius: 15px;     
+    overflow: hidden;          
     background: #dcdcdc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* FOTO DOSEN */
+.profil-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;         
+    object-position: center;   
+    display: block;
 }
 
 /* Nama dosen */
 .profil-card h4 {
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
 }
 
 .profil-card p {
-    margin: 1px 0;
+    margin: 7px 0;
     color: #444;
 }
 
@@ -155,6 +170,26 @@ body {
 
 .section-card table td {
     background: #fff;
+}
+
+.section-card table th:nth-child(2),
+.section-card table td:nth-child(2) {
+    width: 300px;          /* Kolom Perguruan Tinggi */
+}
+
+.section-card table th:nth-child(3),
+.section-card table td:nth-child(3) {
+    width: 250px;          /* Kolom Bidang Studi */
+}
+
+.section-card table th:nth-child(4),
+.section-card table td:nth-child(4) {
+    width: 170px;          /* Kolom Gelar */
+}
+
+.section-card table th:nth-child(5),
+.section-card table td:nth-child(5) {
+    width: 170px;          /* Kolom Tahun Ijazah */
 }
 
 /* RESPONSIVE MODE */
