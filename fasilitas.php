@@ -1,58 +1,54 @@
 <?php
-require 'config.php';
+    require 'config.php';
 
-/* LOAD NAVBAR DATA */
-$qNav = "SELECT * FROM vw_nav";
-$rNav = pg_query($conn, $qNav);
+    $qNav = "SELECT * FROM vw_nav";
+    $rNav = pg_query($conn, $qNav);
 
-$navItems = [];
-while ($rowNav = pg_fetch_assoc($rNav)) {
-    $id_nav = $rowNav['id_nav'];
+    $navItems = [];
+    while ($rowNav = pg_fetch_assoc($rNav)) {
+        $id_nav = $rowNav['id_nav'];
 
-    if (!isset($navItems[$id_nav])) {
-        $navItems[$id_nav] = [
-            'nama_nav' => $rowNav['nama_nav'],
-            'url_nav'  => $rowNav['url_nav'],
-            'subnav'   => []
+        if (!isset($navItems[$id_nav])) {
+            $navItems[$id_nav] = [
+                'nama_nav' => $rowNav['nama_nav'],
+                'url_nav'  => $rowNav['url_nav'],
+                'subnav'   => []
+            ];
+        }
+
+        if ($rowNav['id_subnav']) {
+            $navItems[$id_nav]['subnav'][] = [
+                'nama_subnav' => $rowNav['nama_subnav'],
+                'url_subnav'  => $rowNav['url_subnav']
+            ];
+        }
+    }
+
+    $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
+    $rDosen = pg_query($conn, $qDosen);
+
+    while ($d = pg_fetch_assoc($rDosen)) {
+        $url = "dosen_detail.php?id=" . $d['id_dosen'];
+        $navItems[3]['subnav'][] = [
+            'nama_subnav' => $d['nama_dosen'],
+            'url_subnav'  => $url
         ];
     }
 
-    if ($rowNav['id_subnav']) {
-        $navItems[$id_nav]['subnav'][] = [
-            'nama_subnav' => $rowNav['nama_subnav'],
-            'url_subnav'  => $rowNav['url_subnav']
-        ];
+    $qLogo = "SELECT * FROM vw_logo_cta";
+    $rLogo = pg_query($conn, $qLogo);
+    $rowLogo = pg_fetch_assoc($rLogo);
+
+
+    function getFasilitas($conn, $jenis) {
+        $jenis = intval($jenis);
+        return pg_query($conn, "
+            SELECT *
+            FROM vw_fasilitas_lengkap 
+            WHERE id_jenisfasilitas = $jenis 
+            ORDER BY id_fasilitas
+        ");
     }
-}
-
-/* LOAD DOSEN KE SUBNAV (NAV 3) */
-$qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
-$rDosen = pg_query($conn, $qDosen);
-
-while ($d = pg_fetch_assoc($rDosen)) {
-    $url = "dosen_detail.php?id=" . $d['id_dosen'];
-    $navItems[3]['subnav'][] = [
-        'nama_subnav' => $d['nama_dosen'],
-        'url_subnav'  => $url
-    ];
-}
-
-/* LOAD LOGO & CTA */
-$qLogo = "SELECT * FROM vw_logo_cta";
-$rLogo = pg_query($conn, $qLogo);
-$rowLogo = pg_fetch_assoc($rLogo);
-
-/* FUNCTION - GET FASILITAS */
-
-function getFasilitas($conn, $jenis) {
-    $jenis = intval($jenis);
-    return pg_query($conn, "
-        SELECT *
-        FROM vw_fasilitas_lengkap 
-        WHERE id_jenisfasilitas = $jenis 
-        ORDER BY id_fasilitas
-    ");
-}
 ?>
 
 <!DOCTYPE html>

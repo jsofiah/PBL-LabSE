@@ -1,7 +1,6 @@
 <?php
     require 'config.php';
 
-    // QUERY NAV JGN DIHAPUS
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
@@ -39,12 +38,11 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-    //QUERY VISI MISI
-    $qVisi = "SELECT * FROM vw_visi_lab";
+    $qVisi = "SELECT * FROM vw_konten_lab where judul_konten = 'Visi Lab'";
     $rVisi = pg_query($conn, $qVisi);
     $rowVisi = pg_fetch_assoc($rVisi);
 
-    $qMisi = "SELECT * FROM vw_misi_lab";
+    $qMisi = "SELECT * FROM vw_konten_lab where judul_konten = 'Misi Lab'";
     $rMisi = pg_query($conn, $qMisi);
 ?>
 <!DOCTYPE html>
@@ -64,7 +62,6 @@
     <link rel="stylesheet" href="css/styleFooter.css">
 </head>
 <body>
-    <!-- BAGIAN NAV -->
     <div class="logo">
         <?php if ($rowLogo): ?>
             <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
@@ -123,47 +120,44 @@
             </div>
         </div>
     </div>
-    
-    <!-- BAGIAN VISI MISI -->
+
     <div class="container py-3">
-    
-    <div class="row justify-content-center mb-4">
-        <div class="col-auto">
-            <h2 class="fw-bold">VISI</h2>
+        
+        <div class="row justify-content-center mb-4">
+            <div class="col-auto">
+                <h2 class="fw-bold">VISI</h2>
+            </div>
         </div>
-    </div>
-    
-    <div class="row align-items-center mb-5 gy-4">
-        <div class="col-md-6">
-            <img src="img/visi.jpg" alt="Visi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
+        
+        <div class="row align-items-center mb-5 gy-4">
+            <div class="col-md-6">
+                <img src="img/visi.jpg" alt="Visi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
+            </div>
+            <div class="col-md-6">
+                <p><?php echo htmlspecialchars($rowVisi['isi_konten']); ?></p>
+            </div>
         </div>
-        <div class="col-md-6">
-            <p><?php echo htmlspecialchars($rowVisi['isi_visi']); ?></p>
+
+        <div class="row justify-content-center mb-4 mt-5">
+            <div class="col-auto">
+                <h2 class="fw-bold">MISI</h2>
+            </div>
+        </div>
+
+        <div class="row align-items-center gy-4 mb-5">
+            <div class="col-md-6">
+                <?php while ($rowMisi = pg_fetch_assoc($rMisi)): ?>
+                    <div class="misi-item">
+                        <?php echo htmlspecialchars($rowMisi['isi_konten']); ?>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+            <div class="col-md-6">
+                <img src="img/misi.jpg" alt="Misi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
+            </div>
         </div>
     </div>
 
-    <div class="row justify-content-center mb-4 mt-5">
-        <div class="col-auto">
-            <h2 class="fw-bold">MISI</h2>
-        </div>
-    </div>
-
-    <div class="row align-items-center gy-4">
-        <div class="col-md-6">
-            <?php while ($rowMisi = pg_fetch_assoc($rMisi)): ?>
-                <div class="misi-item">
-                    <?php echo htmlspecialchars($rowMisi['isi_misi']); ?>
-                </div>
-            <?php endwhile; ?>
-        </div>
-        <div class="col-md-6">
-            <img src="img/misi.jpg" alt="Misi Lab SE" class="img-fluid rounded shadow-sm visi-misi-gambar">
-        </div>
-    </div>
-
-</div>
-
-    <!-- JS FOOTER DROPDOWN -->
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
 

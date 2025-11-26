@@ -56,9 +56,6 @@
     letter-spacing: -1px;
 }
 
-/* ------------------------------------------
-   SECTION TITLE
--------------------------------------------*/
 .container h2 {
     font-weight: 700;
     color: #000;
@@ -68,9 +65,6 @@ h3 {
     font-weight: 600;
 }
 
-/* ------------------------------------------
-   FASILITAS SLIDER WRAPPER
--------------------------------------------*/
 .fasilitas-slider {
     position: relative;
     display: flex;
@@ -78,9 +72,6 @@ h3 {
     margin: 30px 0;
 }
 
-/* ------------------------------------------
-   SLIDER TRACK
--------------------------------------------*/
 .fasilitas-track {
     display: flex;
     overflow-x: auto;
@@ -113,9 +104,6 @@ h3 {
     background-color: #a0a0a0;
 }
 
-/* ------------------------------------------
-   FASILITAS CARD
--------------------------------------------*/
 .fasilitas-card {
     width: 300px;
     min-width: 300px;
@@ -150,9 +138,6 @@ h3 {
     color: #555;
 }
 
-/* ------------------------------------------
-   SLIDE BUTTONS
--------------------------------------------*/
 .slide-btn {
     background: none;
     border: none;
@@ -169,9 +154,6 @@ h3 {
     color: #233d86;
 }
 
-/* ------------------------------------------
-   RESPONSIVE MODE
--------------------------------------------*/
 @media (max-width: 992px) {
     .hero-title {
         font-size: 45px;
