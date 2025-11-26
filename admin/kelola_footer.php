@@ -24,7 +24,7 @@
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
-    <div class="content-area container-fluid px-3">
+    <div class="content-area container">
         <div class="mb-4">
             <h2 class="mb-2">Kelola Footer</h2>
             <a href="tambah_footer.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Footer</a>
