@@ -5,22 +5,22 @@
     $rNav = pg_query($conn, $qNav);
 
     $navItems = [];
-    while ($rowNav = pg_fetch_assoc($rNav)) {
-        $id_nav = $rowNav['id_nav'];
-
-        if (!isset($navItems[$id_nav])) {
-            $navItems[$id_nav] = [
-                'nama_nav' => $rowNav['nama_nav'],
-                'url_nav'  => $rowNav['url_nav'],
-                'subnav'   => []
-            ];
-        }
-
-        if ($rowNav['id_subnav']) {
-            $navItems[$id_nav]['subnav'][] = [
-                'nama_subnav' => $rowNav['nama_subnav'],
-                'url_subnav'  => $rowNav['url_subnav']
-            ];
+    if ($rNav) {
+        while ($rowNav = pg_fetch_assoc($rNav)) {
+            $id_nav = $rowNav['id_nav'];
+            if (!isset($navItems[$id_nav])) {
+                $navItems[$id_nav] = [
+                    'nama_nav' => $rowNav['nama_nav'],
+                    'url_nav'  => $rowNav['url_nav'],
+                    'subnav'   => []
+                ];
+            }
+            if (!empty($rowNav['id_subnav'])) {
+                $navItems[$id_nav]['subnav'][] = [
+                    'nama_subnav' => $rowNav['nama_subnav'],
+                    'url_subnav'  => $rowNav['url_subnav']
+                ];
+            }
         }
     }
 
@@ -79,7 +79,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleDosenPenelitian.css">
@@ -97,27 +97,19 @@
     <nav>
         <ul id="nav-list" class="nav-collapse">
             <?php foreach ($navItems as $nav): ?>
-                <?php if (count($nav['subnav']) > 0): ?>
+                <?php if (!empty($nav['subnav'])): ?>
                     <li class="dropdown">
-                        <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?> <i class="bi bi-chevron-down"></i>
-                        </a>
+                        <a href="<?= h($nav['url_nav']) ?>" class="dropbtn"><?= h($nav['nama_nav']) ?> <i class="bi bi-chevron-down"></i></a>
                         <div class="dropdown-content">
-                            <div class="dropdown-scroll overflow-auto" style="max-height:250px;">
+                            <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
                                 <?php foreach ($nav['subnav'] as $sub): ?>
-                                    <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
-                                        <?php echo htmlspecialchars($sub['nama_subnav']); ?>
-                                    </a>
+                                    <a href="<?= h($sub['url_subnav']) ?>"><?= h($sub['nama_subnav']) ?></a>
                                 <?php endforeach; ?>
                             </div>
                         </div>
                     </li>
                 <?php else: ?>
-                    <li>
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                        </a>
-                    </li>
+                    <li><a href="<?= h($nav['url_nav']) ?>"><?= h($nav['nama_nav']) ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -208,10 +200,11 @@
         </div>
     </div>
 
-
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dropdown.js"></script>
 </body>
 </html>
 

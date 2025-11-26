@@ -1,5 +1,6 @@
 <?php
     require 'config.php';
+
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
@@ -22,22 +23,20 @@
             }
         }
     }
-
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
-        $rDosen = pg_query($conn, $qDosen);
+    $rDosen = pg_query($conn, $qDosen);
 
-        while ($d = pg_fetch_assoc($rDosen)) {
-            $url = "dosen_detail.php?id=" . $d['id_dosen'];
-            $navItems[3]['subnav'][] = [
-                'nama_subnav' => $d['nama_dosen'],
-                'url_subnav'  => $url
-            ];
-        }
-
+    while ($d = pg_fetch_assoc($rDosen)) {
+        $url = "dosen_detail.php?id=" . $d['id_dosen'];
+        $navItems[3]['subnav'][] = [
+            'nama_subnav' => $d['nama_dosen'],
+            'url_subnav'  => $url
+        ];
+    }
+    
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
-    $rowLogo = $rLogo ? pg_fetch_assoc($rLogo) : null;
-
+    $rowLogo = pg_fetch_assoc($rLogo);
 
     $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
     if ($id <= 0) {
@@ -57,30 +56,37 @@
     $emailDosen = $profil['email_dosen'] ?? '';
     $default_avatar = 'img/default_dosen.png';
 
-    $qKeahlian = "SELECT nama_keahlian FROM vw_dosen_keahlian WHERE id_dosen = $id ORDER BY nama_keahlian";
-    $rKeahlian = pg_query($conn, $qKeahlian);
-    $keahlian = $rKeahlian ? pg_fetch_all($rKeahlian) : [];
-
-    $qPendidikan = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC";
-    $rPendidikan = pg_query($conn, $qPendidikan);
-    $pendidikan = $rPendidikan ? pg_fetch_all($rPendidikan) : [];
-
     $qPendidikanTerakhir = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC LIMIT 1";
     $rPendidikanTerakhir = pg_query($conn, $qPendidikanTerakhir);
     $pendidikanTerakhir = pg_fetch_assoc($rPendidikanTerakhir);
 
-    $qSertifikasi = "SELECT * FROM vw_sertifikasi_dosen WHERE id_dosen = $id ORDER BY tahun_sertifikasi DESC ";
-    $rSertifikasi = pg_query($conn, $qSertifikasi);
-    $sertifikasi = $rSertifikasi ? pg_fetch_all($rSertifikasi) : [];
+    $qPublikasi = "SELECT * FROM vw_publikasi_dosen WHERE id_dosen = $id ORDER BY nama_jenispublikasi, tahun_publikasi DESC, judul_publikasi";
+    $rPublikasi = pg_query($conn, $qPublikasi);
 
-    function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+    $publikasiGroup = [];
+    if ($rPublikasi) {
+        while ($p = pg_fetch_assoc($rPublikasi)) {
+            $jenis = $p['nama_jenispublikasi'] ?: 'Lainnya';
+            $publikasiGroup[$jenis][] = $p;
+        }
+    }
+
+    $iconMap = [
+        'jurnal'   => 'fa-regular fa-newspaper',
+        'buku'     => 'fa-regular fa-bookmark',
+        'media'    => 'fa-regular fa-image',
+        'lainnya'  => 'fa-regular fa-file-lines'
+    ];
+    function h($s) {
+    return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');}
 
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="utf-8">
-    <title>Profil Dosen - <?= h($profil['nama_dosen']) ?></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Publikasi Dosen - <?= h($profil['nama_dosen']) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -89,33 +95,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
-    <link rel="stylesheet" href="css/styleDosenDetail.css">
+    <link rel="stylesheet" href="css/styleDosenPublikasi.css">
 </head>
 <body>
     <div class="logo">
         <?php if ($rowLogo): ?>
-          <img src="<?= h($rowLogo['url_logo']) ?>" class="logo-img" alt="LABSE">
+            <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
         <?php else: ?>
-            <img src="img/logo.png" class="logo-img" alt="LABSE">
+            <img src="img/logo.png" alt="LABSE" class="logo-img">
         <?php endif; ?>
     </div>
 
     <nav>
         <ul id="nav-list" class="nav-collapse">
             <?php foreach ($navItems as $nav): ?>
-                <?php if (!empty($nav['subnav'])): ?>
+                <?php if (count($nav['subnav']) > 0): ?>
                     <li class="dropdown">
-                        <a href="<?= h($nav['url_nav']) ?>" class="dropbtn"><?= h($nav['nama_nav']) ?> <i class="bi bi-chevron-down"></i></a>
+                        <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                            <i class="bi bi-chevron-down"></i>
+                        </a>
+
                         <div class="dropdown-content">
                             <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
                                 <?php foreach ($nav['subnav'] as $sub): ?>
-                                    <a href="<?= h($sub['url_subnav']) ?>"><?= h($sub['nama_subnav']) ?></a>
+                                    <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
+                                        <?php echo htmlspecialchars($sub['nama_subnav']); ?>
+                                    </a>
                                 <?php endforeach; ?>
                             </div>
                         </div>
+
                     </li>
                 <?php else: ?>
-                    <li><a href="<?= h($nav['url_nav']) ?>"><?= h($nav['nama_nav']) ?></a></li>
+                    <li>
+                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                        </a>
+                    </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -130,26 +147,27 @@
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/gedung_lab.png" alt="Dosen Background">
+                <img src="img/bgpublikasi.jpg" alt="Publikasi Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                <h1 class="hero-title">PROFIL DOSEN</h1>
+                    <h1 class="hero-title">PUBLIKASI</h1>
+                </div>
             </div>
         </div>
-        <div class="container my-5" style="margin-left: 0px; padding-left: 0px; margin-right: 0px; padding-right: 0px;">
+        <div class="container my-3" style="margin-left: 0px; padding-left: 0px; margin-right: 0px; padding-right: 0px;">
             <div class="row" style="width: 1350px;">
                 <div class="sidebar-wrapper">
-                    <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-menu active">Profil</a>
+                    <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-menu">Profil</a>
                     <a href="dosen_penelitian.php?id=<?php echo $id; ?>" class="btn-menu">Penelitian</a>
-                    <a href="dosen_publikasi.php?id=<?php echo $id; ?>" class="btn-menu">Publikasi</a>
+                    <a href="dosen_publikasi.php?id=<?php echo $id; ?>" class="btn-menu active">Publikasi</a>
                 </div>
-    
+            
                 <div class="col-lg-9">
                     <div class="d-flex align-items-center mb-4">
                         <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-back me-3"><i class="bi bi-arrow-left"></i></a>
-                        <h2 class="fw-bold mb-0">PROFIL DOSEN</h2>
+                        <h2 class="fw-bold mb-0">PUBLIKASI</h2>
                     </div>
-    
+        
                     <div class="profil-card mb-4">
                         <div class="d-flex">
                             <div class="profil-img-wrapper me-4">
@@ -177,64 +195,47 @@
                             </div>
                         </div>
                     </div>
-    
-                    <div class="section-card">
-                        <h5>Bidang Keahlian</h5>
-                        <?php if (!empty($keahlian)): ?>
-                            <ul>
-                                <?php foreach ($keahlian as $k): ?>
-                                    <li><?= h($k['nama_keahlian']) ?></li>
+  
+                    <?php if (empty($publikasiGroup)): ?>
+                        <div class="card card-rounded p-3">
+                            Tidak ada publikasi untuk dosen ini.
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($publikasiGroup as $jenis => $items): ?>
+                            <div class="section-card">
+                                <div class="publikasi-header my-3">
+                                    <?= h(ucwords(strtolower($jenis))) ?>
+                                </div>
+                                <ul class="list-unstyled publikasi-list mb-0">
+                                    <?php 
+                                        $jenisKey = strtolower($jenis);
+                                        $iconClass = $iconMap[$jenisKey] ?? 'fa-regular fa-file-lines';
+                                    ?>
+                                    <?php foreach ($items as $it): ?>
+                                    <div class="publikasi-card">
+                                        
+                                        <div class="publikasi-icon-box">
+                                            <i class="<?= $iconClass ?>"></i>
+                                        </div>
+
+                                        <div class="publikasi-content">
+                                            <div class="publikasi-title">
+                                                <?= h($it['judul_publikasi']) ?>
+                                            </div>
+
+                                            <div class="publikasi-meta">
+                                                Ketua Publikasi : <?= h($it['nama_dosen']) ?><br>
+                                                Tahun : <?= h($it['tahun_publikasi']) ?>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <p class="text-muted">Belum ada data keahlian.</p>
-                        <?php endif; ?>
-                    </div>
-    
-                    <div class="section-card mt-4">
-                        <h5>Riwayat Pendidikan</h5>
-                        <?php if (!empty($pendidikan)): ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:60px">No</th>
-                                            <th>Perguruan Tinggi</th>
-                                            <th>Bidang Studi</th>
-                                            <th>Gelar</th>
-                                            <th style="width:120px">Tahun Ijazah</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no=1; foreach ($pendidikan as $p): ?>
-                                            <tr>
-                                                <td><?= $no++ ?></td>
-                                                <td><?= h($p['universitas']) ?></td>
-                                                <td><?= h($p['bidang_studi']) ?></td>
-                                                <td><?= h($p['gelar']) ?></td>
-                                                <td><?= h($p['tahun_lulus']) ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+
+                                </ul>
                             </div>
-                        <?php else: ?>
-                            <p class="text-muted mb-0">Belum ada data riwayat pendidikan.</p>
-                        <?php endif; ?>
-                    </div>
-    
-                    <div class="section-card mt-4">
-                        <h5>Sertifikasi</h5>
-                        <?php if (!empty($sertifikasi)): ?>
-                            <ul>
-                                <?php foreach ($sertifikasi as $s): ?>
-                                    <li><?= h($s['nama_sertifikasi']) ?> – <?= h($s['penyelenggara']) ?> (<?= h($s['tahun_sertifikasi']) ?>)</li>
-                                <?php endforeach; ?>
-                            </ul>
-                        <?php else: ?>
-                            <p class="text-muted mb-0">Belum ada data sertifikasi.</p>
-                        <?php endif; ?>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -242,7 +243,6 @@
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
 </body>

@@ -1,0 +1,325 @@
+.hero-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+.hero-container {
+    padding: 2rem;
+    border-radius: 25px;
+}
+
+.hero-frame {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.hero-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.35));
+}
+
+.hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-title {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+}
+
+.sidebar-wrapper {
+    width: 220px;
+    margin-left: 40px;
+    flex: 0 0 220px;
+}
+
+.text-primary{
+    color: #1a237e !important;
+}
+
+.btn-menu {
+    padding: 9px 18px;
+    border-radius: 30px;
+    border: 1px solid #1a237e;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    color: #1a237e;
+    font-size: 1.1rem;
+    background: white;
+    margin-bottom: 1px;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+.btn-menu.active {
+    background: #1a237e;
+    color: white;
+}
+
+.btn-back {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    font-size: 1.2rem;
+    color: #333;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.profil-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.profil-img-wrapper {
+    width: 150px;
+    height: 190px;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #dcdcdc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profil-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.profil-card h4 {
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.profil-card p {
+    margin: 7px 0;
+    color: #444;
+}
+
+.profil-label {
+    font-weight: 700;
+    color: #222;
+}
+
+.col-lg-9 {
+    flex: 0 0 auto;
+    width: 80% !important;
+    margin-right: 0;
+}
+
+.publikasi-header {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f1f1f1;
+    padding-bottom: 8px;
+}
+
+.publikasi-card {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    margin-bottom: 18px;
+    background: linear-gradient(90deg, #f8db84 0px, #fff7c2 50px, white 200px, white 100%);
+    border: none;
+    transition: 0.3s;
+    padding: 20px;
+}
+
+.publikasi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    background: linear-gradient(90deg, #ffd54f 0px, #fff2a8 50px, white 200px, white 100%);
+}
+
+.publikasi-icon-wrapper {
+    width: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0;
+    margin-left: 10px;
+}
+
+/* Icon box - sama seperti research */
+.publikasi-icon-box {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #1a237e;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.publikasi-icon-box i {
+    font-size: 1.8rem;
+    color: #1a237e;
+}
+
+/* Content area */
+.publikasi-content {
+    flex: 1;
+    padding: 24px 26px;
+}
+
+.publikasi-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 5px;
+}
+
+.publikasi-meta {
+    font-size: .88rem;
+    color: #555;
+}
+
+.publikasi-authors {
+    font-size: .88rem;
+    color: #555;
+}
+
+@media (min-width: 768px) {
+    .sidebar-wrapper {
+        width: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-menu {
+        width: 100%;
+    }
+
+    .profil-card,
+    .section-card {
+        width: 100%;
+    }
+
+    .profil-card {
+        text-align: left;
+    }
+
+    .profil-card .d-flex {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 767px) {
+    .sidebar-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-back{
+        margin-left: 40px;
+    }
+
+    .btn-menu {
+        flex: 1;
+        text-align: center;
+        padding: 9px 18px;
+        white-space: nowrap;
+    }
+
+    .profil-card,
+    .section-card {
+        margin-left: 40px;
+        max-width: 600px;
+    }
+
+    .profil-card {
+        text-align: left;
+    }
+
+    .profil-card .d-flex {
+        flex-direction: row;
+        align-items: left;
+    }
+
+    /* Publikasi card tetap horizontal di mobile */
+    .publikasi-card {
+        padding: 15px;
+    }
+
+    .publikasi-icon-wrapper {
+        width: 80px;
+        padding: 15px 0;
+        margin-left: 5px;
+    }
+
+    .publikasi-icon-box {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .publikasi-icon-box i {
+        font-size: 1.5rem;
+    }
+
+    .publikasi-content {
+        padding: 15px 15px;
+    }
+
+    .publikasi-title {
+        font-size: 1rem;
+    }
+
+    .publikasi-meta {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 32px;
+    }
+
+    .profil-img-wrapper {
+        width: 120px;
+        height: 150px;
+    }
+}
