@@ -23,8 +23,17 @@ if (isset($_POST['submit'])) {
     $gambar = $_POST['url_gambar_mitra'];
     $isi = $_POST['isi_mitra'];
 
-    $qUpdate = "SELECT sp_update_mitra($1, $2, $3, $4, $5)";
-    $res = pg_query_params($conn, $qUpdate, [$id, $jenis, $nama, $gambar, $isi]);
+    $qUpdate = "
+        CALL sp_update_mitra(
+            $id,
+            $jenis,
+            '".pg_escape_string($nama)."',
+            '".pg_escape_string($gambar)."',
+            '".pg_escape_string($isi)."'
+        );
+    ";
+
+    $res = pg_query($conn, $qUpdate);
 
     if ($res) {
         header("Location: kelola_mitra.php?msg=updated");

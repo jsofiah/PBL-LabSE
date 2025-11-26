@@ -9,8 +9,8 @@ require_once '../config.php';
 
 $id = $_GET['id'];
 
-$qDelete = "SELECT sp_delete_mitra($1)";
-$res = pg_query_params($conn, $qDelete, [$id]);
+$qDelete = "CALL sp_delete_mitra($id)";
+$res = pg_query($conn, $qDelete);
 
 header("Location: kelola_mitra.php?msg=deleted");
 exit;

@@ -13,8 +13,16 @@ if (isset($_POST['submit'])) {
     $gambar = $_POST['url_gambar_mitra'];
     $isi = $_POST['isi_mitra'];
 
-    $qInsert = "SELECT sp_create_mitra($1, $2, $3, $4)";
-    $result = pg_query_params($conn, $qInsert, [$jenis, $nama, $gambar, $isi]);
+    $qInsert = "
+        CALL sp_create_mitra(
+            $jenis,
+            '".pg_escape_string($nama)."',
+            '".pg_escape_string($gambar)."',
+            '".pg_escape_string($isi)."'
+        );
+    ";
+
+    $result = pg_query($conn, $qInsert);
 
     if ($result) {
         header("Location: kelola_mitra.php?msg=success");
