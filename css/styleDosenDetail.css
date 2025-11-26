@@ -1,11 +1,3 @@
-/* GLOBAL & PAGE WRAPPER */
-
-body {
-    background: #f7f9fc;
-    font-family: 'Poppins', sans-serif;
-}
-
-/* HERO SECTION (HEADER FOTO GEDUNG) */
 .hero-wrapper {
     max-width: 1400px;
     margin: 0 auto;
@@ -53,38 +45,49 @@ body {
     text-shadow: 2px 2px 10px rgba(0,0,0,0.4);
 }
 
-/* SIDEBAR (Profil / Penelitian / Publikasi) */
-
-.side-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: fixed;
-    top: 425px;        /* sesuaikan agar tidak menabrak navbar */
-    left: 90px;
-    width: 200px;
-    }
-
-.side-menu button {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 12px;
-    font-size: 15px;
-    transition: .2s ease;
+.sidebar-wrapper {
+    width: 220px;
+    margin-left: 10px;
+    flex: 0 0 220px;
 }
 
-.side-menu .btn-primary {
-    background: #133A94;
-    border: none;
+.text-primary{
+    color: #1a237e !important;
+}
+
+.btn-menu {
+    padding: 9px 18px;
+    border-radius: 30px;
+    border: 1px solid #1a237e;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    color: #1a237e;
+    font-size: 1.1rem;
+    background: white;
+    transition: 0.3s;
     font-weight: 600;
 }
 
-.side-menu .btn-outline-primary {
-    border-radius: 12px;
-    border-width: 2px;
+.btn-menu.active {
+    background: #1a237e;
+    color: white;
 }
 
-/* PROFIL CARD */
+.btn-back {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    font-size: 1.2rem;
+    color: #333;
+    text-decoration: none;
+    margin-left: 5px;
+}
 
 .profil-card {
     background: white;
@@ -93,28 +96,25 @@ body {
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-/* WRAPPER FOTO PROFIL */
 .profil-img-wrapper {
-    width: 150px;            
-    height: 190px;           
-    border-radius: 15px;     
-    overflow: hidden;          
+    width: 150px;
+    height: 190px;
+    border-radius: 15px;
+    overflow: hidden;
     background: #dcdcdc;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* FOTO DOSEN */
 .profil-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;         
-    object-position: center;   
+    object-fit: cover;
+    object-position: center;
     display: block;
 }
 
-/* Nama dosen */
 .profil-card h4 {
     font-weight: 700;
     margin-bottom: 7px;
@@ -130,7 +130,18 @@ body {
     color: #222;
 }
 
-/* SECTION CARD (Keahlian / Pendidikan / Sertifikasi) */
+.back-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: none;
+    margin-right: 12px;
+}
 
 .section-card {
     background: white;
@@ -145,13 +156,10 @@ body {
     margin-bottom: 14px;
 }
 
-/* List */
 .section-card ul {
     margin-left: 18px;
     line-height: 1.6;
 }
-
-/* TABEL RIWAYAT PENDIDIKAN */
 
 .section-card table {
     border-radius: 16px;
@@ -174,54 +182,97 @@ body {
 
 .section-card table th:nth-child(2),
 .section-card table td:nth-child(2) {
-    width: 300px;          /* Kolom Perguruan Tinggi */
+    width: 300px;
 }
 
 .section-card table th:nth-child(3),
 .section-card table td:nth-child(3) {
-    width: 250px;          /* Kolom Bidang Studi */
+    width: 250px;
 }
 
 .section-card table th:nth-child(4),
 .section-card table td:nth-child(4) {
-    width: 170px;          /* Kolom Gelar */
+    width: 170px;
 }
 
 .section-card table th:nth-child(5),
 .section-card table td:nth-child(5) {
-    width: 170px;          /* Kolom Tahun Ijazah */
+    width: 170px;
 }
 
-/* RESPONSIVE MODE */
+.col-lg-9 {
+    flex: 0 0 auto;
+    width: 80% !important;
+    margin-right: 0;
+}
 
-@media (max-width: 992px) {
-    .profil-card {
-        text-align: center;
-    }
-    .profil-card .d-flex {
+@media (min-width: 768px) {
+
+    .sidebar-wrapper {
+        width: 220px;
+        display: flex;
         flex-direction: column;
-        align-items: center;
+        gap: 12px;
     }
-    .profil-img {
-        margin-bottom: 15px;
+
+    .btn-menu {
+        width: 100%;
+    }
+
+    .profil-card,
+    .section-card {
+        width: 100%;
+    }
+
+    .profil-card {
+        text-align: left;
+    }
+
+    .profil-card .d-flex {
+        flex-direction: row;
+        align-items: flex-start;
     }
 }
 
-@media (max-width: 768px) {
-    .side-menu {
+@media (max-width: 767px) {
+    .sidebar-wrapper {
+        width: 100%;
+        display: flex;
         flex-direction: row;
         justify-content: center;
+        gap: 10px;
         margin-bottom: 20px;
-        position: static;
     }
-    .side-menu button {
-        width: auto;
+
+    .btn-menu {
         flex: 1;
+        text-align: center;
+        padding: 9px 18px;
+        white-space: nowrap;
+    }
+
+    .profil-card,
+    .section-card {
+        max-width: 600px;
+    }
+
+    .profil-card {
+        text-align: left;
+    }
+
+    .profil-card .d-flex {
+        flex-direction: row;
+        align-items: left;
     }
 }
 
 @media (max-width: 576px) {
     .hero-title {
         font-size: 32px;
+    }
+
+    .profil-img-wrapper {
+        width: 120px;
+        height: 150px;
     }
 }

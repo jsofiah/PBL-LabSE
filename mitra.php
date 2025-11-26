@@ -1,7 +1,6 @@
 <?php
     require 'config.php';
 
-    // QUERY NAV JGN DIHAPUS
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
@@ -50,7 +49,6 @@
         return pg_query($conn, $q);
     }
 
-    // Ambil data untuk setiap kategori
     $mitraAkademik = getMitra($conn, 1);
     $mitraTeknologi = getMitra($conn, 2);
     $mitraIndustri = getMitra($conn, 3);
@@ -156,7 +154,7 @@
         </button>
     </div>
     
-    <hr class="section-divider">
+    <hr class="my-5">
 
     <h3>MITRA TEKNOLOGI</h3>
     <div class="mitra-slider">
@@ -179,7 +177,7 @@
         </button>
     </div>
 
-    <hr class="section-divider">
+    <hr class="my-5">
 
     <h3>MITRA INDUSTRI</h3>
     <div class="mitra-slider">

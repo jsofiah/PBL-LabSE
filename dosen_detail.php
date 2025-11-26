@@ -1,116 +1,79 @@
 <?php
-// profil_dosen.php
-require 'config.php';
+    require 'config.php';
+    $qNav = "SELECT * FROM vw_nav";
+    $rNav = pg_query($conn, $qNav);
 
-/*
-  Memuat data navbar / logo (template yang Anda minta tetap digunakan)
-*/
-$qNav = "SELECT * FROM vw_nav";
-$rNav = pg_query($conn, $qNav);
-
-$navItems = [];
-if ($rNav) {
-    while ($rowNav = pg_fetch_assoc($rNav)) {
-        $id_nav = $rowNav['id_nav'];
-        if (!isset($navItems[$id_nav])) {
-            $navItems[$id_nav] = [
-                'nama_nav' => $rowNav['nama_nav'],
-                'url_nav'  => $rowNav['url_nav'],
-                'subnav'   => []
-            ];
-        }
-        if (!empty($rowNav['id_subnav'])) {
-            $navItems[$id_nav]['subnav'][] = [
-                'nama_subnav' => $rowNav['nama_subnav'],
-                'url_subnav'  => $rowNav['url_subnav']
-            ];
+    $navItems = [];
+    if ($rNav) {
+        while ($rowNav = pg_fetch_assoc($rNav)) {
+            $id_nav = $rowNav['id_nav'];
+            if (!isset($navItems[$id_nav])) {
+                $navItems[$id_nav] = [
+                    'nama_nav' => $rowNav['nama_nav'],
+                    'url_nav'  => $rowNav['url_nav'],
+                    'subnav'   => []
+                ];
+            }
+            if (!empty($rowNav['id_subnav'])) {
+                $navItems[$id_nav]['subnav'][] = [
+                    'nama_subnav' => $rowNav['nama_subnav'],
+                    'url_subnav'  => $rowNav['url_subnav']
+                ];
+            }
         }
     }
-}
 
-$qLogo = "SELECT * FROM vw_logo_cta";
-$rLogo = pg_query($conn, $qLogo);
-$rowLogo = $rLogo ? pg_fetch_assoc($rLogo) : null;
+    $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
+        $rDosen = pg_query($conn, $qDosen);
 
-/* ========== Ambil id dosen dari query string ========== */
-if (!isset($_GET['id'])) {
-    // bisa diganti redirect ke halaman tim dosen
-    die('ID dosen tidak diberikan.'); 
-}
-$id = intval($_GET['id']);
-if ($id <= 0) {
-    die('ID dosen tidak valid.');
-}
+        while ($d = pg_fetch_assoc($rDosen)) {
+            $url = "dosen_detail.php?id=" . $d['id_dosen'];
+            $navItems[3]['subnav'][] = [
+                'nama_subnav' => $d['nama_dosen'],
+                'url_subnav'  => $url
+            ];
+        }
 
-/* ========== Fungsi helper ========== */
-function fetch_one($conn, $sql, $params = []) {
-    $res = pg_query_params($conn, $sql, $params);
-    if (!$res) return false;
-    return pg_fetch_assoc($res);
-}
+    $qLogo = "SELECT * FROM vw_logo_cta";
+    $rLogo = pg_query($conn, $qLogo);
+    $rowLogo = $rLogo ? pg_fetch_assoc($rLogo) : null;
 
-function fetch_all($conn, $sql, $params = []) {
-    $res = pg_query_params($conn, $sql, $params);
-    if (!$res) return false;
-    $rows = [];
-    while ($r = pg_fetch_assoc($res)) $rows[] = $r;
-    return $rows;
-}
 
-/* ========== Ambil data profil dosen ========== */
-$sqlProfil = "SELECT * FROM vw_detail_dosen WHERE id_dosen = $1";
-$resProfil = pg_query_params($conn, $sqlProfil, [$id]);
+    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    if ($id <= 0) {
+        header('Location: daftar_dosen.php');
+        exit;
+    }
 
-if (!$resProfil) {
-    // debug: tampilkan error SQL (hapus/ubah di production)
-    $err = pg_last_error($conn);
-    die("Terjadi kesalahan saat memuat profil dosen: " . htmlspecialchars($err));
-}
+    $qDosenDetail = "SELECT * FROM vw_detail_dosen WHERE id_dosen = $id";
+    $rDosenDetail = pg_query($conn, $qDosenDetail);
+    $profil = pg_fetch_assoc($rDosenDetail);
 
-$profil = pg_fetch_assoc($resProfil);
-if (!$profil) {
-    die("Profil dosen dengan ID " . htmlspecialchars($id) . " tidak ditemukan.");
-}
+    if (!$profil) {
+        header('Location: daftar_dosen.php');
+        exit;
+    }
 
-/* ========== Ambil keahlian, pendidikan, sertifikasi, penelitian ========== */
-function getKeahlian($conn, $id_dosen) {
-    $sql = "
-        SELECT k.nama_keahlian
-        FROM dosen_menguasai_keahlian mk
-        JOIN bidang_keahlian k ON k.id_keahlian = mk.id_keahlian
-        WHERE mk.id_dosen = $1
-        ORDER BY k.nama_keahlian
-    ";
-    return fetch_all($conn, $sql, [$id_dosen]) ?: [];
-}
+    $emailDosen = $profil['email_dosen'] ?? '';
+    $default_avatar = 'img/default_dosen.png';
 
-function getPendidikan($conn, $id_dosen) {
-    $sql = "
-        SELECT universitas, bidang_studi, gelar, tahun_lulus
-        FROM riwayat_pendidikan
-        WHERE id_dosen = $1
-        ORDER BY tahun_lulus ASC NULLS LAST
-    ";
-    return fetch_all($conn, $sql, [$id_dosen]) ?: [];
-}
+    $qKeahlian = "SELECT nama_keahlian FROM vw_dosen_keahlian WHERE id_dosen = $id ORDER BY nama_keahlian";
+    $rKeahlian = pg_query($conn, $qKeahlian);
+    $keahlian = $rKeahlian ? pg_fetch_all($rKeahlian) : [];
 
-function getSertifikasi($conn, $id_dosen) {
-    $sql = "
-        SELECT s.nama_sertifikasi, s.penyelenggara, s.tahun_sertifikasi
-        FROM mempunyai_sertifikasi ms
-        JOIN sertifikasi s ON s.id_sertifikasi = ms.id_sertifikasi
-        WHERE ms.id_dosen = $1
-        ORDER BY s.tahun_sertifikasi DESC NULLS LAST
-    ";
-    return fetch_all($conn, $sql, [$id_dosen]) ?: [];
-}
+    $qPendidikan = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC";
+    $rPendidikan = pg_query($conn, $qPendidikan);
+    $pendidikan = $rPendidikan ? pg_fetch_all($rPendidikan) : [];
 
-$keahlian    = getKeahlian($conn, $id);
-$pendidikan  = getPendidikan($conn, $id);
-$sertifikasi = getSertifikasi($conn, $id);
+    $qPendidikanTerakhir = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC LIMIT 1";
+    $rPendidikanTerakhir = pg_query($conn, $qPendidikanTerakhir);
+    $pendidikanTerakhir = pg_fetch_assoc($rPendidikanTerakhir);
 
-/* ========== Helper escape ========= */
-function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
+    $qSertifikasi = "SELECT * FROM vw_sertifikasi_dosen WHERE id_dosen = $id ORDER BY tahun_sertifikasi DESC ";
+    $rSertifikasi = pg_query($conn, $qSertifikasi);
+    $sertifikasi = $rSertifikasi ? pg_fetch_all($rSertifikasi) : [];
+
+    function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
 ?>
 <!DOCTYPE html>
@@ -119,49 +82,25 @@ function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
     <meta charset="utf-8">
     <title>Profil Dosen - <?= h($profil['nama_dosen']) ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- bootstrap / icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- style root + khusus halaman -->
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
-    <link rel="stylesheet" href="css/styleDosenDetail.css"> 
-    <style>
-        /* Penyesuaian kecil (jika perlu) */
-        .back-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: none;
-            margin-right: 12px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styleDosenDetail.css">
 </head>
-<body class="dosen-page">
-
-    <!-- LOGO -->
+<body>
     <div class="logo">
         <?php if ($rowLogo): ?>
-            <img src="<?= h($rowLogo['url_logo']) ?>" class="logo-img" alt="LABSE">
+          <img src="<?= h($rowLogo['url_logo']) ?>" class="logo-img" alt="LABSE">
         <?php else: ?>
             <img src="img/logo.png" class="logo-img" alt="LABSE">
         <?php endif; ?>
     </div>
 
-    <!-- NAVBAR (template yang sama) -->
     <nav>
         <ul id="nav-list" class="nav-collapse">
             <?php foreach ($navItems as $nav): ?>
@@ -183,148 +122,130 @@ function h($s) { return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
         </ul>
     </nav>
 
-    <!-- CTA -->
     <?php if($rowLogo): ?>
         <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
             <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
         </a>
     <?php endif; ?>
 
-    <!-- HERO -->
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/bgdosen.webp" alt="Dosen Background">
+                <img src="img/gedung_lab.png" alt="Dosen Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                 <h1 class="hero-title">PROFIL DOSEN</h1>
             </div>
         </div>
-    </div>
-
-    <!-- CONTENT MAIN -->
-    <div class="container my-5">
-        <div class="row">
-            <!-- SIDEBAR -->
-            <div class="col-lg-3 mb-4">
-                <div class="side-menu">
-                    <button class="btn btn-primary">Profil</button>
-                    <button class="btn btn-outline-primary">Penelitian</button>
-                    <button class="btn btn-outline-primary">Publikasi</button>
+        <div class="container my-5" style="margin-left: 0px; padding-left: 0px; margin-right: 0px; padding-right: 0px;">
+            <div class="row" style="width: 1350px;">
+                <div class="sidebar-wrapper">
+                    <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-menu active">Profil</a>
+                    <a href="dosen_penelitian.php?id=<?php echo $id; ?>" class="btn-menu">Penelitian</a>
+                    <a href="dosen_publikasi.php?id=<?php echo $id; ?>" class="btn-menu">Publikasi</a>
                 </div>
-            </div>
-
-            <!-- MAIN CONTENT -->
-            <div class="col-lg-9">
-                <div class="d-flex align-items-center mb-4">
-                    <button class="back-btn" onclick="history.back()" title="Kembali">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
-                    <h2 class="fw-bold mb-0">PROFIL DOSEN</h2>
-                </div>
-
-                <!-- CARD PROFIL -->
-                <div class="profil-card mb-4">
-                    <div class="d-flex">
-
-                        <!-- FOTO DOSEN (KOTAK + ROUNDED 25PX) -->
-                        <div class="profil-img-wrapper me-4">
-                            <img class="profil-img"
-                                src="<?= h($profil['url_foto_dosen'] ?: 'img/avatar-placeholder.png') ?>"
-                                alt="<?= h($profil['nama_dosen']) ?>">
-                        </div>
-
-                        <!-- TEKS PROFIL -->
-                        <div class="profil-text">
-                            <?php if (!empty($profil['program_studi'])): ?>
-                                <div class="text-muted" style="font-weight:600; color:#133A94;">
-                                    <?= h($profil['program_studi']) ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <h4 class="mt-1"><?= h($profil['nama_dosen']) ?></h4>
-
-                            <?php if (!empty($profil['email_dosen'])): ?>
-                                <p><?= h($profil['email_dosen']) ?></p>
-                            <?php endif; ?>
-
-                            <?php if (!empty($profil['jabatan_lab'])): ?>
-                                <p><strong>Jabatan Lab:</strong> <?= h($profil['jabatan_lab']) ?></p>
-                            <?php endif; ?>
+    
+                <div class="col-lg-9">
+                    <div class="d-flex align-items-center mb-4">
+                        <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-back me-3"><i class="bi bi-arrow-left"></i></a>
+                        <h2 class="fw-bold mb-0">PROFIL DOSEN</h2>
+                    </div>
+    
+                    <div class="profil-card mb-4">
+                        <div class="d-flex">
+                            <div class="profil-img-wrapper me-4">
+                                <img class="profil-img"
+                                    src="<?= h($profil['url_foto_dosen'] ?: 'img/avatar-placeholder.png') ?>"
+                                    alt="<?= h($profil['nama_dosen']) ?>">
+                            </div>
+    
+                            <div class="profil-text">
+                                <?php if (!empty($pendidikanTerakhir)): ?>
+                                    <div class="text-primary fw-semibold">
+                                        <?= h($pendidikanTerakhir['jenjang']) ?> – <?= h($pendidikanTerakhir['universitas']) ?>
+                                    </div>
+                                <?php endif; ?>
+    
+                                <h4 class="mt-1"><?= h($profil['nama_dosen']) ?></h4>
+    
+                                <?php if (!empty($profil['email_dosen'])): ?>
+                                    <p><?= h($profil['email_dosen']) ?></p>
+                                <?php endif; ?>
+    
+                                <?php if (!empty($profil['jabatan_lab'])): ?>
+                                    <p><strong>Jabatan Lab:</strong> <?= h($profil['jabatan_lab']) ?></p>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-
-                <!-- KEAHLIAN -->
-                <div class="section-card">
-                    <h5>Bidang Keahlian / Minat Penelitian</h5>
-                    <?php if (!empty($keahlian)): ?>
-                        <ul>
-                            <?php foreach ($keahlian as $k): ?>
-                                <li><?= h($k['nama_keahlian']) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p class="text-muted">Belum ada data keahlian.</p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- RIWAYAT PENDIDIKAN -->
-                <div class="section-card mt-4">
-                    <h5>Riwayat Pendidikan</h5>
-                    <?php if (!empty($pendidikan)): ?>
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th style="width:60px">No</th>
-                                        <th>Perguruan Tinggi</th>
-                                        <th>Bidang Studi</th>
-                                        <th>Gelar</th>
-                                        <th style="width:120px">Tahun Ijazah</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $no=1; foreach ($pendidikan as $p): ?>
+    
+                    <div class="section-card">
+                        <h5>Bidang Keahlian</h5>
+                        <?php if (!empty($keahlian)): ?>
+                            <ul>
+                                <?php foreach ($keahlian as $k): ?>
+                                    <li><?= h($k['nama_keahlian']) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p class="text-muted">Belum ada data keahlian.</p>
+                        <?php endif; ?>
+                    </div>
+    
+                    <div class="section-card mt-4">
+                        <h5>Riwayat Pendidikan</h5>
+                        <?php if (!empty($pendidikan)): ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-0">
+                                    <thead>
                                         <tr>
-                                            <td><?= $no++ ?></td>
-                                            <td><?= h($p['universitas']) ?></td>
-                                            <td><?= h($p['bidang_studi']) ?></td>
-                                            <td><?= h($p['gelar']) ?></td>
-                                            <td><?= h($p['tahun_lulus']) ?></td>
+                                            <th style="width:60px">No</th>
+                                            <th>Perguruan Tinggi</th>
+                                            <th>Bidang Studi</th>
+                                            <th>Gelar</th>
+                                            <th style="width:120px">Tahun Ijazah</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <p class="text-muted mb-0">Belum ada data riwayat pendidikan.</p>
-                    <?php endif; ?>
-                </div>
-
-                <!-- SERTIFIKASI -->
-                <div class="section-card mt-4">
-                    <h5>Kompetensi / Sertifikasi</h5>
-                    <?php if (!empty($sertifikasi)): ?>
-                        <ul>
-                            <?php foreach ($sertifikasi as $s): ?>
-                                <li><?= h($s['nama_sertifikasi']) ?> – <?= h($s['penyelenggara']) ?> (<?= h($s['tahun_sertifikasi']) ?>)</li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p class="text-muted mb-0">Belum ada data sertifikasi.</p>
-                    <?php endif; ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php $no=1; foreach ($pendidikan as $p): ?>
+                                            <tr>
+                                                <td><?= $no++ ?></td>
+                                                <td><?= h($p['universitas']) ?></td>
+                                                <td><?= h($p['bidang_studi']) ?></td>
+                                                <td><?= h($p['gelar']) ?></td>
+                                                <td><?= h($p['tahun_lulus']) ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted mb-0">Belum ada data riwayat pendidikan.</p>
+                        <?php endif; ?>
+                    </div>
+    
+                    <div class="section-card mt-4">
+                        <h5>Sertifikasi</h5>
+                        <?php if (!empty($sertifikasi)): ?>
+                            <ul>
+                                <?php foreach ($sertifikasi as $s): ?>
+                                    <li><?= h($s['nama_sertifikasi']) ?> – <?= h($s['penyelenggara']) ?> (<?= h($s['tahun_sertifikasi']) ?>)</li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <p class="text-muted mb-0">Belum ada data sertifikasi.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- footer dynamic -->
+    <!-- CONTENT MAIN -->
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
 
-    <!-- bootstrap + dropdown -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
 </body>
