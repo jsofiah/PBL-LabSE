@@ -23,13 +23,7 @@ if (isset($_POST['simpan'])) {
         }
     }
 
-    $query = "
-        SELECT sp_create_logo_cta(
-            '$logoBaru',
-            '$_POST[judul]',
-            '$_POST[link]'
-        );
-    ";
+    $query = "CALL sp_create_logocta('$_POST[judul]', '$_POST[link]', '$logoBaru');";
 
     pg_query($conn, $query);
 

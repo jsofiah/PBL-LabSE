@@ -39,14 +39,14 @@ if (isset($_POST['update'])) {
     }
 
     $qUpdate = "
-        SELECT sp_update_logo_cta(
-            $id,
-            '$logoBaru',
-            '$_POST[judul]',
-            '$_POST[link]'
-        );
+    CALL sp_update_logocta(
+        $id,
+        '$_POST[judul]',
+        '$_POST[link]',
+        '$logoBaru'
+    );
     ";
-
+    
     pg_query($conn, $qUpdate);
 
     echo "<script>alert('Data Logo CTA berhasil diperbarui!'); window.location='kelola_logoCTA.php';</script>";

@@ -92,8 +92,7 @@
             </table>
         </div>
     </div>
-
-    <!-- FIX: Sidebar bisa diklik -->
+    
     <script src="js/sidebar.js"></script>
 
 </body>

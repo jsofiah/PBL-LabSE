@@ -10,7 +10,8 @@ require "../config.php";
 $id = $_GET['id'] ?? 0;
 
 if ($id) {
-    $query = "SELECT sp_delete_logo_cta($id)";
+    $query = "CALL sp_delete_logocta($id)";
+    
     pg_query($conn, $query);
 }
 
