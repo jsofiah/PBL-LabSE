@@ -57,7 +57,6 @@
 
     $qPenelitian = "SELECT * FROM vw_penelitian_dosen WHERE id_dosen = $id ORDER BY tahun_penelitian DESC";
     $rPenelitian = pg_query($conn, $qPenelitian);
-
     $default_avatar = 'img/default_dosen.png';
 ?>
 
@@ -67,14 +66,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Penelitian Dosen - Laboratorium SE</title>
+
     <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleDosenPenelitian.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
     <div class="logo">
@@ -91,7 +93,8 @@
                 <?php if (count($nav['subnav']) > 0): ?>
                     <li class="dropdown">
                         <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?> <i class="bi bi-chevron-down"></i>
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?> 
+                            <i class="bi bi-chevron-down"></i>
                         </a>
                         <div class="dropdown-content">
                             <div class="dropdown-scroll overflow-auto" style="max-height:250px;">
@@ -114,7 +117,7 @@
         </ul>
     </nav>
 
-    <?php if($rowLogo): ?>
+    <?php if ($rowLogo): ?>
         <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
             <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
         </a>
@@ -126,7 +129,7 @@
                 <img src="img/background_index.jpg" alt="Lab Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title"> PENELITIAN </h1>
+                    <h1 class="hero-title">PENELITIAN</h1>
                 </div>
             </div>
         </div>
@@ -141,35 +144,43 @@
 
         <div class="content-wrapper">
             <div class="d-flex align-items-center mb-4">
-                <a href="dosen_detail.php" class="btn-back me-3"><i class="bi bi-arrow-left"></i></a>
+                <a href="dosen_detail.php" class="btn-back me-3">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
                 <h2 class="page-title">PENELITIAN</h2>
             </div>
-
-            <div class="card content-card mb-4">
-                <div class="card-body p-4">
-                    <div class="dosen-profile-header d-flex al ign-items-center">
-                        <div class="profile-img-wrapper me-4">
-                            <img src="<?php echo htmlspecialchars(($rowDosen && $rowDosen['url_foto_dosen']) ? $rowDosen['url_foto_dosen'] : $default_avatar); ?>" class="profile-img">
-                        </div>
-                        <div class="profile-info">
-                            <h6 class="text-primary fw-bold mb-1">
-                                <?php if($pendidikanTerakhir) echo htmlspecialchars($pendidikanTerakhir['jenjang'] . ' - ' . $pendidikanTerakhir['universitas']); ?>
-                            </h6>
-                            <h4 class="fw-bold mb-1"><?php echo htmlspecialchars($rowDosen['nama_dosen'] ?? 'Dosen Tidak Ditemukan'); ?></h4>
-                            <p class="text-muted mb-0"><?php echo htmlspecialchars($emailDosen); ?></p>
-                        </div>
+            <div class="dosen-profile-card">
+                <div class="dosen-profile-inner">
+                    <div class="dosen-photo-wrapper">
+                        <img src="<?php echo htmlspecialchars(($rowDosen && $rowDosen['url_foto_dosen']) ? $rowDosen['url_foto_dosen'] : $default_avatar); ?>" class="dosen-photo">
+                    </div>
+                    <div class="dosen-info">
+                        <p class="dosen-prodi">
+                            Program Studi 
+                            <?php echo htmlspecialchars($pendidikanTerakhir['jenjang'] . ' - ' . $pendidikanTerakhir['bidang_studi'] . ' ' . $pendidikanTerakhir['universitas']); ?>
+                        </p>
+                        <h2 class="dosen-name">
+                            <?php echo htmlspecialchars($rowDosen['nama_dosen'] ?? 'Dosen Tidak Ditemukan'); ?>
+                        </h2>
+                        <p class="dosen-email">
+                            <?php echo htmlspecialchars($emailDosen); ?>
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <?php if($rPenelitian && pg_num_rows($rPenelitian) > 0): ?>
-                <?php while($pen = pg_fetch_assoc($rPenelitian)): ?>
+            <?php if ($rPenelitian && pg_num_rows($rPenelitian) > 0): ?>
+                <?php while ($pen = pg_fetch_assoc($rPenelitian)): ?>
                     <div class="research-card">
                         <div class="research-icon-wrapper">
-                            <div class="icon-box"><i class="bi bi-journal-text"></i></div>
+                            <div class="icon-box">
+                                <i class="bi bi-journal-text"></i>
+                            </div>
                         </div>
                         <div class="research-info">
-                            <h5 class="research-title"><?php echo htmlspecialchars($pen['judul_penelitian']); ?></h5>
+                            <h7 class="research-title">
+                                <?php echo htmlspecialchars($pen['judul_penelitian']); ?>
+                            </h7>
                             <div class="research-details">
                                 Ketua Peneliti : <?php echo htmlspecialchars($rowDosen['nama_dosen']); ?><br>
                                 Tahun : <?php echo htmlspecialchars($pen['tahun_penelitian']); ?>
@@ -182,13 +193,12 @@
                     Tidak ada penelitian untuk dosen ini.
                 </div>
             <?php endif; ?>
-
         </div>
     </div>
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
-
