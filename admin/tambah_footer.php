@@ -56,6 +56,7 @@
 <meta charset="UTF-8">
 <title>Tambah Footer</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
@@ -74,57 +75,57 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Judul</label>
-                        <input type="text" name="judul" class="form-control" required>
+                        <input type="text" name="judul" class="form-control" placeholder="Masukkan judul footer" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Hari Kerja</label>
-                        <input type="text" name="hari_kerja" class="form-control" required>
+                        <input type="text" name="hari_kerja" class="form-control" placeholder="Masukkan rentang hari kerja" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Jam Kerja</label>
-                        <input type="text" name="jam_kerja" class="form-control" required>
+                        <input type="text" name="jam_kerja" class="form-control" placeholder="Masukkan jam kerja" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 1</label>
-                        <input type="text" name="telepon1" class="form-control">
+                        <input type="text" name="telepon1" class="form-control" placeholder="Masukkan nomor telepon">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 2</label>
-                        <input type="text" name="telepon2" class="form-control">
+                        <input type="text" name="telepon2" class="form-control" placeholder="Masukkan nomor telepon">
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="2" required></textarea>
+                        <textarea name="alamat" class="form-control" rows="2" placeholder="Masukkan alamat" required></textarea>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Email</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control" placeholder="Masukkan email" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Instagram</label>
-                        <input type="text" name="instagram" class="form-control">
+                        <input type="text" name="instagram" class="form-control" placeholder="Masukkan link instagram">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">YouTube</label>
-                        <input type="text" name="youtube" class="form-control">
+                        <input type="text" name="youtube" class="form-control" placeholder="Masukkan link youtube">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">LinkedIn</label>
-                        <input type="text" name="linkedin" class="form-control">
+                        <input type="text" name="linkedin" class="form-control" placeholder="Masukkan link linkedin">
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Link Maps</label>
-                        <textarea name="maps" class="form-control" rows="2" required></textarea>
+                        <textarea name="maps" class="form-control" rows="2" placeholder="Masukkan link maps" required></textarea>
                     </div>
                 </div>
 

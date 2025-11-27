@@ -72,6 +72,7 @@
 <meta charset="UTF-8">
 <title>Edit Footer</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
@@ -97,58 +98,58 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Judul</label>
-                        <input type="text" name="judul" class="form-control" value="<?= $footer['judul_footer']; ?>" required>
+                        <input type="text" name="judul" class="form-control" placeholder="Masukkan judul footer" value="<?= $footer['judul_footer']; ?>" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Hari Kerja</label>
-                        <input type="text" name="hari_kerja" class="form-control" value="<?= $footer['hari_kerja']; ?>" required>
+                        <input type="text" name="hari_kerja" class="form-control" placeholder="Masukkan rentang hari kerja" value="<?= $footer['hari_kerja']; ?>" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Jam Kerja</label>
-                        <input type="text" name="jam_kerja" class="form-control" value="<?= $footer['jam_kerja']; ?>" required>
+                        <input type="text" name="jam_kerja" class="form-control" placeholder="Masukkan jam kerja" value="<?= $footer['jam_kerja']; ?>" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 1</label>
-                        <input type="text" name="telepon1" class="form-control" value="<?= $footer['no_telepon1']; ?>">
+                        <input type="text" name="telepon1" class="form-control" placeholder="Masukkan nomor telepon" value="<?= $footer['no_telepon1']; ?>">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 2</label>
-                        <input type="text" name="telepon2" class="form-control" value="<?= $footer['no_telepon2']; ?>">
+                        <input type="text" name="telepon2" class="form-control" placeholder="Masukkan nomor telepon" value="<?= $footer['no_telepon2']; ?>">
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="2"><?= $footer['alamat']; ?></textarea required>
+                        <textarea name="alamat" class="form-control" placeholder="Masukkan alamat" rows="2"><?= $footer['alamat']; ?></textarea required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Email</label>
-                        <input type="email" name="email" class="form-control" value="<?= $footer['email']; ?>" required>
+                        <input type="email" name="email" class="form-control" placeholder="Masukkan email" value="<?= $footer['email']; ?>" required>
                     </div>
 
                     
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Instagram</label>
-                        <input type="text" name="instagram" class="form-control" value="<?= $footer['link_instagram']; ?>">
+                        <input type="text" name="instagram" class="form-control" placeholder="Masukkan link instagram" value="<?= $footer['link_instagram']; ?>">
                     </div>
                     
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">YouTube</label>
-                        <input type="text" name="youtube" class="form-control" value="<?= $footer['link_youtube']; ?>">
+                        <input type="text" name="youtube" class="form-control" placeholder="Masukkan link youtube" value="<?= $footer['link_youtube']; ?>">
                     </div>
                     
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">LinkedIn</label>
-                        <input type="text" name="linkedin" class="form-control" value="<?= $footer['link_linkedin']; ?>">
+                        <input type="text" name="linkedin" class="form-control" placeholder="Masukkan link linkedin" value="<?= $footer['link_linkedin']; ?>">
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Link Maps</label>
-                        <textarea name="maps" class="form-control" rows="2" required><?= $footer['link_maps']; ?></textarea>
+                        <textarea name="maps" class="form-control" rows="2" placeholder="Masukkan link maps" required><?= $footer['link_maps']; ?></textarea>
                     </div>
                 </div>
 

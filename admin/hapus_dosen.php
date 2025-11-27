@@ -22,7 +22,7 @@
     }
 
     if (!empty($data['url_foto_dosen'])) {
-        $filePath = "../img/dosen/" . $data['url_foto_dosen'];
+        $filePath = "../" . $data['url_foto_dosen'];
 
         if (file_exists($filePath)) {
             unlink($filePath);
