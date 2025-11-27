@@ -77,17 +77,17 @@
 
                         <div class='mb-3'>
                         <label class='form-label text-white'>Universitas</label>
-                        <input type='text' name='universitas' class='form-control' required>
+                        <input type='text' name='universitas' class='form-control' placeholder="Masukkan universitas" required>
                         </div>
 
                         <div class='mb-3'>
                         <label class='form-label text-white'>Bidang Studi</label>
-                        <input type='text' name='bidang_studi' class='form-control' required>
+                        <input type='text' name='bidang_studi' class='form-control' placeholder="Masukkan bidang studi" required>
                         </div>
 
                         <div class='mb-3'>
                         <label class='form-label text-white'>Tahun Lulus</label>
-                        <input type="number" name="tahun_lulus" class="form-control" min="1900" max="2100" step="1" placeholder="2020" required>
+                        <input type="number" name="tahun_lulus" class="form-control" min="1900" max="2100" step="1" placeholder="Masukkan tahun lulus" required>
                         </div>
 
                         <div class='mb-3'>
