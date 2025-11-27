@@ -34,7 +34,6 @@ if (isset($_POST['login'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <link rel="stylesheet" href="css/styleLogin.css">
     <script src="js/login.js"></script>
 </head>
@@ -44,7 +43,7 @@ if (isset($_POST['login'])) {
         <div class="row g-0 align-items-center justify-content-center">
             <div class="col-lg-7 col-md-12 left-section">
                 <div class="logo-container">
-                    <img src="img/logo.png" alt="Lab SE Logo" class="logo-img">
+                    <img src="../img/logo.png" alt="Lab SE Logo" class="logo-img">
                 </div>
                 <div class="login-card">
                     <form method="POST">
@@ -82,8 +81,7 @@ if (isset($_POST['login'])) {
                             <path d="M0 175.585C0 147.971 22.3858 125.585 50 125.585H87.8741C114.946 125.585 137.1 104.039 137.855 76.9778L138.645 48.6071C139.4 21.5458 161.554 0 188.626 0H667C694.614 0 717 22.3858 717 50V650.158C717 677.316 695.322 699.508 668.172 700.144L637.828 700.856C610.678 701.492 589 723.684 589 750.842V759C589 786.614 566.614 809 539 809H50C22.3858 809 0 786.614 0 759V175.585Z"/>
                         </clipPath>
                     </defs>
-
-                    <image href="img/bg_login.jpg" width="717" height="809" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-shape)" />
+                    <image href="../img/bg_login.jpg" width="717" height="809" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-shape)" />
                 </svg>
             </div>
 
