@@ -1,0 +1,125 @@
+/* =========================================
+   GLOBAL RESET
+   ========================================= */
+body, html {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.main-wrapper {
+    height: 100vh;
+    width: 100%;
+}
+
+/* =========================================
+   BAGIAN KIRI (LOGO & FORM)
+   ========================================= */
+.left-section {
+    background-color: #fff;
+    z-index: 2;
+    position: relative;
+}
+
+/* Logo */
+.logo-img {
+    width: 250px; /* Ukuran Logo Besar */
+    height: auto;
+    display: block;
+}
+
+/* Card Form */
+.login-card {
+    width: 100%;
+    max-width: 380px; /* Ukuran Compact */
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 24px;
+    /* Shadow halus HANYA pada form login agar timbul */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08); 
+}
+
+/* Input Fields */
+.form-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    background-color: #F3F4F6; /* Abu-abu muda */
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: #9CA3AF;
+    font-weight: 500;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.4); /* Glow Kuning */
+    outline: none;
+}
+
+/* Tombol Login */
+.btn-login {
+    width: 100%;
+    background-color: #FFD700;
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 6px rgba(255, 215, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.btn-login:hover {
+    background-color: #eec900;
+    transform: translateY(-2px);
+}
+
+/* Checkbox */
+.form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    border: 2px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.form-check-input:checked {
+    background-color: #333;
+    border-color: #333;
+}
+.form-check-label {
+    font-weight: 600;
+    color: #333;
+    margin-left: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+/* =========================================
+   BAGIAN KANAN (Tempat SVG)
+   ========================================= */
+.right-section {
+    background-color: #fff;
+    position: relative;
+    
+    /* Flexbox untuk menengahkan SVG secara sempurna */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
