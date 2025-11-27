@@ -8,7 +8,13 @@ if (!isset($_SESSION['username'])) {
 require_once '../config.php';
 
 // Ambil semua data mitra
-$qViewMitra = "SELECT * FROM mitra ORDER BY id_mitra";
+$qViewMitra = "
+    SELECT m.*, jm.nama_jenismitra 
+    FROM mitra m
+    LEFT JOIN jenis_mitra jm ON m.id_jenismitra = jm.id_jenismitra
+    ORDER BY m.id_mitra;
+";
+
 $rViewMitra = pg_query($conn, $qViewMitra);
 
 ?>
@@ -40,22 +46,24 @@ $rViewMitra = pg_query($conn, $qViewMitra);
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>
-                    <col style="width:40px;">
-                    <col style="width:180px;">
-                    <col style="width:250px;">
-                    <col style="width:360px;">
-                    <col style="width:190px;">
-                </colgroup>
+                <col style="width:40px;">
+                <col style="width:180px;">
+                <col style="width:200px;">
+                <col style="width:300px;">
+                <col style="width:200px;">
+                <col style="width:180px;">
+            </colgroup>
 
-                <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Gambar</th>
-                        <th class="text-center">Nama Mitra</th>
-                        <th class="text-center">Isi Mitra</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead>
+            <thead class="table-primary">
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">Gambar</th>
+                    <th class="text-center">Nama Mitra</th>
+                    <th class="text-center">Isi Mitra</th>
+                    <th class="text-center">Jenis Mitra</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
 
                 <tbody>
                     <?php while ($m = pg_fetch_assoc($rViewMitra)) : ?>
@@ -80,6 +88,11 @@ $rViewMitra = pg_query($conn, $qViewMitra);
                             <!-- Deskripsi -->
                             <td class="text-center">
                                 <?= htmlspecialchars(substr($m['isi_mitra'], 0, 60)); ?>...
+                            </td>
+
+                            <!-- Jenis Mitra -->
+                            <td class="text-center">
+                                <?= htmlspecialchars($m['nama_jenismitra']); ?>
                             </td>
 
                             <!-- Aksi -->
