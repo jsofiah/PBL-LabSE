@@ -65,6 +65,7 @@
 <meta charset='UTF-8'>
 <title>Edit Dosen</title>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel='stylesheet' href='css/styleForm.css'>
 </head>
 
@@ -90,19 +91,30 @@
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Nama Dosen</label>
-                    <input type='text' name='nama' class='form-control'
+                    <input type='text' name='nama' class='form-control' placeholder="Masukkan nama"
                         value='<?= $dosen['nama_dosen']; ?>' required>
                 </div>
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Jabatan</label>
-                    <input type='text' name='jabatan' class='form-control'
-                        value='<?= $dosen['jabatan_lab']; ?>' required>
+                    <select name='jabatan' class='form-control' required>
+                        <option value='' disabled>Pilih Jabatan</option>
+
+                        <option value="Ketua Laboratorium"
+                            <?= ($dosen['jabatan_lab'] === 'Ketua Laboratorium') ? 'selected' : '' ?>>
+                            Ketua Laboratorium
+                        </option>
+
+                        <option value="Peneliti"
+                            <?= ($dosen['jabatan_lab'] === 'Peneliti') ? 'selected' : '' ?>>
+                            Peneliti
+                        </option>
+                    </select>
                 </div>
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Email</label>
-                    <input type='email' name='email' class='form-control'
+                    <input type='email' name='email' class='form-control' placeholder="Masukkan email"
                         value='<?= $dosen['email_dosen']; ?>' required>
                 </div>
 
