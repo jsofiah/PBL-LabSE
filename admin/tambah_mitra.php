@@ -8,21 +8,15 @@ if (!isset($_SESSION['username'])) {
 require_once '../config.php';
 
 if (isset($_POST['submit'])) {
-    $jenis = $_POST['id_jenismitra'];
-    $nama  = $_POST['nama_mitra'];
-    $gambar = $_POST['url_gambar_mitra'];
-    $isi = $_POST['isi_mitra'];
+    $jenis  = $_POST['id_jenismitra'];
+    $nama   = pg_escape_string($conn, $_POST['nama_mitra']);
+    $gambar = pg_escape_string($conn, $_POST['url_gambar_mitra']);
+    $isi    = pg_escape_string($conn, $_POST['isi_mitra']);
 
-    $qInsert = "
-        CALL sp_create_mitra(
-            $jenis,
-            '".pg_escape_string($nama)."',
-            '".pg_escape_string($gambar)."',
-            '".pg_escape_string($isi)."'
-        );
-    ";
+    $qInsert = "CALL sp_create_mitra($1, $2, $3, $4)";
+    $params  = array($jenis, $nama, $gambar, $isi);
 
-    $result = pg_query($conn, $qInsert);
+    $result = pg_query_params($conn, $qInsert, $params);
 
     if ($result) {
         header("Location: kelola_mitra.php?msg=success");
@@ -31,8 +25,11 @@ if (isset($_POST['submit'])) {
         $error = "Gagal menambah data mitra!";
     }
 }
-?>
 
+// Ambil data jenis mitra untuk dropdown
+$qJenis = pg_query($conn, "SELECT * FROM jenis_mitra ORDER BY id_jenismitra ASC");
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,18 +40,29 @@ if (isset($_POST['submit'])) {
 
 <h3>Tambah Mitra</h3>
 
+<?php if(isset($error)): ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+<?php endif; ?>
+
 <form method="POST">
 
     <label>Jenis Mitra</label>
-    <input type="number" name="id_jenismitra" class="form-control" required>
+    <select name="id_jenismitra" class="form-control" required>
+        <option value="">-- Pilih Jenis Mitra --</option>
+        <?php while($j = pg_fetch_assoc($qJenis)): ?>
+            <option value="<?= $j['id_jenismitra'] ?>">
+                <?= htmlspecialchars($j['nama_jenismitra']) ?>
+            </option>
+        <?php endwhile; ?>
+    </select>
 
-    <label>Nama Mitra</label>
+    <label class="mt-2">Nama Mitra</label>
     <input type="text" name="nama_mitra" class="form-control" required>
 
-    <label>URL Gambar</label>
+    <label class="mt-2">URL Gambar</label>
     <input type="text" name="url_gambar_mitra" class="form-control">
 
-    <label>Deskripsi</label>
+    <label class="mt-2">Deskripsi</label>
     <textarea name="isi_mitra" class="form-control" rows="4"></textarea>
 
     <br>

@@ -14,9 +14,9 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Jalankan function delete
-$qDelete = "CALL sp_delete_roadmap($id)";
-pg_query($conn, $qDelete);
+// Jalankan procedure delete
+$qDelete = "CALL sp_delete_roadmap($1)";
+$result = pg_query_params($conn, $qDelete, array($id));
 
 if ($result) {
     echo "<script>
