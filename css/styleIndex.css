@@ -228,11 +228,6 @@
   border-radius: 15px;
 }
 
-.artikel-section {
-  background-color: #fff;
-  padding: 80px 0;
-}
-
 .artikel-thumbnail {
   overflow: hidden;
 }
@@ -263,7 +258,6 @@
 
 .artikel-section {
   background-color: #fff;
-  padding: 50px 0;
 }
 
 .artikel-section h2 {

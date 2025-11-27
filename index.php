@@ -227,7 +227,7 @@
         </div>
     </div>
 
-    <div class="artikel-section py-5">
+    <div class="artikel-section">
         <div class="container">
             <h2 class="text-center fw-bold mb-5">ARTIKEL TERBARU</h2>
             
