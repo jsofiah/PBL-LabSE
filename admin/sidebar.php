@@ -47,6 +47,7 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
                 </div>
                 <div class="submenu" id="profil">
                     <a href="kelola_konten.php" class="submenu-link"><i class="fas fa-info-circle"></i> Konten Lab</a>
+                    <a href="kelola_peran.php" class="submenu-link"><i class="fas fa-lightbulb"></i> Peran Lab</a>
                     <a href="kelola_roadmap.php" class="submenu-link"><i class="fas fa-road"></i> Roadmap</a>
                     <a href="kelola_fasilitas.php" class="submenu-link"><i class="fas fa-door-open"></i> Fasilitas</a>
                     <a href="kelola_mitra.php" class="submenu-link"><i class="fas fa-handshake"></i> Mitra</a>
