@@ -1,26 +1,31 @@
 <?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit;
-}
-require_once "../config.php";
+    session_start();
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit;
+    }
 
-$qJenis = "SELECT * FROM jenis_artikel ORDER BY id_jenisartikel ASC";
-$rJenis = pg_query($conn, $qJenis);
+    require_once '../config.php';
+
+    $qJenis = "SELECT * FROM jenis_artikel ORDER BY id_jenisartikel ASC";
+    $rJenis = pg_query($conn, $qJenis);
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Kelola Jenis Artikel</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleSidebar.css">
-<link rel="stylesheet" href="css/styleTabel.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Jenis Artikel - Portal LAB SE</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleSidebar.css">
+    <link rel="stylesheet" href="css/styleTabel.css">
 </head>
 
 <body>
+
 <?php include 'sidebar.php'; ?>
 
 <div class="content-area container-fluid px-3">
@@ -33,7 +38,15 @@ $rJenis = pg_query($conn, $qJenis);
     </div>
 
     <div class="table-responsive">
+
         <table class="table table-bordered table-striped table-fixed">
+
+            <colgroup>
+                <col style="width:30px;">
+                <col style="width:150px;">
+                <col style="width:100px;">
+            </colgroup>
+
             <thead class="table-primary">
                 <tr>
                     <th class="text-center">ID</th>
@@ -43,28 +56,34 @@ $rJenis = pg_query($conn, $qJenis);
             </thead>
 
             <tbody>
-                <?php while($row = pg_fetch_assoc($rJenis)) : ?>
-                <tr>
-                    <td class="text-center"><?= $row['id_jenisartikel']; ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['nama_jenisartikel']); ?></td>
-                    <td class="text-center">
-                        <a href="edit_jenisartikel.php?id=<?= $row['id_jenisartikel']; ?>" class="btn btn-warning btn-sm">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
-                        <a onclick="return confirm('Yakin ingin menghapus?')"
-                           href="hapus_jenisartikel.php?id=<?= $row['id_jenisartikel']; ?>"
-                           class="btn btn-danger btn-sm">
-                           <i class="fa fa-trash"></i> Hapus
-                        </a>
-                    </td>
-                </tr>
+                <?php while($j = pg_fetch_assoc($rJenis)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $j['id_jenisartikel']; ?></td>
+
+                        <td><?= htmlspecialchars($j['nama_jenisartikel']); ?></td>
+
+                        <td class="text-center">
+                            <a href="edit_jenisartikel.php?id=<?= $j['id_jenisartikel']; ?>" 
+                               class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_jenisartikel.php?id=<?= $j['id_jenisartikel']; ?>"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Yakin ingin menghapus jenis artikel ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
                 <?php endwhile; ?>
             </tbody>
 
         </table>
     </div>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+<script src="js/sidebar.js"></script>
+
 </body>
 </html>
