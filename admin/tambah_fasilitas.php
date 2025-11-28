@@ -1,0 +1,90 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit;
+}
+
+require_once '../config.php';
+
+$qJenis = "SELECT * FROM jenis_fasilitas ORDER BY id_jenisfasilitas";
+$rJenis = pg_query($conn, $qJenis);
+
+if (isset($_POST['submit'])) {
+    $idJenis = $_POST['id_jenisfasilitas'];
+    $nama = $_POST['nama_fasilitas'];
+    $isi = $_POST['isi_fasilitas'];
+
+    $folder = "../img/fasilitas/";
+
+    $namaFile = time() . "_" . basename($_FILES["gambar"]["name"]);
+    $targetFile = $folder . $namaFile;
+
+    if (move_uploaded_file($_FILES["gambar"]["tmp_name"], $targetFile)) {
+
+        $url_gambar = "img/fasilitas/" . $namaFile;
+
+        $qInsert = "INSERT INTO fasilitas (id_jenisfasilitas, nama_fasilitas, isi_fasilitas, url_gambar_fasilitas)
+                    VALUES ($1, $2, $3, $4)";
+
+        $result = pg_query_params($conn, $qInsert, [$idJenis, $nama, $isi, $url_gambar]);
+
+        if ($result) {
+            header("Location: kelola_fasilitas.php");
+            exit;
+        } else {
+            echo "Gagal menyimpan data!";
+        }
+
+    } else {
+        echo "Upload gambar gagal!";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tambah Fasilitas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+<h3>Tambah Fasilitas</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <label class="form-label">Jenis Fasilitas</label>
+        <select name="id_jenisfasilitas" class="form-control" required>
+            <option value="">-- Pilih Jenis --</option>
+            <?php while ($row = pg_fetch_assoc($rJenis)) : ?>
+                <option value="<?= $row['id_jenisfasilitas']; ?>">
+                    <?= $row['nama_jenisfasilitas']; ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Nama Fasilitas</label>
+        <input type="text" name="nama_fasilitas" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Isi Fasilitas</label>
+        <textarea name="isi_fasilitas" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Upload Gambar Fasilitas</label>
+        <input type="file" name="gambar" class="form-control" accept="image/*" required>
+    </div>
+
+    <button type="submit" name="submit" class="btn btn-success">Simpan</button>
+    <a href="kelola_fasilitas.php" class="btn btn-secondary">Kembali</a>
+
+</form>
+
+</body>
+</html>
