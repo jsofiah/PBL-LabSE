@@ -4,6 +4,9 @@ session_start();
 
 $message = "";
 
+$saved_username = isset($_COOKIE['username']) ? $_COOKIE['username'] : "";
+$saved_password = isset($_COOKIE['password']) ? $_COOKIE['password'] : "";
+
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
@@ -16,6 +19,15 @@ if (isset($_POST['login'])) {
 
         $_SESSION['id_admin'] = $row['id'];
         $_SESSION['username'] = $row['username'];
+
+        if (isset($_POST['remember'])) {
+            setcookie("username", $username, time() + (86400 * 30), "/");
+            setcookie("password", $_POST["password"], time() + (86400 * 30), "/");
+        } else {
+            setcookie("username", $username, time() + (86400 * 15), "/");
+            setcookie("password", $_POST["password"], time() + (86400 * 15), "/");
+
+        }
 
         header("Location: dashboard.php");
         exit;
@@ -35,33 +47,69 @@ if (isset($_POST['login'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/styleLogin.css">
-    <script src="js/login.js"></script>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("password");
+            const icon = document.getElementById("eyeIcon");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            } else {
+                input.type = "password";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            }
+        }
+    </script>
 </head>
 
 <body>
     <div class="container-fluid overflow-hidden main-wrapper">
         <div class="row g-0 align-items-center justify-content-center">
             <div class="col-lg-7 col-md-12 left-section">
+
                 <div class="logo-container">
                     <img src="../img/logo.png" alt="Lab SE Logo" class="logo-img">
                 </div>
+
                 <div class="login-card">
                     <form method="POST">
                         <div class="mb-4">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="studentpolinema@gmail.com" required>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="username" 
+                                name="username" 
+                                placeholder="Masukkan username"
+                                value="<?php echo htmlspecialchars($saved_username); ?>"
+                                required>
                         </div>
 
                         <div class="mb-4 position-relative">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="****************" required>
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Masukkan password"
+                                value="<?php echo htmlspecialchars($saved_password); ?>"
+                                required>
 
                             <span class="toggle-password" onclick="togglePassword()">
                                 <i id="eyeIcon" class="fa-solid fa-eye-slash"></i>
                             </span>
                         </div>
+
                         <div class="mb-4 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input" 
+                                id="rememberMe" 
+                                name="remember"
+                                <?php if ($saved_username) echo "checked"; ?>>
                             <label class="form-check-label" for="rememberMe">Remember Me</label>
                         </div>
 
@@ -70,10 +118,10 @@ if (isset($_POST['login'])) {
                         <?php if ($message): ?>
                             <p style="color:red; margin-top:12px; font-size:0.9rem;"><?= $message ?></p>
                         <?php endif; ?>
-                        
                     </form>
                 </div>
             </div>
+
             <div class="col-lg-5 d-none d-lg-flex right-section">
                 <svg width="717" height="809" viewBox="0 0 717 809" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -84,7 +132,6 @@ if (isset($_POST['login'])) {
                     <image href="../img/bg_login.jpg" width="717" height="809" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-shape)" />
                 </svg>
             </div>
-
         </div>
     </div>
 </body>

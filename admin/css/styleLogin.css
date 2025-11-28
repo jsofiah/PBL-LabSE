@@ -14,12 +14,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 20px;
+    padding: 0 10px;
 }
 
 .main-wrapper .row {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1300px;
     margin: 0 auto;
     align-items: center;
 }
@@ -29,13 +29,14 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-left: 60px;
+    padding-left: 130px;
     margin-top: -40px;
 }
 
 .logo-img {
-    width: 310px;
+    width: 380px;
     margin-bottom: 4px;
+    padding-left: 50px;
 }
 
 .login-card {
@@ -75,11 +76,16 @@ body {
 
 .toggle-password {
     position: absolute;
-    right: 18px;
-    top: 38px;
+    right: 16px;
+    top: 70%;
+    transform: translateY(-50%);
     cursor: pointer;
     color: #6b7280;
-    font-size: 18px;
+    font-size: 20px;       
+    pointer-events: auto;
+}
+.form-control {
+    padding-right: 48px;     
 }
 
 .toggle-password:hover {
@@ -102,11 +108,12 @@ body {
     background-color: #FACC15;
     transform: translateY(-2px);
 }
-
+ 
 .right-section {
     display: flex !important;
     align-items: center;
     justify-content: flex-start;
+    margin-right:  0px;
 }
 
 .right-section svg {
