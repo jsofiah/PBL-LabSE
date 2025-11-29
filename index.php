@@ -74,6 +74,10 @@
         }
         return $tanggal;
     }
+
+    $qDosenDetail = "SELECT * FROM vw_detail_dosen";
+    $rDosenDetail = pg_query($conn, $qDosenDetail);
+    $profil = pg_fetch_assoc($rDosenDetail);
 ?>
 
 <!DOCTYPE html>
@@ -227,6 +231,35 @@
         </div>
     </div>
 
+    <div class="team-section">
+        <h2 class="text-center fw-bold">TIM DOSEN</h2>
+        <div class="carousel-wrapper">
+            <div class="fade-left"></div>
+            <div class="fade-right"></div>
+            <div class="carousel" id="carousel">
+                <?php while ($row = pg_fetch_assoc($rDosenDetail)) { ?>
+                    <div class="card">
+                        <div class="img-box">
+                            <?php if (!empty($row['url_foto_dosen'])) { ?>
+                                <img src="<?= $row['url_foto_dosen'] ?>" alt="<?= $row['nama_dosen'] ?>">
+                            <?php } else { ?>
+                                <img src="img/avatar-placeholder.png" alt="default">
+                            <?php } ?>
+                        </div>
+                        <div class="content">
+                            <h3><?= $row['nama_dosen'] ?></h3>
+                            <p class="lab"><?= $row['jabatan_lab'] ?></p>
+                            <a href="dosen_detail.php?id=<?= $row['id_dosen'] ?>" class="btn">
+                                Lihat Profil
+                            </a>
+                        </div>
+                    </div>
+                <?php } ?>
+
+            </div>
+        </div>
+    </div>
+
     <div class="artikel-section">
         <div class="container">
             <h2 class="text-center fw-bold mb-5">ARTIKEL TERBARU</h2>
@@ -310,5 +343,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
+    <script src="js/carausel.js"></script>
 </body>
 </html>
