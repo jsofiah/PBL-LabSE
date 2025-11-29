@@ -113,7 +113,7 @@ $initial = strtoupper(substr($namaAdmin, 0, 2));
 
         <div class="admin-profile">
             <div class="profile-dropdown" id="profileDropdown">
-                <a href="kelola_profil.php" class="profile-item">
+                <a href="profil.php" class="profile-item">
                     <i class="fas fa-user"></i> Profile
                 </a>
                 <a href="logout.php" class="profile-item">
