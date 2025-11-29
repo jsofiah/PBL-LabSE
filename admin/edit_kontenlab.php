@@ -1,56 +1,56 @@
 <?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit;
-}
+    session_start();
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit;
+    }
 
-require_once "../config.php";
+    require_once "../config.php";
 
-$id = $_GET['id'] ?? 0;
+    $id = $_GET['id'] ?? 0;
 
-$qKonten = "SELECT * FROM vw_konten_lab WHERE id_konten = $id";
-$rKonten = pg_query($conn, $qKonten);
-$k = pg_fetch_assoc($rKonten);
+    $qKonten = "SELECT * FROM vw_konten_lab WHERE id_konten = $id";
+    $rKonten = pg_query($conn, $qKonten);
+    $k = pg_fetch_assoc($rKonten);
 
-if (!$k) {
-    echo "<script>alert('Data tidak ditemukan!'); window.location.href='kelola_kontenLab.php';</script>";
-    exit;
-}
+    if (!$k) {
+        echo "<script>alert('Data tidak ditemukan!'); window.location.href='kelola_kontenLab.php';</script>";
+        exit;
+    }
 
-if (isset($_POST['update'])) {
+    if (isset($_POST['update'])) {
 
-    $judul = $_POST['judul'];
-    $isi = $_POST['isi'];
+        $judul = $_POST['judul'];
+        $isi = $_POST['isi'];
 
-    $qUpdate = "
-        CALL sp_update_konten_lab(
-            $id,
-            '$judul',
-            '$isi'
-        );
-    ";
+        $qUpdate = "
+            CALL sp_update_konten_lab(
+                $id,
+                '$judul',
+                '$isi'
+            );
+        ";
 
-    pg_query($conn, $qUpdate);
+        pg_query($conn, $qUpdate);
 
-    echo "
-    <script>
-        alert('Konten berhasil diperbarui!');
-        window.location.href = 'kelola_kontenLab.php';
-    </script>
-    ";
-    exit;
-}
+        echo "
+        <script>
+            alert('Konten berhasil diperbarui!');
+            window.location.href = 'kelola_kontenLab.php';
+        </script>
+        ";
+        exit;
+    }
 ?>
 
 <!DOCTYPE html>
 <html lang='id'>
 <head>
-<meta charset='UTF-8'>
-<title>Edit Konten Lab</title>
-
-<link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
-<link rel='stylesheet' href='css/styleForm.css'>
+    <meta charset='UTF-8'>
+    <title>Edit Konten Lab</title>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='css/styleForm.css'>
 </head>
 
 <body class='p-4'>
