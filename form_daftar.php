@@ -137,7 +137,6 @@
         </div>
     </div>
     
-    <!-- ===== FORM PENDAFTARAN SE GEEKS ===== -->
     <div class="container py-3">
         <div class="p-4 rounded shadow bg-white">
             <h3 class="fw-bold mb-4">SE GEEKS</h3>
@@ -152,12 +151,16 @@
                         $email = pg_escape_string($conn, $_POST['email']);
                         $nim = pg_escape_string($conn, $_POST['nim']);
 
-                        $qInsert = "
-                            INSERT INTO pendaftaran_segeeks (nama_pendaftar, prodi_pendaftar, angkatan_pendaftar, email_pendaftar, nim_pendaftar)
-                            VALUES ('$nama', '$prodi', '$angkatan', '$email', '$nim')
-                        ";
+                        $qInsert = "CALL sp_create_pendaftaran($1, $2, $3, $4, $5, $6)";
 
-                        $rInsert = pg_query($conn, $qInsert);
+                        $rInsert = pg_query_params($conn, $qInsert, [
+                            $nama,
+                            $prodi,
+                            $angkatan,
+                            $email,
+                            $nim,
+                            null
+                        ]);
 
                         if ($rInsert) {
                             echo "<div class='alert alert-success'>Pendaftaran berhasil disimpan!</div>";
@@ -165,29 +168,35 @@
                             echo "<div class='alert alert-danger'>Gagal menyimpan: " . pg_last_error($conn) . "</div>";
                         }
                     }
+
                     ?>
 
                     <form action="" method="POST">
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="fw-medium">Nama Lengkap</label>
-                                <input type="text" name="nama_lengkap" class="form-control mb-3" required>
+                                <input type="text" name="nama_lengkap" class="form-control mb-3" placeholder="Masukkan nama lengkap" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="fw-medium">NIM</label>
-                                <input type="text" name="nim" class="form-control mb-3" required>
+                                <input type="text" name="nim" class="form-control mb-3" placeholder="Masukkan NIM" required>
                             </div>
                         </div>
 
                         <label class="fw-medium">Program Studi</label>
-                        <input type="text" name="program_studi" class="form-control mb-3" required>
+                        <select name="program_studi" class="form-control mb-3" required>
+                            <option value="" disabled selected>Pilih Program Studi</option>
+                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Sistem Informasi Bisnis">Sistem Informasi Bisnis</option>
+                            <option value="Pengembangan Piranti Lunak Situs">Pengembangan Piranti Lunak Situs</option>
+                        </select>
 
                         <label class="fw-medium">Angkatan</label>
-                        <input type="text" name="angkatan" class="form-control mb-4" required>
+                        <input type="text" name="angkatan" class="form-control mb-4" placeholder="Masukkan tahun angkatan" required>
 
                         <label class="fw-medium">Email</label>
-                        <input type="email" name="email" class="form-control mb-4" required>
+                        <input type="email" name="email" class="form-control mb-4" placeholder="Masukkan email" required>
 
                         <button type="submit" class="btn btn-primary px-4">Submit</button>
                     </form>
