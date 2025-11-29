@@ -1,5 +1,6 @@
 <?php
-    require 'config.php'; 
+    require 'config.php';
+
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
     $navItems = [];
@@ -23,78 +24,41 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-    //  LOGIKA PENCARIAN FTS ARTIKEL 
-    
+    // fungsi proyek
     $filter = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
-    $cari   = isset($_GET['cari']) ? trim($_GET['cari']) : ''; 
+    $cari   = isset($_GET['cari']) ? pg_escape_string($conn, $_GET['cari']) : '';
     $orderDirection = ($filter == 'terlama') ? 'ASC' : 'DESC';
 
-    $limit = 5; 
+    $limit = 5;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-    $ts_query_str = "";
-    $params = [];
-    
+    $whereClause = "";
     if (!empty($cari)) {
-        $words = explode(" ", $cari);
-        $search_terms = [];
-        foreach ($words as $word) {
-            $clean_word = preg_replace('/[^a-zA-Z0-9]/', '', $word);
-            if (!empty($clean_word)) {
-                $search_terms[] = $clean_word . ":*"; 
-            }
-        }
-        if (!empty($search_terms)) {
-            $ts_query_str = implode(" & ", $search_terms);
-        }
+        $whereClause = "WHERE judul_proyek ILIKE '%$cari%' OR isi_proyek ILIKE '%$cari%'";
     }
 
-    $base_query = " FROM public.artikel a
-                    LEFT JOIN public.jenis_artikel ja ON a.id_jenisartikel = ja.id_jenisartikel ";
-
-    $where_clause = "";
-    if (!empty($ts_query_str)) {
-        $where_clause = " WHERE to_tsvector('indonesian', 
-                            COALESCE(a.judul_artikel, '') || ' ' || 
-                            COALESCE(a.isi_artikel, '') || ' ' || 
-                            COALESCE(a.penulis_artikel, '') || ' ' || 
-                            COALESCE(ja.nama_jenisartikel, '') 
-                          ) @@ to_tsquery('indonesian', $1) ";
-        $params[] = $ts_query_str;
-    }
-
-    $qTotal = "SELECT COUNT(*) as total $base_query $where_clause";
-    $rTotal = pg_query_params($conn, $qTotal, $params);
+    $qTotal = "SELECT COUNT(*) as total FROM vw_proyek $whereClause";
+    $rTotal = pg_query($conn, $qTotal);
     $rowTotal = pg_fetch_assoc($rTotal);
     $totalData = $rowTotal['total'];
     $totalPages = ceil($totalData / $limit);
 
-    $qArtikel = "SELECT 
-                    a.id_artikel,
-                    a.judul_artikel,
-                    a.isi_artikel,
-                    a.tanggal_terbit_artikel,
-                    a.url_gambar_artikel,
-                    a.penulis_artikel,
-                    ja.nama_jenisartikel
-                 $base_query
-                 $where_clause
-                 ORDER BY a.tanggal_terbit_artikel $orderDirection 
-                 LIMIT $limit OFFSET $start";
+    $qProyek = "SELECT * FROM vw_proyek 
+                $whereClause 
+                ORDER BY tanggal_terbit_proyek $orderDirection 
+                LIMIT $limit OFFSET $start";
+    $rProyek = pg_query($conn, $qProyek);
 
-    $rArtikel = pg_query_params($conn, $qArtikel, $params);
-
-    $listArtikel = [];
-    if ($rArtikel) {
-        while ($row = pg_fetch_assoc($rArtikel)) {
-            $row['tgl_indo'] = formatTanggalIndonesia($row['tanggal_terbit_artikel']);
-            $previewRaw = strip_tags($row['isi_artikel']);
-            $row['preview_fmt'] = htmlspecialchars(substr($previewRaw, 0, 120)) . '...';
-            $listArtikel[] = $row;
-        }
+    $listProyek = [];
+    while ($row = pg_fetch_assoc($rProyek)) {
+        $row['tgl_indo'] = formatTanggalIndonesia($row['tanggal_terbit_proyek']);
+        
+        $previewRaw = strip_tags($row['isi_proyek']);
+        $row['preview_fmt'] = htmlspecialchars(substr($previewRaw, 0, 150)) . '...';
+        
+        $listProyek[] = $row;
     }
-
     function formatTanggalIndonesia($tanggal) {
         $bulan = array(
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
@@ -116,18 +80,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artikel - Laboratorium Software Engineer</title>
+    <title>Proyek - Laboratorium Software Engineer</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/styleRoot.css">
-    <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleFooter.css">
-    <link rel="stylesheet" href="css/styleProyek.css"> 
-
+    <link rel="stylesheet" href="css/styleProyek.css">
 </head>
 <body>
 
@@ -173,10 +135,10 @@
     <div class="hero-wrapper">
         <div class="hero-container">
             <div class="hero-frame">
-                <img src="img/bgartikel.jpg" onerror="this.src='img/bgproyek.jpg'" alt="Artikel Background">
+                <img src="img/bgproyek.jpg" alt="Proyek Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">ARTIKEL & BERITA</h1>
+                    <h1 class="hero-title">PROYEK</h1>
                 </div>
             </div>
         </div>
@@ -186,11 +148,11 @@
         <div class="row mb-5 align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="d-flex gap-3">
-                    <a href="?filter=terbaru&cari=<?php echo htmlspecialchars($cari); ?>" 
+                    <a href="?filter=terbaru&cari=<?php echo $cari; ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terbaru') ? 'active' : ''; ?>">
                        Terbaru
                     </a>
-                    <a href="?filter=terlama&cari=<?php echo htmlspecialchars($cari); ?>" 
+                    <a href="?filter=terlama&cari=<?php echo $cari; ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terlama') ? 'active' : ''; ?>">
                        Terlama
                     </a>
@@ -199,10 +161,8 @@
             
             <div class="col-md-6 d-flex justify-content-md-end">
                 <form action="" method="GET" class="search-capsule shadow-sm">
-                    <?php if (isset($filter)): ?>
-                        <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filter); ?>">
-                    <?php endif; ?>
-                    <input type="text" name="cari" class="search-input" placeholder="Cari judul, topik, penulis..." value="<?php echo htmlspecialchars($cari); ?>">
+                    <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filter); ?>">
+                    <input type="text" name="cari" class="search-input" placeholder="Telusuri..." value="<?php echo htmlspecialchars($cari); ?>">
                     <button type="submit" class="search-btn-icon">
                         <i class="bi bi-search"></i>
                     </button>
@@ -210,62 +170,54 @@
             </div>
         </div>
 
-        <div class="row">
-            <?php if (!empty($listArtikel)): ?>
-                <?php foreach ($listArtikel as $a): ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
-                            <div style="height: 200px; overflow: hidden; position: relative;">
-                                <img src="<?php echo htmlspecialchars($a['url_gambar_artikel']); ?>" 
-                                     class="w-100 h-100" 
-                                     style="object-fit: cover; transition: transform 0.3s;"
-                                     alt="<?php echo htmlspecialchars($a['judul_artikel']); ?>">
-                                
-                                <?php if($a['nama_jenisartikel']): ?>
-                                    <span class="badge bg-primary position-absolute top-0 end-0 m-3 shadow-sm">
-                                        <?php echo htmlspecialchars($a['nama_jenisartikel']); ?>
-                                    </span>
-                                <?php endif; ?>
+        <div class="project-list">
+            
+            <?php if (!empty($listProyek)): ?>
+                <?php foreach ($listProyek as $p): ?>
+                
+                <div class="card project-card mb-4">
+                    <div class="row g-0 align-items-center h-100">
+                        <div class="col-md-4">
+                            <div class="project-img-wrapper">
+                                <img src="<?php echo htmlspecialchars($p['url_gambar_proyek1']); ?>" 
+                                     class="project-img" 
+                                     alt="<?php echo htmlspecialchars($p['judul_proyek']); ?>">
                             </div>
-
-                            <div class="card-body d-flex flex-column p-4">
-                                <div class="text-muted small mb-2">
-                                    <i class="bi bi-calendar3 me-1"></i> <?php echo $a['tgl_indo']; ?>
-                                    <span class="mx-2">•</span>
-                                    <i class="bi bi-person me-1"></i> <?php echo htmlspecialchars($a['penulis_artikel']); ?>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="card-body-custom">
+                                <div>
+                                    <h4 class="project-title"><?php echo htmlspecialchars($p['judul_proyek']); ?></h4>
+                                    <p class="project-desc">
+                                        <?php echo $p['preview_fmt']; ?>
+                                    </p>
                                 </div>
                                 
-                                <h5 class="card-title fw-bold mb-3">
-                                    <a href="artikelDetail.php?id=<?php echo $a['id_artikel']; ?>" class="text-decoration-none text-dark stretched-link">
-                                        <?php echo htmlspecialchars($a['judul_artikel']); ?>
-                                    </a>
-                                </h5>
-                                
-                                <p class="card-text text-muted small flex-grow-1">
-                                    <?php echo $a['preview_fmt']; ?>
-                                </p>
-                                
-                                <div class="mt-3 text-end">
-                                    <span class="text-primary fw-semibold small">Baca Selengkapnya <i class="bi bi-arrow-right ms-1"></i></span>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="project-date">
+                                        <i class="bi bi-calendar3 me-1"></i> <?php echo $p['tgl_indo']; ?>
+                                    </span>
+                                    
+                                    <a href="proyekDetail.php?id=<?php echo $p['id_proyek']; ?>" class="btn-read-more">Baca selengkapnya</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="col-12">
-                    <div class="alert alert-light text-center py-5 shadow-sm" role="alert">
-                        <h4 class="text-muted"><i class="bi bi-newspaper me-2"></i>Artikel tidak ditemukan.</h4>
-                        <?php if(!empty($cari)): ?>
-                            <p>Tidak ada hasil untuk kata kunci: "<strong><?php echo htmlspecialchars($cari); ?></strong>"</p>
-                        <?php endif; ?>
-                    </div>
+                <div class="alert alert-light text-center py-5 shadow-sm" role="alert">
+                    <h4 class="text-muted"><i class="bi bi-folder-x me-2"></i>Proyek tidak ditemukan.</h4>
                 </div>
             <?php endif; ?>
+
         </div>
 
         <?php if ($totalPages > 1): ?>
         <div class="d-flex justify-content-between align-items-center mt-5">
+            
             <?php if ($page > 1): ?>
                 <a href="?page=<?php echo $page - 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>" class="btn-pagination">
                     <i class="bi bi-caret-left-fill me-1"></i> Previous
@@ -276,7 +228,7 @@
                 </button>
             <?php endif; ?>
 
-            <span class="text-muted fw-bold">Halaman <?php echo $page; ?> dari <?php echo $totalPages; ?></span>
+            <span class="text-muted fw-bold">Slide <?php echo $page; ?> of <?php echo $totalPages; ?></span>
 
             <?php if ($page < $totalPages): ?>
                 <a href="?page=<?php echo $page + 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>" class="btn-pagination">
@@ -287,9 +239,9 @@
                     Next <i class="bi bi-caret-right-fill ms-1"></i>
                 </button>
             <?php endif; ?>
+
         </div>
         <?php endif; ?>
-
     </div>
     
     <div id="footer-container"></div>
