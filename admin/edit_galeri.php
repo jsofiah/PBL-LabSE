@@ -4,22 +4,37 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
-require_once '../config.php';
+require '../config.php';
 
 $id = $_GET['id'];
-$q = "SELECT * FROM galeri WHERE id_galeri = $id";
-$r = pg_query($conn, $q);
-$data = pg_fetch_assoc($r);
+
+$qData = pg_query($conn, "SELECT * FROM galeri WHERE id_galeri=$id");
+$data = pg_fetch_assoc($qData);
 
 if (isset($_POST['submit'])) {
     $desk = $_POST['deskripsi_galeri'];
-    $url = $_POST['url_gambar_galeri'];
 
-    $update = "UPDATE galeri 
-               SET deskripsi_galeri='$desk', url_gambar_galeri='$url' 
-               WHERE id_galeri=$id";
+    // cek apakah user upload gambar baru
+    if (!empty($_FILES['gambar']['name'])) {
 
-    pg_query($conn, $update);
+        $folder = "../img/galeri/";
+        $namaFile = time() . "_" . basename($_FILES['gambar']['name']);
+        $target = $folder . $namaFile;
+
+        move_uploaded_file($_FILES['gambar']['tmp_name'], $target);
+
+        $pathDb = "img/galeri/" . $namaFile;
+
+        $qUpdate = "UPDATE galeri 
+                    SET deskripsi_galeri='$desk', url_gambar_galeri='$pathDb'
+                    WHERE id_galeri=$id";
+    } else {
+        $qUpdate = "UPDATE galeri 
+                    SET deskripsi_galeri='$desk'
+                    WHERE id_galeri=$id";
+    }
+
+    pg_query($conn, $qUpdate);
     header("Location: kelola_galeri.php");
     exit;
 }
@@ -34,23 +49,27 @@ if (isset($_POST['submit'])) {
 
 <body class="container mt-4">
 
-<h3>Edit Galeri</h3>
+<h3>Edit Gambar Galeri</h3>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 
-    <label>Deskripsi Galeri:</label>
-    <input type="text" name="deskripsi_galeri" 
-           value="<?= $data['deskripsi_galeri']; ?>" 
-           class="form-control mb-3" required>
+    <div class="mb-3">
+        <label>Deskripsi</label>
+        <input type="text" name="deskripsi_galeri" class="form-control"
+               value="<?= htmlspecialchars($data['deskripsi_galeri']); ?>" required>
+    </div>
 
-    <label>URL Gambar:</label>
-    <input type="text" name="url_gambar_galeri" 
-           value="<?= $data['url_gambar_galeri']; ?>" 
-           class="form-control mb-3" required>
+    <div class="mb-3">
+        <label>Gambar Saat Ini</label><br>
+        <img src="../<?= $data['url_gambar_galeri']; ?>" style="width:150px;">
+    </div>
 
-    <button class="btn btn-warning" name="submit">Update</button>
-    <a href="kelola_galeri.php" class="btn btn-secondary">Kembali</a>
+    <div class="mb-3">
+        <label>Upload Gambar Baru (opsional)</label>
+        <input type="file" name="gambar" class="form-control" accept="image/*">
+    </div>
 
+    <button class="btn btn-primary" name="submit">Update</button>
 </form>
 
 </body>
