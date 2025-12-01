@@ -1,28 +1,46 @@
 <?php
     require 'config.php';
+
+    // --- 1. Logika Navbar & Header ---
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
     $navItems = [];
+    
     while ($rowNav = pg_fetch_assoc($rNav)) {
         $id_nav = $rowNav['id_nav'];
         if (!isset($navItems[$id_nav])) {
-            $navItems[$id_nav] = ['nama_nav' => $rowNav['nama_nav'], 'url_nav' => $rowNav['url_nav'], 'subnav' => []];
+            $navItems[$id_nav] = [
+                'nama_nav' => $rowNav['nama_nav'], 
+                'url_nav' => $rowNav['url_nav'], 
+                'subnav' => []
+            ];
         }
         if ($rowNav['id_subnav']) {
-            $navItems[$id_nav]['subnav'][] = ['nama_subnav' => $rowNav['nama_subnav'], 'url_subnav' => $rowNav['url_subnav']];
+            $navItems[$id_nav]['subnav'][] = [
+                'nama_subnav' => $rowNav['nama_subnav'], 
+                'url_subnav' => $rowNav['url_subnav']
+            ];
         }
     }
 
+    // --- 2. Logika Submenu Dosen ---
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
+    
     while ($d = pg_fetch_assoc($rDosen)) {
-        $navItems[3]['subnav'][] = ['nama_subnav' => $d['nama_dosen'], 'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']];
+        $navItems[3]['subnav'][] = [
+            'nama_subnav' => $d['nama_dosen'], 
+            'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']
+        ];
     }
 
+    // --- 3. Logika Logo ---
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
-    
+
+
+    // --- 4. Logika Proyek & Pencarian (FTS) ---
     $filter = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
     $cari   = isset($_GET['cari']) ? trim($_GET['cari']) : ''; 
     $orderDirection = ($filter == 'terlama') ? 'ASC' : 'DESC';
@@ -31,15 +49,26 @@
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-    $base_join = " FROM public.proyek p
+    // Base Query pakai VIEW + JOIN untuk Search
+    // PERBAIKAN DI SINI: Menambahkan semua kolom vw_proyek ke GROUP BY
+    $base_join = " FROM vw_proyek p
                    LEFT JOIN public.proyek_mhs pm ON p.id_proyek = pm.id_proyek
                    LEFT JOIN public.mhs_segeeks m ON pm.id_mhs = m.id_mhs
                    LEFT JOIN public.proyek_dosen pd ON p.id_proyek = pd.id_proyek
                    LEFT JOIN public.dosen d ON pd.id_dosen = d.id_dosen
-                   GROUP BY p.id_proyek ";
+                   GROUP BY 
+                        p.id_proyek, 
+                        p.judul_proyek, 
+                        p.isi_proyek, 
+                        p.tanggal_terbit_proyek, 
+                        p.penulis_proyek,
+                        p.url_gambar_proyek1, 
+                        p.url_gambar_proyek2, 
+                        p.url_gambar_proyek3 ";
 
     $having_clause = "";
-
+    
+    // Filter Pencarian Hybrid
     if (!empty($cari)) {
         $clean_cari = preg_replace('/[^a-zA-Z0-9 ]/', '', $cari);
         $words = explode(" ", $clean_cari);
@@ -47,21 +76,18 @@
         
         foreach ($words as $w) {
             $t = trim($w);
-            if (!empty($t)) {
-                $ts_terms[] = $t . ":*"; 
-            }
+            if (!empty($t)) $ts_terms[] = $t . ":*"; 
         }
 
         if (!empty($ts_terms)) {
             $query_str = implode(" & ", $ts_terms);
-        
+            
             $search_targets = " COALESCE(p.judul_proyek, '') || ' ' || 
                                 COALESCE(p.isi_proyek, '') || ' ' || 
                                 COALESCE(p.penulis_proyek, '') || ' ' || 
                                 COALESCE(STRING_AGG(m.nama_mhs, ' '), '') || ' ' || 
                                 COALESCE(STRING_AGG(d.nama_dosen, ' '), '') ";
 
-        
             $having_clause = " HAVING (
                                 to_tsvector('indonesian', $search_targets) @@ to_tsquery('indonesian', '$query_str')
                                 OR
@@ -70,23 +96,20 @@
         }
     }
 
+    // --- 5. Pagination & Eksekusi Query ---
     $qTotal = "SELECT COUNT(*) as total FROM (SELECT p.id_proyek $base_join $having_clause) as sub";
     $rTotal = pg_query($conn, $qTotal);
     
     if (!$rTotal) {
-        $totalData = 0;
-        $totalPages = 1;
+        $totalData = 0; $totalPages = 1;
     } else {
         $rowTotal = pg_fetch_assoc($rTotal);
         $totalData = $rowTotal['total'];
         $totalPages = ceil($totalData / $limit);
     }
+
     $qProyek = "SELECT 
-                    p.id_proyek,
-                    p.judul_proyek,
-                    p.isi_proyek,
-                    p.tanggal_terbit_proyek,
-                    p.url_gambar_proyek1,
+                    p.*,
                     STRING_AGG(DISTINCT m.nama_mhs, ', ') AS anggota_mahasiswa,
                     STRING_AGG(DISTINCT d.nama_dosen, ', ') AS dosen_pembimbing
                 $base_join
@@ -96,6 +119,7 @@
 
     $rProyek = pg_query($conn, $qProyek);
 
+    // Format Data Tampilan
     $listProyek = [];
     if ($rProyek) {
         while ($row = pg_fetch_assoc($rProyek)) {
@@ -135,6 +159,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/styleRoot.css">
+    <!-- <link rel="stylesheet" href="css/styleIndex.css"> -->
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleProyek.css">
 </head>
@@ -195,11 +220,11 @@
         <div class="row mb-5 align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="d-flex gap-3">
-                    <a href="?filter=terbaru&cari=<?php echo htmlspecialchars($cari); ?>" 
+                    <a href="?filter=terbaru&cari=<?php echo $cari; ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terbaru') ? 'active' : ''; ?>">
                        Terbaru
                     </a>
-                    <a href="?filter=terlama&cari=<?php echo htmlspecialchars($cari); ?>" 
+                    <a href="?filter=terlama&cari=<?php echo $cari; ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terlama') ? 'active' : ''; ?>">
                        Terlama
                     </a>
@@ -259,7 +284,6 @@
                     <h4 class="text-muted"><i class="bi bi-folder-x me-2"></i>Proyek tidak ditemukan.</h4>
                 </div>
             <?php endif; ?>
-
         </div>
 
         <?php if ($totalPages > 1): ?>
