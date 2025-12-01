@@ -59,55 +59,50 @@ if (isset($_POST['update'])) {
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Edit Logo CTA</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleForm.css">
-<link rel="stylesheet" href="css/styleSidebar.css">
+    <meta charset="UTF-8">
+    <title>Edit Logo CTA</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body>
+<body class="p-4">
+    <div class="content-area container">
+        <h1 class="mb-4 fw-bold text-center">Edit Logo CTA</h1>
 
-<?php include 'sidebar.php'; ?>
+        <div class="card shadow-sm p-4 form-card">
 
-<div class="content-area container">
-    <h1 class="mb-4 fw-bold text-center">Edit Logo CTA</h1>
+            <form method="POST" enctype="multipart/form-data">
 
-    <div class="card shadow-sm p-4 form-card">
+                <div class="text-center mb-3">
+                    <label class="form-label text-white">Logo Saat Ini</label><br>
+                    <img src="../<?= $data['url_logo']; ?>" style="max-height:90px; border-radius:5px;">
+                    <input type="hidden" name="logo_lama" value="<?= $data['url_logo']; ?>">
+                </div>
 
-        <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label text-white">Upload Logo Baru</label>
+                    <input type="file" name="logo" class="form-control">
+                </div>
 
-            <div class="text-center mb-3">
-                <label class="form-label text-white">Logo Saat Ini</label><br>
-                <img src="../<?= $data['url_logo']; ?>" style="max-height:90px; border-radius:5px;">
-                <input type="hidden" name="logo_lama" value="<?= $data['url_logo']; ?>">
-            </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">Judul CTA</label>
+                    <input type="text" name="judul" class="form-control"
+                        value="<?= htmlspecialchars($data['judul_cta']); ?>" required>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label text-white">Upload Logo Baru</label>
-                <input type="file" name="logo" class="form-control">
-            </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">Link CTA</label>
+                    <input type="text" name="link" class="form-control"
+                        value="<?= htmlspecialchars($data['link_cta']); ?>" required>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label text-white">Judul CTA</label>
-                <input type="text" name="judul" class="form-control"
-                       value="<?= htmlspecialchars($data['judul_cta']); ?>" required>
-            </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="kelola_logoCTA.php" class="btn btn-secondary">Kembali</a>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label text-white">Link CTA</label>
-                <input type="text" name="link" class="form-control"
-                       value="<?= htmlspecialchars($data['link_cta']); ?>" required>
-            </div>
-
-            <div class="d-flex gap-2 mt-3">
-                <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
-                <a href="kelola_logoCTA.php" class="btn btn-secondary">Kembali</a>
-            </div>
-
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-
-<script src="js/sidebar.js"></script>
 </body>
 </html>
