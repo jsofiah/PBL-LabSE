@@ -4,6 +4,7 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
+
 require_once '../config.php';
 
 if (isset($_GET['id'])) {
@@ -17,12 +18,15 @@ if (isset($_GET['id'])) {
     $result = pg_query($conn, $query);
 
     if ($result) {
-        if ($data && !empty($data['foto_admin'])) {
-            $filePath = "../" . $data['foto_admin'];
-            if (file_exists($filePath)) {
+
+        if (!empty($data['foto_admin'])) {
+            $filePath = $data['foto_admin'];
+
+            if (file_exists($filePath) && is_file($filePath)) {
                 unlink($filePath);
             }
         }
+
         $_SESSION['pesan'] = "Admin berhasil dihapus!";
     } else {
         $_SESSION['pesan'] = "Gagal menghapus admin.";

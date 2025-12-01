@@ -7,14 +7,11 @@ if (!isset($_SESSION['username'])) {
 
 require "../config.php";
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['simpan'])) {
 
-    // FIX deprecated issue
     $nama = pg_escape_string($conn, $_POST['nama_jenismitra']);
 
-    // Harus sesuai procedure (1 parameter)
-    $q = "CALL sp_create_jenismitra('$nama');";
-
+    $q = "CALL sp_create_jenismitra('$nama')";
     $res = pg_query($conn, $q);
 
     if ($res) {
@@ -22,6 +19,7 @@ if (isset($_POST['submit'])) {
                 alert('Jenis mitra berhasil ditambahkan!');
                 window.location='kelola_jenisMitra.php';
               </script>";
+        exit;
     } else {
         echo "<script>alert('Gagal menambahkan jenis mitra!');</script>";
     }
@@ -33,28 +31,34 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <title>Tambah Jenis Mitra</title>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="css/styleSidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
-<body>
-<?php include 'sidebar.php'; ?>
+<body class="p-4">
 
-<div class="content-area container">
-    <h3 class="mb-4">Tambah Jenis Mitra</h3>
+    <div class="container">
+        <h1 class="mb-4 fw-bold text-center">Tambah Jenis Mitra</h1>
 
-    <form method="POST">
+        <div class="card form-card shadow-sm p-4">
 
-        <div class="mb-3">
-            <label class="form-label">Nama Jenis Mitra</label>
-            <input type="text" name="nama_jenismitra" class="form-control" required>
+            <form method="POST">
+
+                <div class="mb-3">
+                    <label class="form-label text-white">Nama Jenis Mitra</label>
+                    <input type="text" name="nama_jenismitra" 
+                           class="form-control" 
+                           placeholder="Masukkan nama jenis mitra" required>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                    <a href="kelola_jenisMitra.php" class="btn btn-secondary">Kembali</a>
+                </div>
+
+            </form>
         </div>
+    </div>
 
-        <button name="submit" class="btn btn-success">Simpan</button>
-        <a href="kelola_jenisMitra.php" class="btn btn-secondary">Kembali</a>
-
-    </form>
-</div>
-
-<script src="js/sidebar.js"></script>
 </body>
 </html>
