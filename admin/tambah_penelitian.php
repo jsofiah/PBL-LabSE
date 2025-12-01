@@ -62,7 +62,7 @@ $rDosen = pg_query($conn, $qDosen);
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Tahun Penelitian</label>
-                    <input type='number' name='tahun' class='form-control' min="1990" max="2100" placeholder="Contoh: 2024" required>
+                    <input type='number' name='tahun' class='form-control' min="1990" max="2100" placeholder="masukkan tahun penelitian" required>
                 </div>
 
                 <div class='mb-3'>
