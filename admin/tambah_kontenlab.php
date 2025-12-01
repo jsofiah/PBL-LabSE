@@ -50,12 +50,12 @@
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul Konten</label>
-                <input type='text' name='judul' class='form-control' required>
+                <input type='text' name='judul' class='form-control' placeholder="tambah judul Konten" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Isi Konten</label>
-                <textarea name='isi' rows='5' class='form-control' required></textarea>
+                <textarea name='isi' rows='5' class='form-control' placeholder="tambah Isi Konten" required></textarea>
             </div>
 
             <div class='d-flex gap-2 mt-3'>
