@@ -1,6 +1,5 @@
 <?php
     require 'config.php';
-
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
     $navItems = [];
@@ -23,42 +22,90 @@
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
-
-    // fungsi proyek
+    
     $filter = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
-    $cari   = isset($_GET['cari']) ? pg_escape_string($conn, $_GET['cari']) : '';
+    $cari   = isset($_GET['cari']) ? trim($_GET['cari']) : ''; 
     $orderDirection = ($filter == 'terlama') ? 'ASC' : 'DESC';
 
     $limit = 5;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-    $whereClause = "";
+    $base_join = " FROM public.proyek p
+                   LEFT JOIN public.proyek_mhs pm ON p.id_proyek = pm.id_proyek
+                   LEFT JOIN public.mhs_segeeks m ON pm.id_mhs = m.id_mhs
+                   LEFT JOIN public.proyek_dosen pd ON p.id_proyek = pd.id_proyek
+                   LEFT JOIN public.dosen d ON pd.id_dosen = d.id_dosen
+                   GROUP BY p.id_proyek ";
+
+    $having_clause = "";
+
     if (!empty($cari)) {
-        $whereClause = "WHERE judul_proyek ILIKE '%$cari%' OR isi_proyek ILIKE '%$cari%'";
+        $clean_cari = preg_replace('/[^a-zA-Z0-9 ]/', '', $cari);
+        $words = explode(" ", $clean_cari);
+        $ts_terms = [];
+        
+        foreach ($words as $w) {
+            $t = trim($w);
+            if (!empty($t)) {
+                $ts_terms[] = $t . ":*"; 
+            }
+        }
+
+        if (!empty($ts_terms)) {
+            $query_str = implode(" & ", $ts_terms);
+        
+            $search_targets = " COALESCE(p.judul_proyek, '') || ' ' || 
+                                COALESCE(p.isi_proyek, '') || ' ' || 
+                                COALESCE(p.penulis_proyek, '') || ' ' || 
+                                COALESCE(STRING_AGG(m.nama_mhs, ' '), '') || ' ' || 
+                                COALESCE(STRING_AGG(d.nama_dosen, ' '), '') ";
+
+        
+            $having_clause = " HAVING (
+                                to_tsvector('indonesian', $search_targets) @@ to_tsquery('indonesian', '$query_str')
+                                OR
+                                to_tsvector('simple', $search_targets) @@ to_tsquery('simple', '$query_str')
+                               ) ";
+        }
     }
 
-    $qTotal = "SELECT COUNT(*) as total FROM vw_proyek $whereClause";
+    $qTotal = "SELECT COUNT(*) as total FROM (SELECT p.id_proyek $base_join $having_clause) as sub";
     $rTotal = pg_query($conn, $qTotal);
-    $rowTotal = pg_fetch_assoc($rTotal);
-    $totalData = $rowTotal['total'];
-    $totalPages = ceil($totalData / $limit);
-
-    $qProyek = "SELECT * FROM vw_proyek 
-                $whereClause 
-                ORDER BY tanggal_terbit_proyek $orderDirection 
+    
+    if (!$rTotal) {
+        $totalData = 0;
+        $totalPages = 1;
+    } else {
+        $rowTotal = pg_fetch_assoc($rTotal);
+        $totalData = $rowTotal['total'];
+        $totalPages = ceil($totalData / $limit);
+    }
+    $qProyek = "SELECT 
+                    p.id_proyek,
+                    p.judul_proyek,
+                    p.isi_proyek,
+                    p.tanggal_terbit_proyek,
+                    p.url_gambar_proyek1,
+                    STRING_AGG(DISTINCT m.nama_mhs, ', ') AS anggota_mahasiswa,
+                    STRING_AGG(DISTINCT d.nama_dosen, ', ') AS dosen_pembimbing
+                $base_join
+                $having_clause
+                ORDER BY p.tanggal_terbit_proyek $orderDirection 
                 LIMIT $limit OFFSET $start";
+
     $rProyek = pg_query($conn, $qProyek);
 
     $listProyek = [];
-    while ($row = pg_fetch_assoc($rProyek)) {
-        $row['tgl_indo'] = formatTanggalIndonesia($row['tanggal_terbit_proyek']);
-        
-        $previewRaw = strip_tags($row['isi_proyek']);
-        $row['preview_fmt'] = htmlspecialchars(substr($previewRaw, 0, 150)) . '...';
-        
-        $listProyek[] = $row;
+    if ($rProyek) {
+        while ($row = pg_fetch_assoc($rProyek)) {
+            $row['tgl_indo'] = formatTanggalIndonesia($row['tanggal_terbit_proyek']);
+            $previewRaw = strip_tags($row['isi_proyek']);
+            $row['preview_fmt'] = htmlspecialchars(substr($previewRaw, 0, 150)) . '...';
+            $listProyek[] = $row;
+        }
     }
+
     function formatTanggalIndonesia($tanggal) {
         $bulan = array(
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
@@ -148,11 +195,11 @@
         <div class="row mb-5 align-items-center">
             <div class="col-md-6 mb-3 mb-md-0">
                 <div class="d-flex gap-3">
-                    <a href="?filter=terbaru&cari=<?php echo $cari; ?>" 
+                    <a href="?filter=terbaru&cari=<?php echo htmlspecialchars($cari); ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terbaru') ? 'active' : ''; ?>">
                        Terbaru
                     </a>
-                    <a href="?filter=terlama&cari=<?php echo $cari; ?>" 
+                    <a href="?filter=terlama&cari=<?php echo htmlspecialchars($cari); ?>" 
                        class="filter-btn text-decoration-none <?php echo ($filter == 'terlama') ? 'active' : ''; ?>">
                        Terlama
                     </a>
