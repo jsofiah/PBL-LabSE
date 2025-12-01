@@ -62,13 +62,13 @@
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul Konten</label>
-                <input type='text' name='judul' class='form-control'
+                <input type='text' name='judul' class='form-control' placeholder="Masukkan judul konten"
                        value='<?= $k['judul_konten']; ?>' required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Isi Konten</label>
-                <textarea name='isi' rows='5' class='form-control' required><?= $k['isi_konten']; ?></textarea>
+                <textarea name='isi' rows='5' class='form-control' placeholder="Masukkan isi konten" required><?= $k['isi_konten']; ?></textarea>
             </div>
 
             <div class='d-flex gap-2 mt-3'>

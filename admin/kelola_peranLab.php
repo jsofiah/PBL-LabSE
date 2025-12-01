@@ -18,17 +18,9 @@ $result = pg_query($conn, $query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Peran Lab</title>
-
-    <!-- Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS Admin -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
 </head>
@@ -37,16 +29,13 @@ $result = pg_query($conn, $query);
     <?php include 'sidebar.php'; ?>
 
     <div class="content-area container">
-
-        <!-- Header + Tombol Tambah -->
         <div class="mb-4">
-            <h2 class="mb-0">Kelola Peran Lab</h2>
+            <h2 class="mb-2">Kelola Peran Lab</h2>
             <a href="tambah_peranLab.php" class="btn btn-success btn-sm">
                 <i class="fa fa-plus"></i> Tambah Peran
             </a>
         </div>
 
-        <!-- Tabel -->
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>

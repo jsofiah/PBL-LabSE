@@ -51,7 +51,7 @@
                     <col style="width:200px">
                     <col style="width:300px">
                     <col style="width:160px">
-                    <col style="width:130px">
+                    <col style="width:200px">
                 </colgroup>
 
                 <thead class="table-primary">
@@ -60,7 +60,7 @@
                         <th class="text-center">Jenis</th>
                         <th class="text-center">Nama</th>
                         <th class="text-center">Isi</th>
-                        <th class="text-center">URL Gambar</th>
+                        <th class="text-center">Preview Gambar</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -73,24 +73,24 @@
                         <td class="text-center"><?= htmlspecialchars($row['nama_fasilitas']); ?></td>
                         <td><?= nl2br(htmlspecialchars($row['isi_fasilitas'])); ?></td>
                        <td class="text-center">
-    <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>" 
-         alt="Gambar Fasilitas" 
-         style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-</td>
+                            <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>" 
+                                alt="Gambar Fasilitas" 
+                                style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                        </td>
 
 
-<td>
-    <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
-       class="btn btn-warning btn-sm">
-        <i class="bi bi-pencil-square"></i> Edit
-    </a>
+                        <td class="text-center">
+                            <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
 
-    <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
-       class="btn btn-danger btn-sm"
-       onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
-        <i class="bi bi-trash"></i> Hapus
-    </a>
-</td>
+                            <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

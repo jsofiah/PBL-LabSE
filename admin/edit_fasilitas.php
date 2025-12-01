@@ -13,7 +13,6 @@ $qData = "SELECT * FROM fasilitas WHERE id_fasilitas = $1";
 $rData = pg_query_params($conn, $qData, [$id]);
 $data = pg_fetch_assoc($rData);
 
-// Ambil jenis
 $qJenis = "SELECT * FROM jenis_fasilitas ORDER BY id_jenisfasilitas";
 $rJenis = pg_query($conn, $qJenis);
 
@@ -22,12 +21,11 @@ if (isset($_POST['submit'])) {
     $nama = $_POST['nama_fasilitas'];
     $isi = $_POST['isi_fasilitas'];
 
-    // === HANDLE UPLOAD GAMBAR ===
-    $gambarBaru = $data['url_gambar_fasilitas']; // default tetap gambar lama
+    $gambarBaru = $data['url_gambar_fasilitas'];
 
     if (!empty($_FILES['gambar']['name'])) {
 
-        $folder = '../img/fasilitas/';  // folder penyimpanan
+        $folder = '../img/fasilitas/';
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
@@ -36,7 +34,12 @@ if (isset($_POST['submit'])) {
         $pathSimpan = $folder . $namaFile;
 
         if (move_uploaded_file($_FILES['gambar']['tmp_name'], $pathSimpan)) {
-            // Simpan path relative ke database
+
+            $oldFile = "../" . $data['url_gambar_fasilitas'];
+            if ($data['url_gambar_fasilitas'] && file_exists($oldFile)) {
+                unlink($oldFile);
+            }
+
             $gambarBaru = "img/fasilitas/" . $namaFile;
         }
     }
@@ -61,22 +64,22 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Edit Fasilitas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body class="container mt-4">
+<body class="container p-4">
 
-<h1 class="mb-4 fw-bold text-center">Edit Fasilitas</h1
+<h1 class="mb-4 fw-bold text-center">Edit Fasilitas</h1>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 <div class="card shadow-sm p-4">
     <div class="mb-3">
-        <label>Jenis Fasilitas</label>
+        <label class="text-white">Jenis Fasilitas</label>
         <select name="id_jenisfasilitas" class="form-control" required>
             <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
                 <option value="<?= $j['id_jenisfasilitas']; ?>"
@@ -103,7 +106,7 @@ if (isset($_POST['submit'])) {
         <input type="file" name="gambar" class="form-control">
     </div>
     <div class="d-flex gap-2 mt-3">
-        <button name="submit" class="btn btn-primary">Update</button>
+        <button name="submit" class="btn btn-primary">Simpan perubahan</button>
         <a href="kelola_fasilitas.php" class="btn btn-secondary">Kembali</a>
     </div>
             </div>
