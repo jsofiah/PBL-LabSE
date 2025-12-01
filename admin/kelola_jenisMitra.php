@@ -22,6 +22,7 @@ $rJenis = pg_query($conn, $qJenis);
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
 <body>
 
@@ -65,7 +66,7 @@ $rJenis = pg_query($conn, $qJenis);
 
                         <!-- ID Proyek Dosen -->
                         <td class="text-center">
-                            <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>" class="btn btn-warning btn-sm" class="fa fa-edit">Edit</a>
                             <a href="hapus_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>"
                                onclick="return confirm('Yakin ingin menghapus jenis mitra ini?')"
                                class="btn btn-danger btn-sm">
