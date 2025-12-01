@@ -1,54 +1,45 @@
 <?php
-require 'config.php';
-$qNav = "SELECT * FROM vw_nav";
-$rNav = pg_query($conn, $qNav);
+    require 'config.php';
 
-$navItems = [];
-while ($rowNav = pg_fetch_assoc($rNav)) {
-    $id_nav = $rowNav['id_nav'];
-    
-    if (!isset($navItems[$id_nav])) {
-        $navItems[$id_nav] = [
-            'nama_nav' => $rowNav['nama_nav'],
-            'url_nav' => $rowNav['url_nav'],
-            'subnav' => []
-        ];
+    // --- LOGIC NAVIGASI ---
+    $qNav = "SELECT * FROM vw_nav";
+    $rNav = pg_query($conn, $qNav);
+    $navItems = [];
+    while ($rowNav = pg_fetch_assoc($rNav)) {
+        $id_nav = $rowNav['id_nav'];
+        if (!isset($navItems[$id_nav])) {
+            $navItems[$id_nav] = ['nama_nav' => $rowNav['nama_nav'], 'url_nav' => $rowNav['url_nav'], 'subnav' => []];
+        }
+        if ($rowNav['id_subnav']) {
+            $navItems[$id_nav]['subnav'][] = ['nama_subnav' => $rowNav['nama_subnav'], 'url_subnav' => $rowNav['url_subnav']];
+        }
     }
-    
-    if ($rowNav['id_subnav']) {
-        $navItems[$id_nav]['subnav'][] = [
-            'nama_subnav' => $rowNav['nama_subnav'],
-            'url_subnav' => $rowNav['url_subnav']
-        ];
+
+    // --- LOGIC DOSEN ---
+    $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
+    $rDosen = pg_query($conn, $qDosen);
+    while ($d = pg_fetch_assoc($rDosen)) {
+        $navItems[3]['subnav'][] = ['nama_subnav' => $d['nama_dosen'], 'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']];
     }
-}
 
-$qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
-$rDosen = pg_query($conn, $qDosen);
+    // --- LOGIC LOGO ---
+    $qLogo = "SELECT * FROM vw_logo_cta";
+    $rLogo = pg_query($conn, $qLogo);
+    $rowLogo = pg_fetch_assoc($rLogo);
 
-while ($d = pg_fetch_assoc($rDosen)) {
-    $url = "dosen_detail.php?id=" . $d['id_dosen'];
-    $navItems[3]['subnav'][] = [
-        'nama_subnav' => $d['nama_dosen'],
-        'url_subnav' => $url
-    ];
-}
+    // --- LOGIC PAGINATION GALERI ---
+    $limit = 10; 
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-$qLogo = "SELECT * FROM vw_logo_cta";
-$rLogo = pg_query($conn, $qLogo);
-$rowLogo = pg_fetch_assoc($rLogo);
+    $queryTotal = "SELECT count(*) as total FROM galeri";
+    $resultTotal = pg_query($conn, $queryTotal);
+    $rowTotal = pg_fetch_assoc($resultTotal);
+    $totalData = $rowTotal['total'];
+    $totalPage = ceil($totalData / $limit);
 
-$limit = 14;
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$start = ($page > 1) ? ($page * $limit) - $limit : 0;
-
-$queryTotal = "SELECT count(*) as total FROM galeri";
-$resultTotal = pg_query($conn, $queryTotal);
-$rowTotal = pg_fetch_assoc($resultTotal);
-$totalData = $rowTotal['total'];
-$totalPage = ceil($totalData / $limit);
-$query = "SELECT * FROM vw_galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
-$result = pg_query($conn, $query);
+    $query = "SELECT * FROM vw_galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
+    $result = pg_query($conn, $query);
 ?>
 
 <!DOCTYPE html>
@@ -57,15 +48,15 @@ $result = pg_query($conn, $query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeri - Laboratorium Software Engineer</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
-    <link rel="stylesheet" href="css/styleGalery.css">
+    <link rel="stylesheet" href="css/styleGalery.css"> 
 </head>
 <body>
     <div class="logo">
@@ -82,8 +73,7 @@ $result = pg_query($conn, $query);
                 <?php if (count($nav['subnav']) > 0): ?>
                     <li class="dropdown">
                         <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                            <i class="bi bi-chevron-down"></i>
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?> <i class="bi bi-chevron-down"></i>
                         </a>
                         <div class="dropdown-content">
                             <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
@@ -96,11 +86,7 @@ $result = pg_query($conn, $query);
                         </div>
                     </li>
                 <?php else: ?>
-                    <li>
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                        </a>
-                    </li>
+                    <li><a href="<?php echo htmlspecialchars($nav['url_nav']); ?>"><?php echo htmlspecialchars($nav['nama_nav']); ?></a></li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
@@ -117,8 +103,7 @@ $result = pg_query($conn, $query);
             <div class="hero-frame">
                 <img src="img/bggaleri.jpg" alt="Galeri Background">
                 <div class="hero-overlay"></div>
-                <div class="hero-content">
-                <h1 class="hero-title">GALERI</h1>
+                <div class="hero-content"><h1 class="hero-title">GALERI</h1></div>
             </div>
         </div>
     </div>
@@ -132,7 +117,6 @@ $result = pg_query($conn, $query);
                     $gambar = $row['url_gambar_galeri'];
                     $deskripsi = $row['deskripsi_galeri'];
             ?>
-            
                 <div class="grid-item" onclick="previewImage(this)">
                     <img src="<?php echo htmlspecialchars($gambar); ?>" alt="<?php echo htmlspecialchars($deskripsi); ?>">
                     <div class="grid-overlay">
@@ -142,36 +126,36 @@ $result = pg_query($conn, $query);
                         </div>
                     </div>
                 </div>
-
             <?php
                 }
             } else {
                 echo "<div style='grid-column: span 4; text-align: center; padding: 50px;'>Belum ada foto yang diunggah.</div>";
             }
             ?>
-
         </div>
         
-        <?php if($totalPage > 1): ?>
-        <div class="d-flex justify-content-center gap-3 mt-5">
-            
-            <?php if($page > 1): ?>
-                <a href="?page=<?php echo $page - 1; ?>" class="btn btn-outline-dark px-4 rounded-pill shadow-sm">
-                    <i class="bi bi-arrow-left me-2"></i> Sebelumnya
-                </a>
-            <?php endif; ?>
+        <?php if ($totalPage > 1): ?>
+            <div class="pagination-wrapper">
 
-            <span class="align-self-center fw-bold text-muted">
-                Halaman <?php echo $page; ?> dari <?php echo $totalPage; ?>
-            </span>
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?>" class="btn-pagination">
+                        <i class="bi bi-caret-left-fill me-1"></i> Previous
+                    </a>
+                <?php else: ?>
+                    <button class="btn-pagination" disabled>Previous</button>
+                <?php endif; ?>
 
-            <?php if($page < $totalPage): ?>
-                <a href="?page=<?php echo $page + 1; ?>" class="btn btn-dark px-4 rounded-pill shadow-sm">
-                    Selanjutnya <i class="bi bi-arrow-right ms-2"></i>
-                </a>
-            <?php endif; ?>
-            
-        </div>
+                <span class="pagination-info">Slide <?php echo $page; ?> of <?php echo $totalPage; ?></span>
+
+                <?php if ($page < $totalPage): ?>
+                    <a href="?page=<?php echo $page + 1; ?>" class="btn-pagination">
+                        Next <i class="bi bi-caret-right-fill ms-1"></i>
+                    </a>
+                <?php else: ?>
+                    <button class="btn-pagination" disabled>Next</button>
+                <?php endif; ?>
+
+            </div>
         <?php endif; ?>
 
     </div>
@@ -195,7 +179,4 @@ $result = pg_query($conn, $query);
     <script src="js/galeri.js"></script>
 </body>
 </html>
-
-<?php
-pg_close($conn);
-?>
+<?php pg_close($conn); ?>
