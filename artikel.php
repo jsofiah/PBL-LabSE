@@ -39,10 +39,9 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-
-    $filter = $_GET['filter'] ?? 'terbaru';
-    $cari   = $_GET['cari'] ?? '';
-    $jenis  = $_GET['jenis'] ?? '';
+    $filter   = $_GET['filter'] ?? 'terbaru';
+    $cari     = $_GET['cari'] ?? '';
+    $kategori = $_GET['kategori'] ?? 'semua'; 
 
     $qJenis = "
         SELECT DISTINCT id_jenisartikel, nama_jenisartikel
@@ -51,55 +50,66 @@
     ";
     $rJenis = pg_query($conn, $qJenis);
 
+    $whereClause = "WHERE 1=1";
+
+    if ($kategori != 'semua' && $kategori != '') {
+        $katClean = pg_escape_string($conn, $kategori);
+        $whereClause .= " AND id_jenisartikel = '$katClean' ";
+    }
+
+    if (!empty($cari)) {
+        $clean_cari = preg_replace('/[^a-zA-Z0-9 ]/', '', $cari);
+        $words = explode(" ", $clean_cari);
+        $ts_terms = [];
+        
+        foreach ($words as $w) {
+            $t = trim($w);
+            if (!empty($t)) {
+                $ts_terms[] = $t . ":*"; 
+            }
+        }
+
+        if (!empty($ts_terms)) {
+            $query_str = implode(" & ", $ts_terms); 
+            
+            $search_targets = " COALESCE(judul_artikel, '') || ' ' || 
+                                COALESCE(isi_artikel, '') || ' ' ||
+                                COALESCE(nama_jenisartikel, '') ";
+
+            $whereClause .= " AND (
+                                to_tsvector('indonesian', $search_targets) @@ to_tsquery('indonesian', '$query_str')
+                                OR
+                                to_tsvector('simple', $search_targets) @@ to_tsquery('simple', '$query_str')
+                              ) ";
+        }
+    }
+
     $limit = 8;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page - 1) * $limit;
 
-    $where = "WHERE 1=1";
-
-    if (!empty($cari)) {
-        $where .= " AND judul_artikel ILIKE '%$cari%'";
-    }
-    if ($filter == 'jenis' && !empty($jenis)) {
-        $where .= " AND id_jenisartikel = '$jenis'";
-    }
-
-    $qCount = "SELECT COUNT(*) AS total FROM vw_artikel $where";
+    $qCount = "SELECT COUNT(*) AS total FROM vw_artikel $whereClause";
     $rCount = pg_query($conn, $qCount);
-    $totalData = pg_fetch_assoc($rCount)['total'];
-    $totalPages = ceil($totalData / $limit);
-
-    $order = "ORDER BY tanggal_terbit_artikel DESC";
-    if ($filter == 'terlama') {
-        $order = "ORDER BY tanggal_terbit_artikel ASC";
-    }
-
-    $filter   = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
-    $kategori = isset($_GET['kategori']) ? $_GET['kategori'] : 'semua';
-    $cari     = isset($_GET['cari']) ? $_GET['cari'] : '';
-
-    if ($filter == 'terlama') {
-        $order = "ASC";
+    
+    if (!$rCount) {
+        $totalData = 0;
+        $totalPages = 1;
     } else {
-        $order = "DESC";
+        $rowTotal = pg_fetch_assoc($rCount);
+        $totalData = $rowTotal['total'];
+        $totalPages = ceil($totalData / $limit);
     }
 
-    $whereKategori = ($kategori == 'semua') 
-        ? "" 
-        : " AND id_jenisartikel = '$kategori' ";
-
-    $whereCari = ($cari != '')
-    ? " AND (judul_artikel ILIKE '%$cari%' OR isi_artikel ILIKE '%$cari%') "
-    : "";
-
+    $orderDirection = "DESC";
+    if ($filter == 'terlama') {
+        $orderDirection = "ASC";
+    }
 
     $qArtikel = "
         SELECT *
         FROM vw_artikel
-        WHERE 1=1
-            $whereKategori
-            $whereCari
-        ORDER BY tanggal_terbit_artikel $order
+        $whereClause
+        ORDER BY tanggal_terbit_artikel $orderDirection
         LIMIT $limit OFFSET $start
     ";
     $rArtikel = pg_query($conn, $qArtikel);
@@ -118,8 +128,8 @@
         }
         return $tanggal;
     }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -290,9 +300,7 @@
                                     
                                     <p class="artikel-excerpt">
                                         <?php
-                                            // Logika Preview Text
                                             $preview = strip_tags($rowArtikel['isi_artikel']);
-                                            // Jika teks lebih dari 150 karakter, potong
                                             if (strlen($preview) > 150) {
                                                 echo htmlspecialchars(substr($preview, 0, 150)) . '...';
                                             } else {
@@ -339,7 +347,7 @@
             <div class="pagination-wrapper">
 
                 <?php if ($page > 1): ?>
-                    <a href="?page=<?php echo $page - 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>&jenis=<?php echo $jenis; ?>"
+                    <a href="?page=<?php echo $page - 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>&kategori=<?php echo $kategori; ?>"
                        class="btn-pagination">
                        <i class="bi bi-caret-left-fill me-1"></i> Previous
                     </a>
@@ -350,7 +358,7 @@
                 <span class="pagination-info">Slide <?php echo $page; ?> of <?php echo $totalPages; ?></span>
 
                 <?php if ($page < $totalPages): ?>
-                    <a href="?page=<?php echo $page + 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>&jenis=<?php echo $jenis; ?>"
+                    <a href="?page=<?php echo $page + 1; ?>&filter=<?php echo $filter; ?>&cari=<?php echo $cari; ?>&kategori=<?php echo $kategori; ?>"
                        class="btn-pagination">
                        Next <i class="bi bi-caret-right-fill ms-1"></i>
                     </a>
