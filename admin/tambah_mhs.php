@@ -115,7 +115,7 @@ if (isset($_POST['submit'])) {
 
             <div class="d-flex gap-2">
                 <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-                <a href="kelola_admin.php" class="btn btn-secondary">Batal</a>
+                <a href="kelola_mhs.php" class="btn btn-secondary">Batal</a>
             </div>
         </form>
     </div>
