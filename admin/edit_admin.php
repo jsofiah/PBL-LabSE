@@ -55,8 +55,11 @@ if (isset($_POST['update'])) {
     $result = pg_query($conn, $query);
 
     if ($result) {
-        $_SESSION['pesan'] = "Data Admin berhasil diperbarui!";
-        header("Location: kelola_admin.php");
+         echo "
+        <script>
+            alert('Data Admin berhasil diperbarui!');
+            window.location.href = 'kelola_admin.php';
+        </script>";
         exit;
     } else {
         $error = "Gagal update data: " . pg_last_error($conn);
@@ -70,39 +73,38 @@ if (isset($_POST['update'])) {
     <meta charset="UTF-8">
     <title>Edit Admin - Portal LAB SE</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body>
-    <?php include 'sidebar.php'; ?>
+<body class="p-4">
     <div class="content-area container">
-        <h3 class="mb-4">Edit Data Admin</h3>
+        <h1 class="mb-4 fw-bold text-center">Edit Data Admin</h1>
         <?php if(isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
         
         <form action="" method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
             <div class="mb-3">
-                <label class="form-label">Username</label>
+                <label class="form-label text-white">Username</label>
                 <input type="text" name="username" class="form-control" value="<?= htmlspecialchars($data['username']); ?>" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Password (Baru)</label>
+                <label class="form-label text-white">Password (Baru)</label>
                 <input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah password">
             </div>
             <div class="mb-3">
-                <label class="form-label">Foto Profil Saat Ini</label><br>
+                <label class="form-label text-white">Foto Profil Saat Ini</label><br>
                 <?php if (!empty($data['foto_admin'])): ?>
-                    <img src="../<?= htmlspecialchars($data['foto_admin']); ?>" width="100" class="img-thumbnail mb-2">
+                    <img src="<?= htmlspecialchars($data['foto_admin']); ?>" width="100" class="img-thumbnail mb-2">
                 <?php else: ?>
-                    <p class="text-muted">Belum ada foto.</p>
+                    <p class="text-white">Belum ada foto.</p>
                 <?php endif; ?>
                 <input type="file" name="foto" class="form-control" accept="image/*">
-                <small class="text-muted">Upload foto baru untuk mengganti.</small>
+                <small class="text-white">Upload foto baru untuk mengganti.</small>
             </div>
             <div class="d-flex gap-2">
-                <button type="submit" name="update" class="btn btn-primary">Update</button>
-                <a href="kelola_admin.php" class="btn btn-secondary">Batal</a>
+                <button type="submit" name="update" class="btn btn-primary">Simpan perubahan</button>
+                <a href="kelola_admin.php" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </div>
-    <script src="js/sidebar.js"></script>
 </body>
 </html>
