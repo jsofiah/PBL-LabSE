@@ -1,6 +1,5 @@
 <?php
     require 'config.php';
-
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
 
@@ -23,7 +22,6 @@
             ];
         }
     }
-
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
 
@@ -39,19 +37,19 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
+//filter
+    
     $filter   = $_GET['filter'] ?? 'terbaru';
     $cari     = $_GET['cari'] ?? '';
     $kategori = $_GET['kategori'] ?? 'semua'; 
 
-    $qJenis = "
-        SELECT DISTINCT id_jenisartikel, nama_jenisartikel
-        FROM vw_artikel
-        ORDER BY nama_jenisartikel
-    ";
+    $qJenis = "SELECT DISTINCT id_jenisartikel, nama_jenisartikel FROM vw_artikel ORDER BY nama_jenisartikel";
     $rJenis = pg_query($conn, $qJenis);
 
+    //  LOGIKA PENCARIAN (FTS HYBRID) & WHERE CLAUSE
     $whereClause = "WHERE 1=1";
 
+    // A. Filter berdasarkan Kategori (Dropdown)
     if ($kategori != 'semua' && $kategori != '') {
         $katClean = pg_escape_string($conn, $kategori);
         $whereClause .= " AND id_jenisartikel = '$katClean' ";
@@ -75,7 +73,7 @@
             $search_targets = " COALESCE(judul_artikel, '') || ' ' || 
                                 COALESCE(isi_artikel, '') || ' ' ||
                                 COALESCE(nama_jenisartikel, '') ";
-
+            
             $whereClause .= " AND (
                                 to_tsvector('indonesian', $search_targets) @@ to_tsquery('indonesian', '$query_str')
                                 OR
@@ -84,7 +82,8 @@
         }
     }
 
-    $limit = 8;
+    // PAGINATION
+    $limit = 5; 
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page - 1) * $limit;
 
@@ -100,20 +99,16 @@
         $totalPages = ceil($totalData / $limit);
     }
 
-    $orderDirection = "DESC";
+    $orderDirection = "DESC"; 
     if ($filter == 'terlama') {
         $orderDirection = "ASC";
     }
 
-    $qArtikel = "
-        SELECT *
-        FROM vw_artikel
-        $whereClause
-        ORDER BY tanggal_terbit_artikel $orderDirection
-        LIMIT $limit OFFSET $start
-    ";
+    // Query Utama (vw_artikel)
+    $qArtikel = "SELECT * FROM vw_artikel $whereClause ORDER BY tanggal_terbit_artikel $orderDirection LIMIT $limit OFFSET $start ";
     $rArtikel = pg_query($conn, $qArtikel);
 
+    //format tanggal    
     function formatTanggalIndonesia($tanggal) {
         $bulan = array(
             1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
@@ -144,6 +139,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
+    <link rel="stylesheet" href="css/styleIndex.css">
     <link rel="stylesheet" href="css/styleArtikel.css">
     <link rel="stylesheet" href="css/styleFooter.css">
 
