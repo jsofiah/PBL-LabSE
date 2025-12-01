@@ -54,35 +54,32 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <title>Tambah Mahasiswa</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body>
-    <?php include 'sidebar.php'; ?>
-    
-    <div class="content-area container p-4">
-        <h3>Tambah Mahasiswa</h3>
-        <br>
+<body class="p-4">
 
-        <form action="" method="POST" class="bg-white p-4 border rounded">
-            
+    <div class="content-area container">
+        <h1 class="mb-4 fw-bold text-center">Tambah Mahasiswa</h1>
+
+        <form action="" method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
             <div class="mb-3">
-                <label class="form-label">NIM</label>
-                <input type="number" name="nim" class="form-control" required>
+                <label class="form-label text-white">NIM</label>
+                <input type="number" name="nim" class="form-control" placeholder="Masukkan NIM" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Nama Lengkap</label>
-                <input type="text" name="nama" class="form-control" required>
+                <label class="form-label text-white">Nama Lengkap</label>
+                <input type="text" name="nama" class="form-control" placeholder="Masukkan Nama" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required>
+                <label class="form-label text-white">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Masukkan Email" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Prodi</label>
+                <label class="form-label text-white">Prodi</label>
                 <select name="prodi" class="form-select" required>
                     <option value="">- Pilih -</option>
                     <option value="Sistem Informasi Bisnis">Sistem Informasi Bisnis</option>
@@ -92,12 +89,12 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Angkatan</label>
-                <input type="number" name="angkatan" class="form-control" required>
+                <label class="form-label text-white">Angkatan</label>
+                <input type="number" name="angkatan" class="form-control" placeholder="Masukkan Angkatan" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Status</label>
+                <label class="form-label text-white">Status</label>
                 <select name="status" class="form-select">
                     <option value="Aktif">Aktif</option>
                     <option value="Tidak Aktif">Tidak Aktif</option>
@@ -105,7 +102,7 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-4">
-                <label class="form-label d-block">Keahlian (Centang yang sesuai):</label>
+                <label class="form-label text-white">Keahlian (Centang yang sesuai):</label>
                 <div class="border p-2 rounded" style="max-height: 200px; overflow-y: scroll;">
                     <?php while($skill = pg_fetch_assoc($rSkills)): ?>
                         <div class="form-check">
@@ -116,13 +113,12 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
 
-            <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
-            <a href="kelola_mhs.php" class="btn btn-secondary">Batal</a>
-
+            <div class="d-flex gap-2">
+                <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                <a href="kelola_admin.php" class="btn btn-secondary">Batal</a>
+            </div>
         </form>
     </div>
-
     <script src="js/sidebar.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
