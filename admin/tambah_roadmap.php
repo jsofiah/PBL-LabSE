@@ -7,32 +7,21 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-// Jika form disubmit, langsung proses INSERT
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $judul = $_POST['judul_roadmap'];
     $deskripsi = $_POST['deskripsi_roadmap'];
     $tanggal = $_POST['tanggal_roadmap'];
 
-    $qInsert = "
-        CALL sp_create_roadmap(
-            '$judul',
-            '$deskripsi',
-            '$tanggal'
-        );
-    ";
+    $qInsert = "CALL sp_create_roadmap($1, $2, $3)";
+    $params  = array($judul, $deskripsi, $tanggal);
 
-    $result = pg_query($conn, $qInsert);
-    
+    $result = pg_query_params($conn, $qInsert, $params);
+
     if ($result) {
-        echo "<script>
-                alert('Roadmap berhasil ditambahkan!');
-                window.location = 'kelola_roadmap.php';
-              </script>";
+        echo "<script>alert('Roadmap berhasil ditambahkan!'); window.location='kelola_roadmap.php';</script>";
         exit;
     } else {
-        echo "<script>
-                alert('Gagal menambahkan roadmap!');
-              </script>";
+        echo "<script>alert('Gagal menambahkan roadmap!');</script>";
     }
 }
 ?>
@@ -40,13 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Roadmap</title>
+<meta charset="UTF-8">
+<title>Tambah Roadmap</title>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/styleSidebar.css">
+<link rel="stylesheet" href="css/styleForm.css">
 </head>
 
 <body>
@@ -54,33 +42,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'sidebar.php'; ?>
 
 <div class="content-area container">
-    <h3 class="mb-4">Tambah Roadmap</h3>
+    <h1 class="mb-4 fw-bold text-center">Tambah Roadmap</h1>
 
-    <form action="" method="POST">
+    <div class="card p-4 shadow-sm form-card">
+        <form action="" method="POST">
 
-        <div class="mb-3">
-            <label class="form-label">Judul Roadmap</label>
-            <input type="text" name="judul_roadmap" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Judul Roadmap</label>
+                <input type="text" name="judul_roadmap" class="form-control" 
+                placeholder="Masukkan judul roadmap" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Deskripsi Roadmap</label>
-            <textarea name="deskripsi_roadmap" class="form-control" rows="4" required></textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Deskripsi Roadmap</label>
+                <textarea name="deskripsi_roadmap" class="form-control" rows="4" 
+                placeholder="Masukkan deskripsi roadmap" required></textarea>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Tanggal Roadmap</label>
-            <input type="date" name="tanggal_roadmap" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Tanggal Roadmap</label>
+                <input type="date" name="tanggal_roadmap" class="form-control" required>
+            </div>
 
-        <button type="submit" class="btn btn-success">
-            <i class="fa fa-save"></i> Simpan
-        </button>
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-success">Simpan</button>
+                <a href="kelola_roadmap.php" class="btn btn-secondary">Kembali</a>
+            </div>
 
-        <a href="kelola_roadmap.php" class="btn btn-secondary">Kembali</a>
-
-    </form>
+        </form>
+    </div>
 </div>
+
+<script src="js/sidebar.js"></script>
 
 </body>
 </html>
