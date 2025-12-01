@@ -131,7 +131,7 @@
 
                 <div class="d-flex gap-2 mt-3">
                     <button type="submit" name="simpan" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Tambah Footer
+                        <i class="fa fa-plus"></i> Tambah
                     </button>
                     <a href="kelola_footer.php" class="btn btn-secondary">
                         <i class="fa fa-arrow-left"></i> Kembali

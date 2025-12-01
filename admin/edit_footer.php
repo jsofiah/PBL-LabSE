@@ -19,20 +19,24 @@
     }
 
     if (isset($_POST['update'])) {
-
         $logoLama = $_POST['logo_lama'];
         $logoBaru = $logoLama;
 
         if (!empty($_FILES['logo']['name'])) {
+
             $targetDir = "../img/";
             $filename = time() . "_" . basename($_FILES["logo"]["name"]);
             $targetFile = $targetDir . $filename;
 
             if (move_uploaded_file($_FILES["logo"]["tmp_name"], $targetFile)) {
-                if (!empty($logoLama) && file_exists("../img/" . $logoLama)) {
-                    unlink("../img/" . $logoLama);
+
+                $oldFile = "../" . $logoLama;
+
+                if (!empty($logoLama) && file_exists($oldFile) && is_file($oldFile)) {
+                    unlink($oldFile);
                 }
-                $logoBaru = $filename;
+
+                $logoBaru = "img/" . $filename;
             }
         }
 
@@ -64,6 +68,7 @@
         ";
         exit;
     }
+
 ?>
 
 <!DOCTYPE html>
