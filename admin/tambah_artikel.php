@@ -68,7 +68,7 @@ if (isset($_POST['simpan'])) {
             <div class='mb-3'>
                 <label class='form-label text-white'>Jenis Artikel</label>
                 <select name='id_jenisartikel' class='form-control' required>
-                    <option value='' disabled selected>Pilih Jenis</option>
+                    <option value='' disabled selected>Pilih Jenis Artikel</option>
                     <?php while($j = pg_fetch_assoc($rJenis)) : ?>
                         <option value="<?= $j['id_jenisartikel'] ?>">
                             <?= $j['nama_jenisartikel'] ?>
@@ -79,17 +79,17 @@ if (isset($_POST['simpan'])) {
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul</label>
-                <input type='text' name='judul' class='form-control' required>
+                <input type='text' name='judul' class='form-control' placeholder="masukkan judul artikel" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Isi Artikel</label>
-                <textarea name='isi' class='form-control' rows='5' required></textarea>
+                <textarea name='isi' class='form-control' rows='5' placeholder="masukkan isi artikel" required></textarea>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Penulis</label>
-                <input type='text' name='penulis' class='form-control' required>
+                <input type='text' name='penulis' class='form-control' placeholder="masukkan penulis" required>
             </div>
 
             <div class='mb-3'>

@@ -60,12 +60,12 @@
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul Publikasi</label>
-                <input type='text' name='judul' class='form-control' required>
+                <input type='text' name='judul' class='form-control' placeholder="masukkan judul publikasi" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Tahun</label>
-                <input type='text' name='tahun' class='form-control' placeholder='2025' required>
+                <input type='text' name='tahun' class='form-control' placeholder='masukkan tahun' required>
             </div>
 
             <div class='mb-3'>
