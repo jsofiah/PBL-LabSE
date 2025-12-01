@@ -26,26 +26,29 @@ if (isset($_POST['submit'])) {
 <head>
     <title>Tambah Peran Lab</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
 <body class="container mt-4">
 
-<h3>Tambah Peran Lab</h3>
+<h1 class="mb-4 fw-bold text-center">Tambah Peran Lab</h1>
 <form method="POST">
-
-    <label>Nama Peran:</label>
+    <div class="card shadow-sm p-4">
+    <label class="form-label text-white">Nama Peran:</label>
     <input type="text" name="nama_peran" class="form-control mb-3" required>
 
-    <label>Deskripsi Peran:</label>
+    <label class="form-label text-white">Deskripsi Peran:</label>
     <textarea name="deskripsi_peran" class="form-control mb-3" required></textarea>
 
-    <label>Icon (text):</label>
+    <label class="form-label text-white">Icon (text):</label>
     <input type="text" name="icon" class="form-control mb-3">
-
-    <button class="btn btn-success" name="submit">Simpan</button>
+    <div class="d-flex gap-2 mt-3">
+    <button class="btn btn-primary" name="submit">Simpan</button>
     <a href="kelola_peranLab.php" class="btn btn-secondary">Kembali</a>
+</div>
 
 </form>
+</div>
 
 </body>
 </html>
