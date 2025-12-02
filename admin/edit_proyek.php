@@ -5,121 +5,131 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-require_once '../config.php';
+require '../config.php';
 
-if (!isset($_GET['id'])) {
-    header("Location: kelola_proyek.php");
-    exit;
-}
+$id = intval($_GET['id']);
 
-$id = $_GET['id'];
-
-// Ambil data proyek
-$qSelect = "SELECT * FROM proyek WHERE id_proyek = $1";
-$rSelect = pg_query_params($conn, $qSelect, array($id));
-$data = pg_fetch_assoc($rSelect);
+$q = "SELECT * FROM proyek WHERE id_proyek = $1";
+$r = pg_query_params($conn, $q, [$id]);
+$data = pg_fetch_assoc($r);
 
 if (!$data) {
-    echo "<script>alert('Data proyek tidak ditemukan!'); window.location='kelola_proyek.php';</script>";
+    echo "<script>alert('Data tidak ditemukan!'); window.location='kelola_proyek.php';</script>";
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $judul  = $_POST['judul_proyek'];
-    $isi    = $_POST['isi_proyek'];
-    $tanggal= $_POST['tanggal_terbit_proyek'];
-    $penulis= $_POST['penulis_proyek'];
-    $g1     = $_POST['url_gambar_proyek1'];
-    $g2     = $_POST['url_gambar_proyek2'];
-    $g3     = $_POST['url_gambar_proyek3'];
+if (isset($_POST['update'])) {
 
-    $query = "
-        CALL sp_update_proyek(
-            $id,
-            '$judul',
-            '$isi',
-            '$tanggal',
-            '$penulis',
-            '$g1',
-            '$g2',
-            '$g3'
-        );
-    ";
+    $judul   = pg_escape_string($conn, $_POST['judul_proyek']);
+    $isi     = pg_escape_string($conn, $_POST['isi_proyek']);
+    $tanggal = $_POST['tanggal_terbit_proyek'];
+    $penulis = pg_escape_string($conn, $_POST['penulis_proyek']);
 
-    $res = pg_query($conn, $query);
+    $folder = "../img/proyek/";
+    if (!file_exists($folder)) mkdir($folder, 0777, true);
+
+    function updateFile($input, $folder, $oldFile) {
+        if (!empty($_FILES[$input]['name'])) {
+            $newName = time() . "_" . basename($_FILES[$input]["name"]);
+            $path = $folder . $newName;
+
+            if (move_uploaded_file($_FILES[$input]["tmp_name"], $path)) {
+                if (!empty($oldFile)) {
+                    $lama = "../" . $oldFile;
+                    if (file_exists($lama)) unlink($lama);
+                }
+                return "img/proyek/" . $newName;
+            }
+        }
+        return $oldFile;
+    }
+
+    $g1 = updateFile("gambar1", $folder, $data['url_gambar_proyek1']);
+    $g2 = updateFile("gambar2", $folder, $data['url_gambar_proyek2']);
+    $g3 = updateFile("gambar3", $folder, $data['url_gambar_proyek3']);
+
+    $qUpdate = "CALL sp_update_proyek($1,$2,$3,$4,$5,$6,$7,$8)";
+    $params  = array($id, $judul, $isi, $tanggal, $penulis, $g1, $g2, $g3);
+
+    $res = pg_query_params($conn, $qUpdate, $params);
 
     if ($res) {
-        echo "<script>
-                alert('Proyek berhasil diperbarui!');
-                window.location = 'kelola_proyek.php';
-              </script>";
+        echo "<script>alert('Proyek berhasil diperbarui!'); window.location='kelola_proyek.php';</script>";
         exit;
     } else {
-        echo "<script>alert('Gagal memperbarui proyek!');</script>";
+        $error = "Gagal memperbarui proyek!";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Proyek</title>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
+<meta charset="UTF-8">
+<title>Edit Proyek</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/styleForm.css" rel="stylesheet">
 </head>
-<body>
 
-<?php include 'sidebar.php'; ?>
+<body class="p-4">
 
 <div class="content-area container">
-    <h3 class="mb-4">Edit Proyek</h3>
+    <h1 class="mb-4 fw-bold text-center">Edit Proyek</h1>
 
-    <form action="" method="POST">
-        <div class="mb-3">
-            <label class="form-label">Judul Proyek</label>
-            <input type="text" name="judul_proyek" class="form-control" value="<?= htmlspecialchars($data['judul_proyek']); ?>" required>
-        </div>
+    <div class="card shadow-sm p-4 form-card">
 
-        <div class="mb-3">
-            <label class="form-label">Isi Proyek</label>
-            <textarea name="isi_proyek" class="form-control" rows="6" required><?= htmlspecialchars($data['isi_proyek']); ?></textarea>
-        </div>
+        <?php if(isset($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+        <?php endif; ?>
 
-        <div class="mb-3">
-            <label class="form-label">Tanggal Terbit</label>
-            <input type="date" name="tanggal_terbit_proyek" class="form-control" value="<?= htmlspecialchars($data['tanggal_terbit_proyek']); ?>" required>
-        </div>
+        <form method="POST" enctype="multipart/form-data">
 
-        <div class="mb-3">
-            <label class="form-label">Penulis</label>
-            <input type="text" name="penulis_proyek" class="form-control" value="<?= htmlspecialchars($data['penulis_proyek']); ?>" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Judul Proyek</label>
+                <input type="text" name="judul_proyek" class="form-control"
+                       value="<?= htmlspecialchars($data['judul_proyek']); ?>" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">URL Gambar 1</label>
-            <input type="text" name="url_gambar_proyek1" class="form-control" value="<?= htmlspecialchars($data['url_gambar_proyek1']); ?>">
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Isi Proyek</label>
+                <textarea name="isi_proyek" class="form-control" rows="5"
+                          required><?= htmlspecialchars($data['isi_proyek']); ?></textarea>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">URL Gambar 2</label>
-            <input type="text" name="url_gambar_proyek2" class="form-control" value="<?= htmlspecialchars($data['url_gambar_proyek2']); ?>">
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Tanggal Terbit</label>
+                <input type="date" name="tanggal_terbit_proyek" class="form-control"
+                       value="<?= $data['tanggal_terbit_proyek']; ?>" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">URL Gambar 3</label>
-            <input type="text" name="url_gambar_proyek3" class="form-control" value="<?= htmlspecialchars($data['url_gambar_proyek3']); ?>">
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-white">Penulis</label>
+                <input type="text" name="penulis_proyek" class="form-control"
+                       value="<?= htmlspecialchars($data['penulis_proyek']); ?>" required>
+            </div>
 
-        <button type="submit" class="btn btn-warning">
-            <i class="fa fa-edit"></i> Update
-        </button>
+            <div class="mb-3">
+                <label class="form-label text-white">Upload Gambar 1</label>
+                <input type="file" name="gambar1" class="form-control">
+            </div>
 
-        <a href="kelola_proyek.php" class="btn btn-secondary">Kembali</a>
-    </form>
+            <div class="mb-3">
+                <label class="form-label text-white">Upload Gambar 2</label>
+                <input type="file" name="gambar2" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white">Upload Gambar 3</label>
+                <input type="file" name="gambar3" class="form-control">
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="kelola_proyek.php" class="btn btn-secondary">Kembali</a>
+            </div>
+
+        </form>
+    </div>
 </div>
 
 </body>
