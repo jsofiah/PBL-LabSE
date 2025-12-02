@@ -7,8 +7,7 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-// Ambil data peran lab
-$query = "SELECT * FROM peran_lab ORDER BY id_peran ASC";
+$query = "SELECT * FROM vw_peran_lab ORDER BY id_peran ASC";
 $result = pg_query($conn, $query);
 ?>
 

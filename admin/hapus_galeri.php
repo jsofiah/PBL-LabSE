@@ -8,7 +8,7 @@ require '../config.php';
 
 $id = $_GET['id'];
 
-$q = pg_query($conn, "SELECT url_gambar_galeri FROM galeri WHERE id_galeri=$id");
+$q = pg_query_params($conn, "SELECT url_gambar_galeri FROM vw_galeri WHERE id_galeri=$1", array($id));
 $data = pg_fetch_assoc($q);
 
 $path = "../" . $data['url_gambar_galeri'];
@@ -16,7 +16,10 @@ if (file_exists($path)) {
     unlink($path);
 }
 
-pg_query($conn, "DELETE FROM galeri WHERE id_galeri=$id");
+$query = "CALL sp_delete_galeri($1)";
+pg_query_params($conn, $query, array($id));
 
-header("Location: kelola_galeri.php");
+echo "<script>alert('Gambar berhasil dihapus!');
+      window.location='kelola_galeri.php';</script>";
 exit;
+?>

@@ -6,10 +6,7 @@
     }
     require_once '../config.php';
 
-    $qFasilitas = "SELECT f.*, j.nama_jenisfasilitas 
-                   FROM fasilitas f 
-                   LEFT JOIN jenis_fasilitas j ON f.id_jenisfasilitas = j.id_jenisfasilitas
-                   ORDER BY f.id_fasilitas ASC";
+    $qFasilitas = "SELECT * FROM vw_fasilitas_lengkap ORDER BY id_fasilitas ASC";
     $rFasilitas = pg_query($conn, $qFasilitas);
 
     $fasilitas = [];
@@ -73,19 +70,19 @@
                         <td class="text-center"><?= htmlspecialchars($row['nama_fasilitas']); ?></td>
                         <td><?= nl2br(htmlspecialchars($row['isi_fasilitas'])); ?></td>
                        <td class="text-center">
-                            <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>" 
-                                alt="Gambar Fasilitas" 
+                            <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>"
+                                alt="Gambar Fasilitas"
                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                         </td>
 
 
                         <td class="text-center">
-                            <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
+                            <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
                             class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
 
-                            <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" 
+                            <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
                             class="btn btn-danger btn-sm"
                             onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
                                 <i class="fa fa-trash"></i> Hapus

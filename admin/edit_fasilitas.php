@@ -44,19 +44,30 @@ if (isset($_POST['submit'])) {
         }
     }
 
-    $qUpdate = "UPDATE fasilitas SET
-                    id_jenisfasilitas = $1,
-                    nama_fasilitas = $2,
-                    isi_fasilitas = $3,
-                    url_gambar_fasilitas = $4
-                WHERE id_fasilitas = $5";
+    $qUpdate = "CALL sp_update_fasilitas(
+                    $1, -- _id_fasilitas
+                    $2, -- _id_jenisfasilitas
+                    $3, -- _nama_fasilitas
+                    $4, -- _isi_fasilitas
+                    $5  -- _url_gambar_fasilitas
+                );";
 
     $result = pg_query_params($conn, $qUpdate, [
-        $idJenis, $nama, $isi, $gambarBaru, $id
+        $id,        
+        $idJenis,     
+        $nama,      
+        $isi,       
+        $gambarBaru  
     ]);
 
+
     if ($result) {
-        header("Location: kelola_fasilitas.php");
+        echo "
+        <script>
+            alert('Data fasilitas berhasil diperbarui!');
+            window.location.href = 'kelola_fasilitas.php';
+        </script>
+        ";
         exit;
     } else {
         echo "Gagal memperbarui!";
@@ -93,7 +104,7 @@ if (isset($_POST['submit'])) {
     <div class="mb-3">
         <label class="form-label text-white">Nama Fasilitas</label>
         <input type="text" name="nama_fasilitas" class="form-control"
-               value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
+                value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
     </div>
 
     <div class="mb-3">

@@ -25,6 +25,17 @@ if ($data && !empty($data['url_gambar_mitra'])) {
 $qDelete = "CALL sp_delete_mitra($1)";
 $res = pg_query_params($conn, $qDelete, [$id]);
 
-header("Location: kelola_mitra.php?msg=deleted");
-exit;
+if ($res) {
+    echo "<script>
+            alert('Mitra berhasil dihapus!');
+            window.location='kelola_mitra.php';
+          </script>";
+    exit;
+} else {
+    echo "<script>
+            alert('Gagal menghapus mitra!');
+            window.location='kelola_mitra.php';
+          </script>";
+    exit;
+}
 ?>

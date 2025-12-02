@@ -8,10 +8,23 @@ if (!isset($_SESSION['username'])) {
 require_once '../config.php';
 
 $id = $_GET['id'];
+$message = "";
+$success = false;
 
-$qDelete = "DELETE FROM jenis_fasilitas WHERE id_jenisfasilitas = $1";
+$qDelete = "CALL sp_delete_jenis_fasilitas($1)";
 $result = pg_query_params($conn, $qDelete, [$id]);
 
-header("Location: kelola_jenisFasilitas.php");
+if ($result) {
+    $message = "Jenis Fasilitas berhasil dihapus!";
+} else {
+    $message = "Gagal menghapus Jenis Fasilitas! Error: " . pg_last_error($conn);
+}
+
+echo "
+<script>
+    alert('$message');
+    window.location.href = 'kelola_jenisFasilitas.php';
+</script>
+";
 exit;
 ?>
