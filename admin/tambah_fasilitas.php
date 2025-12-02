@@ -17,6 +17,10 @@ if (isset($_POST['submit'])) {
 
     $folder = "../img/fasilitas/";
 
+    if (!file_exists($folder)) {
+        mkdir($folder, 0777, true);
+    }
+
     $namaFile = time() . "_" . basename($_FILES["gambar"]["name"]);
     $targetFile = $folder . $namaFile;
 
@@ -24,16 +28,27 @@ if (isset($_POST['submit'])) {
 
         $url_gambar = "img/fasilitas/" . $namaFile;
 
-        $qInsert = "INSERT INTO fasilitas (id_jenisfasilitas, nama_fasilitas, isi_fasilitas, url_gambar_fasilitas)
-                    VALUES ($1, $2, $3, $4)";
+        $qInsert = "CALL sp_create_fasilitas($1, $2, $3, $4)";
 
-        $result = pg_query_params($conn, $qInsert, [$idJenis, $nama, $isi, $url_gambar]);
+        $result = pg_query_params($conn, $qInsert, [
+            $idJenis, 
+            $nama, 
+            $isi, 
+            $url_gambar
+        ]);
 
         if ($result) {
-            header("Location: kelola_fasilitas.php");
+            echo "
+            <script>
+                alert('Fasilitas baru berhasil ditambahkan!');
+                window.location.href = 'kelola_fasilitas.php';
+            </script>
+            ";
             exit;
         } else {
-            echo "Gagal menyimpan data!";
+            if (file_exists($targetFile)) {
+            }
+            echo "Gagal menyimpan data! Error: " . pg_last_error($conn);
         }
 
     } else {
@@ -55,8 +70,6 @@ if (isset($_POST['submit'])) {
 <h1 class="mb-4 fw-bold text-center">Tambah Fasilitas</h1>
 
 <form method="POST" enctype="multipart/form-data">
-    
-
     
     <div class="card shadow-sm p-4">
         <div class="mb-3">
@@ -91,7 +104,6 @@ if (isset($_POST['submit'])) {
     
     </div>
     
-
 </form>
 
 </body>

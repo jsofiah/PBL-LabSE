@@ -61,9 +61,9 @@ if (isset($_POST['submit'])) {
         <form method="POST">
 
             <div class="mb-3">
-                <label class="form-label text-white">Pilih Proyek</label>
+                <label class="form-label text-white">Proyek</label>
                 <select name="id_proyek" class="form-control" required>
-                    <option value="">-- Pilih Proyek --</option>
+                    <option value="">Pilih Proyek</option>
                     <?php while ($p = pg_fetch_assoc($rProyek)) : ?>
                         <option value="<?= $p['id_proyek']; ?>">
                             <?= $p['id_proyek']; ?> - <?= htmlspecialchars($p['judul_proyek']); ?>
@@ -73,9 +73,9 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-white">Pilih Mahasiswa</label>
+                <label class="form-label text-white">Mahasiswa</label>
                 <select name="id_mhs" class="form-control" required>
-                    <option value="">-- Pilih Mahasiswa --</option>
+                    <option value="">Pilih Mahasiswa</option>
                     <?php while ($m = pg_fetch_assoc($rMhs)) : ?>
                         <option value="<?= $m['id_mhs']; ?>">
                             <?= $m['id_mhs']; ?> - <?= htmlspecialchars($m['nama_mhs']); ?>

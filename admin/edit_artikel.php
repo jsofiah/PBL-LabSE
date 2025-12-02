@@ -80,14 +80,8 @@ if (isset($_POST['update'])) {
 
     <div class='card shadow-sm p-4'>
         <form method='POST' enctype='multipart/form-data'>
-
-            <div class='text-center mb-3'>
-                <img src='../<?= $artikel['url_gambar_artikel']; ?>' style='max-height:150px;border-radius:10px;'>
-                <input type='hidden' name='foto_lama' value='<?= $artikel['url_gambar_artikel']; ?>'>
-            </div>
-
             <div class='mb-3'>
-                <label class='form-label text-white'>Upload Gambar Baru</label>
+                <label class='form-label text-white'>Upload Gambar Baru (Opsional)</label>
                 <input type='file' name='foto' class='form-control' accept='image/*'>
             </div>
 

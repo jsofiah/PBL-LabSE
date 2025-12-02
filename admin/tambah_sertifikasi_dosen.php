@@ -57,7 +57,7 @@
 
 <body class='p-4'>
 <div class='container'>
-    <h2 class='mb-4'>Tambah Sertifikasi Dosen</h2>
+    <h2 class='mb-4 fw-bold text-center'>Tambah Sertifikasi Dosen</h2>
     <div class='card shadow-sm p-4'>
         <form method='POST'>
             <div class="mb-3">
@@ -80,13 +80,9 @@
                 </select>
             </div>
 
-            <button type='submit' name='simpan' class='btn btn-primary'>
-                <i class='fa fa-plus'></i> Tambah
+            <button type='submit' name='simpan' class='btn btn-primary'>Simpan
             </button>
-            <a href='kelola_sertifikasi.php' class='btn btn-secondary'>
-                <i class='fa fa-arrow-left'></i> Kembali
-            </a>
-
+            <a href='kelola_sertifikasi.php' class='btn btn-secondary'>Kembali</a>
         </form>
     </div>
 </div>

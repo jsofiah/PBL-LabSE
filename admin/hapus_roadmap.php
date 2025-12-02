@@ -14,7 +14,6 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Jalankan procedure delete
 $qDelete = "CALL sp_delete_roadmap($1)";
 $result = pg_query_params($conn, $qDelete, array($id));
 

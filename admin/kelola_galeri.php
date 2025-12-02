@@ -6,23 +6,6 @@
     }
     require_once '../config.php';
 
-    // NAV
-    $qViewNav = "SELECT * FROM vw_nav ORDER BY id_nav, id_subnav";
-    $rViewNav = pg_query($conn, $qViewNav);
-
-    $navs = [];
-    while ($row = pg_fetch_assoc($rViewNav)) {
-        $idNav = $row['id_nav'];
-        if (!isset($navs[$idNav])) {
-            $navs[$idNav] = [
-                'id_nav' => $row['id_nav'],
-                'nama_nav' => $row['nama_nav'],
-                'url_nav' => $row['url_nav']
-            ];
-        }
-    }
-
-    // GALERI
     $qGaleri = pg_query($conn, "SELECT * FROM galeri ORDER BY id_galeri ASC");
 ?>
 
@@ -35,6 +18,7 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
 </head>

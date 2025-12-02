@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require '../config.php';
 
-// mengambil seluruh jenis mitra
 $qJenis = "SELECT * FROM jenis_mitra ORDER BY id_jenismitra ASC";
 $rJenis = pg_query($conn, $qJenis);
 ?>
@@ -66,10 +65,10 @@ $rJenis = pg_query($conn, $qJenis);
 
                         <!-- ID Proyek Dosen -->
                         <td class="text-center">
-                            <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>" class="btn btn-warning btn-sm" class="fa fa-edit">Edit</a>
+                            <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>Edit</a>
                             <a href="hapus_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>"
                                onclick="return confirm('Yakin ingin menghapus jenis mitra ini?')"
-                               class="btn btn-danger btn-sm">
+                               class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
                                 Hapus
                             </a>
                         </td>
