@@ -30,8 +30,9 @@ if (isset($_POST['update'])) {
 
     $nama = pg_escape_string($conn, $_POST['nama_jenismitra']);
 
-    $qUpdate = "CALL sp_update_jenismitra($id, '$nama')";
-    $res = pg_query($conn, $qUpdate);
+    $qUpdate = "CALL sp_update_jenismitra($1, $2)";
+    $res = pg_query_params($conn, $qUpdate, [$id, $nama]);
+
 
     if ($res) {
         echo "<script>
@@ -50,13 +51,11 @@ if (isset($_POST['update'])) {
 <meta charset="UTF-8">
 <title>Edit Jenis Mitra</title>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="css/styleForm.css" rel="stylesheet">
-<link href="css/styleSidebar.css" rel="stylesheet">
 </head>
 
-<body>
-
-<?php include 'sidebar.php'; ?>
+<body class="p-4">
 
 <div class="content-area container">
     <h1 class="mb-4 fw-bold text-center">Edit Jenis Mitra</h1>
@@ -72,7 +71,7 @@ if (isset($_POST['update'])) {
 
             <div class="d-flex gap-2 mt-3">
                 <button type="submit" name="update" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Simpan
+                    <i class="fa fa-save"></i> Simpan Perubahan
                 </button>
                 <a href="kelola_jenisMitra.php" class="btn btn-secondary">
                     <i class="fa fa-arrow-left"></i> Kembali
