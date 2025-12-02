@@ -12,7 +12,7 @@ if (!isset($_GET['id'])) {
     exit;
 }
 
-$id = intval($_GET['id']); // aman
+$id = intval($_GET['id']);
 
 $qDelete = "CALL sp_delete_jenismitra($id)";
 $res = pg_query($conn, $qDelete);
