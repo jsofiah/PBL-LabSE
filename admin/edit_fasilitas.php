@@ -7,21 +7,11 @@ if (!isset($_SESSION['username'])) {
 
 require '../config.php';
 
-if (!isset($_GET['id'])) {
-    header("Location: kelola_fasilitas.php");
-    exit;
-}
-
 $id = $_GET['id'];
 
 $qData = "SELECT * FROM fasilitas WHERE id_fasilitas = $1";
 $rData = pg_query_params($conn, $qData, [$id]);
 $data = pg_fetch_assoc($rData);
-
-if (!$data) {
-    echo "Fasilitas tidak ditemukan.";
-    exit;
-}
 
 $qJenis = "SELECT * FROM jenis_fasilitas ORDER BY id_jenisfasilitas";
 $rJenis = pg_query($conn, $qJenis);
@@ -31,41 +21,26 @@ if (isset($_POST['submit'])) {
     $nama = $_POST['nama_fasilitas'];
     $isi = $_POST['isi_fasilitas'];
 
-    $gambarLama = $data['url_gambar_fasilitas']; 
-    $gambarBaru = $gambarLama; 
+    $gambarBaru = $data['url_gambar_fasilitas'];
 
     if (!empty($_FILES['gambar']['name'])) {
 
-        $folder = '../img/fasilitas/';  
+        $folder = '../img/fasilitas/';
         if (!file_exists($folder)) {
-            mkdir($folder, 0777, true); 
+            mkdir($folder, 0777, true);
         }
 
-        $fileInfo = pathinfo($_FILES['gambar']['name']);
-        $tipeFile = strtolower($fileInfo['extension']);
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+        $namaFile = uniqid() . "_" . basename($_FILES['gambar']['name']);
+        $pathSimpan = $folder . $namaFile;
 
-        if (!in_array($tipeFile, $allowedTypes)) {
-            echo "<script>alert('Gagal: Hanya file JPG, JPEG, PNG & GIF yang diizinkan!');</script>";
-        } else {
-            $namaFile = uniqid() . "." . $tipeFile; 
-            $pathSimpan = $folder . $namaFile;
+        if (move_uploaded_file($_FILES['gambar']['tmp_name'], $pathSimpan)) {
 
-            if (move_uploaded_file($_FILES['gambar']['tmp_name'], $pathSimpan)) {
-                
-                $gambarBaru = "img/fasilitas/" . $namaFile;
-
-                if (!empty($gambarLama) && $gambarLama != 'img/default.jpg') {
-                    $pathLama = '../' . $gambarLama; 
-                    
-                    if (file_exists($pathLama)) {
-                        unlink($pathLama); 
-                    }
-                }
-
-            } else {
-                 echo "<script>alert('Gagal mengunggah file. Cek izin folder server!');</script>";
+            $oldFile = "../" . $data['url_gambar_fasilitas'];
+            if ($data['url_gambar_fasilitas'] && file_exists($oldFile)) {
+                unlink($oldFile);
             }
+
+            $gambarBaru = "img/fasilitas/" . $namaFile;
         }
     }
 
@@ -84,7 +59,7 @@ if (isset($_POST['submit'])) {
         header("Location: kelola_fasilitas.php");
         exit;
     } else {
-        echo "Gagal memperbarui data fasilitas di database!";
+        echo "Gagal memperbarui!";
     }
 }
 ?>
@@ -94,18 +69,19 @@ if (isset($_POST['submit'])) {
 <head>
     <title>Edit Fasilitas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body class="container mt-4">
+<body class="container p-4">
 
 <h1 class="mb-4 fw-bold text-center">Edit Fasilitas</h1>
 
-<form method="POST" enctype="multipart/form-data"> 
+<form method="POST" enctype="multipart/form-data">
 <div class="card shadow-sm p-4">
     <div class="mb-3">
-        <label>Jenis Fasilitas</label>
+        <label class="text-white">Jenis Fasilitas</label>
         <select name="id_jenisfasilitas" class="form-control" required>
-            <?php pg_result_seek($rJenis, 0); while ($j = pg_fetch_assoc($rJenis)) : ?>
+            <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
                 <option value="<?= $j['id_jenisfasilitas']; ?>"
                     <?= $j['id_jenisfasilitas'] == $data['id_jenisfasilitas'] ? 'selected' : '' ?>>
                     <?= $j['nama_jenisfasilitas']; ?>
@@ -117,7 +93,7 @@ if (isset($_POST['submit'])) {
     <div class="mb-3">
         <label class="form-label text-white">Nama Fasilitas</label>
         <input type="text" name="nama_fasilitas" class="form-control"
-                value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
+               value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
     </div>
 
     <div class="mb-3">
@@ -127,14 +103,13 @@ if (isset($_POST['submit'])) {
 
     <div class="mb-3">
         <label class="form-label text-white">Upload Gambar Baru</label>
-        <input type="file" name="gambar" class="form-control" accept="image/*"> 
+        <input type="file" name="gambar" class="form-control">
     </div>
-    
     <div class="d-flex gap-2 mt-3">
-        <button name="submit" type="submit" class="btn btn-primary">Update</button>
+        <button name="submit" class="btn btn-primary">Simpan perubahan</button>
         <a href="kelola_fasilitas.php" class="btn btn-secondary">Kembali</a>
     </div>
-</div>
+            </div>
 
 </form>
 

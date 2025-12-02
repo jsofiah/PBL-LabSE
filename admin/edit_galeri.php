@@ -6,70 +6,61 @@ if (!isset($_SESSION['username'])) {
 }
 require '../config.php';
 
-if (!isset($_GET['id'])) {
-    header("Location: kelola_galeri.php");
-    exit;
-}
-
-$id = $_GET['id'];
+$id = intval($_GET['id']);
 
 $qData = pg_query_params($conn, "SELECT * FROM galeri WHERE id_galeri=$1", [$id]);
 $data = pg_fetch_assoc($qData);
 
 if (!$data) {
-    echo "Data galeri tidak ditemukan.";
-    exit;
+    die("Data tidak ditemukan!");
 }
 
 if (isset($_POST['submit'])) {
+
     $desk = $_POST['deskripsi_galeri'];
-    $gambarLama = $data['url_gambar_galeri']; 
-    $pathDb = $gambarLama;
+    $gambarLama = $data['url_gambar_galeri'];
 
     if (!empty($_FILES['gambar']['name'])) {
-        
+        $filePath = "../" . $gambarLama;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
         $folder = "../img/galeri/";
-        
-        
         $namaFile = time() . "_" . basename($_FILES['gambar']['name']);
         $target = $folder . $namaFile;
-        
-        if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target)) {
-            
-            $pathDb = "img/galeri/" . $namaFile;
-            
-            if (!empty($gambarLama)) {
-                $pathLama = '../' . $gambarLama; 
-                
-                if (file_exists($pathLama)) {
-                    unlink($pathLama); 
-                }
-            }
-        } else {
-             echo "<script>alert('Gagal mengunggah gambar baru!');</script>";
-        }
-    }
-    
-    $qUpdate = "UPDATE galeri 
-                SET deskripsi_galeri=$1, url_gambar_galeri=$2
-                WHERE id_galeri=$3";
-    
-    $result = pg_query_params($conn, $qUpdate, [$desk, $pathDb, $id]);
 
-    if ($result) {
-        header("Location: kelola_galeri.php");
-        exit;
+        move_uploaded_file($_FILES['gambar']['tmp_name'], $target);
+
+        $pathDb = "img/galeri/" . $namaFile;
+
+        $qUpdate = "UPDATE galeri 
+                    SET deskripsi_galeri=$1, url_gambar_galeri=$2
+                    WHERE id_galeri=$3";
+
+        pg_query_params($conn, $qUpdate, [$desk, $pathDb, $id]);
+
     } else {
-        echo "Gagal memperbarui data galeri di database.";
+
+        $qUpdate = "UPDATE galeri 
+                    SET deskripsi_galeri=$1
+                    WHERE id_galeri=$2";
+
+        pg_query_params($conn, $qUpdate, [$desk, $id]);
     }
+
+    header("Location: kelola_galeri.php");
+    exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Edit Galeri</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
@@ -82,13 +73,8 @@ if (isset($_POST['submit'])) {
 
     <div class="mb-3">
         <label class="form-label text-white">Deskripsi</label>
-        <input type="text" name="deskripsi_galeri" class="form-control"
+        <input type="text" name="deskripsi_galeri" class="form-control" placeholder="Masukkan deskripsi"
                value="<?= htmlspecialchars($data['deskripsi_galeri']); ?>" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label text-white">Gambar Saat Ini</label><br>
-        <img src="../<?= $data['url_gambar_galeri']; ?>" style="width:150px;">
     </div>
 
     <div class="mb-3">
@@ -96,7 +82,7 @@ if (isset($_POST['submit'])) {
         <input type="file" name="gambar" class="form-control" accept="image/*">
     </div>
     <div class="d-flex gap-2 mt-3">
-    <button class="btn btn-primary" name="submit">Update</button>
+    <button class="btn btn-primary" name="submit">Simpan Perbaruan</button>
     <a href="kelola_galeri.php" class="btn btn-secondary">Kembali</a>
     
 </form>

@@ -33,13 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Tambah Roadmap</title>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleSidebar.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
-<body>
-
-<?php include 'sidebar.php'; ?>
+<body class="p-4">
 
 <div class="content-area container">
     <h1 class="mb-4 fw-bold text-center">Tambah Roadmap</h1>
@@ -65,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="d-flex gap-2 mt-3">
-                <button type="submit" class="btn btn-success">Simpan</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
                 <a href="kelola_roadmap.php" class="btn btn-secondary">Kembali</a>
             </div>
 

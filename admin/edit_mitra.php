@@ -5,11 +5,10 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-require_once '../config.php';
+require '../config.php';
 
 $id = intval($_GET['id']);
 
-// Data lama
 $qData = "SELECT * FROM mitra WHERE id_mitra = $1";
 $rData = pg_query_params($conn, $qData, [$id]);
 $data = pg_fetch_assoc($rData);
@@ -19,18 +18,41 @@ if (!$data) {
     exit;
 }
 
-// Dropdown jenis mitra
 $qJenis = pg_query($conn, "SELECT * FROM jenis_mitra ORDER BY id_jenismitra ASC");
 
 if (isset($_POST['update'])) {
 
-    $jenis  = $_POST['id_jenismitra'];
-    $nama   = pg_escape_string($conn, $_POST['nama_mitra']);
-    $gambar = pg_escape_string($conn, $_POST['url_gambar_mitra']);
-    $isi    = pg_escape_string($conn, $_POST['isi_mitra']);
+    $jenis = $_POST['id_jenismitra'];
+    $nama  = pg_escape_string($conn, $_POST['nama_mitra']);
+    $isi   = pg_escape_string($conn, $_POST['isi_mitra']);
+
+    $gambarBaru = $data['url_gambar_mitra'];
+
+    if (!empty($_FILES['gambar']['name'])) {
+
+        $folder = "../img/mitra/";
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
+
+        $namaFile = time() . "_" . basename($_FILES['gambar']['name']);
+        $pathSimpan = $folder . $namaFile;
+
+        if (move_uploaded_file($_FILES['gambar']['tmp_name'], $pathSimpan)) {
+
+            if (!empty($data['url_gambar_mitra'])) {
+                $pathLama = "../" . $data['url_gambar_mitra'];
+                if (file_exists($pathLama)) {
+                    unlink($pathLama);
+                }
+            }
+
+            $gambarBaru = "img/mitra/" . $namaFile;
+        }
+    }
 
     $qUpdate = "CALL sp_update_mitra($1, $2, $3, $4, $5)";
-    $params = array($id, $jenis, $nama, $gambar, $isi);
+    $params = array($id, $jenis, $nama, $gambarBaru, $isi);
 
     $res = pg_query_params($conn, $qUpdate, $params);
 
@@ -45,20 +67,20 @@ if (isset($_POST['update'])) {
     }
 }
 ?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Edit Mitra</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link href="css/styleForm.css" rel="stylesheet">
-<link href="css/styleSidebar.css" rel="stylesheet">
 </head>
 
-<body>
-
-<?php include 'sidebar.php'; ?>
-
+<body class="p-4">
 <div class="content-area container">
     <h1 class="mb-4 fw-bold text-center">Edit Mitra</h1>
 
@@ -68,7 +90,7 @@ if (isset($_POST['update'])) {
             <div class="alert alert-danger"><?= $error ?></div>
         <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
 
             <div class="mb-3">
                 <label class="form-label text-white">Jenis Mitra</label>
@@ -84,19 +106,18 @@ if (isset($_POST['update'])) {
 
             <div class="mb-3">
                 <label class="form-label text-white">Nama Mitra</label>
-                <input type="text" name="nama_mitra" class="form-control"
+                <input type="text" name="nama_mitra" placeholder="Masukkan nama mitra" class="form-control"
                        value="<?= htmlspecialchars($data['nama_mitra']); ?>" required>
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-white">URL Gambar</label>
-                <input type="text" name="url_gambar_mitra" class="form-control"
-                       value="<?= htmlspecialchars($data['url_gambar_mitra']); ?>">
+                <label class="form-label text-white">Upload Gambar Baru</label>
+                <input type="file" name="gambar" class="form-control" accept="image/*">
             </div>
 
             <div class="mb-3">
                 <label class="form-label text-white">Deskripsi</label>
-                <textarea name="isi_mitra" class="form-control" rows="4"><?= 
+                <textarea name="isi_mitra" placeholder="Masukkan deskripsi" class="form-control" rows="4"><?= 
                     htmlspecialchars($data['isi_mitra']); ?></textarea>
             </div>
 
