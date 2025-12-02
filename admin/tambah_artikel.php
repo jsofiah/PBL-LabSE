@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once "../config.php";
 
-// Ambil jenis artikel
 $qJenis = "SELECT * FROM jenis_artikel ORDER BY id_jenisartikel ASC";
 $rJenis = pg_query($conn, $qJenis);
 

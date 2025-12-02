@@ -14,13 +14,11 @@ if (isset($_POST['submit'])) {
     $tanggal = $_POST['tanggal_terbit_proyek'];
     $penulis = pg_escape_string($conn, $_POST['penulis_proyek']);
 
-    // Folder upload
     $folder = "../img/proyek/";
     if (!file_exists($folder)) {
         mkdir($folder, 0777, true);
     }
 
-    // Fungsi upload file
     function uploadFile($inputName, $folder) {
         if (!empty($_FILES[$inputName]['name'])) {
             $namaFile = time() . "_" . basename($_FILES[$inputName]["name"]);

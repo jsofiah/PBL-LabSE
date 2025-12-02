@@ -9,7 +9,6 @@ require_once '../config.php';
 $qSkills = "SELECT * FROM bidang_keahlian ORDER BY nama_keahlian ASC";
 $rSkills = pg_query($conn, $qSkills);
 
-// Proses Simpan Data
 if (isset($_POST['submit'])) {
     $nim = htmlspecialchars($_POST['nim']);
     $nama = htmlspecialchars($_POST['nama']);
@@ -19,10 +18,8 @@ if (isset($_POST['submit'])) {
     $status = ($_POST['status'] == 'Aktif') ? 'true' : 'false';
     $keahlian_dipilih = isset($_POST['keahlian']) ? $_POST['keahlian'] : [];
 
-    // Mulai simpan
     pg_query($conn, "BEGIN");
     try {
-        // 1. Simpan Data Diri
         $queryMhs = "INSERT INTO mhs_segeeks (nim_mhs, nama_mhs, email_mhs, prodi_mhs, angkatan_mhs, status) 
                      VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_mhs";
         $resultMhs = pg_query_params($conn, $queryMhs, array($nim, $nama, $email, $prodi, $angkatan, $status));
@@ -31,14 +28,13 @@ if (isset($_POST['submit'])) {
         $row = pg_fetch_assoc($resultMhs);
         $id_mhs_baru = $row['id_mhs'];
 
-        // 2. Simpan Keahlian (Looping)
         foreach ($keahlian_dipilih as $id_keahlian) {
             $querySkill = "INSERT INTO mhs_menguasai_keahlian (id_mhs, id_keahlian) VALUES ($1, $2)";
             pg_query_params($conn, $querySkill, array($id_mhs_baru, $id_keahlian));
         }
 
         pg_query($conn, "COMMIT");
-        echo "<script>alert('Berhasil disimpan!'); window.location='kelola_mhs.php';</script>";
+        echo "<script>alert('Mahasiswa berhasil ditambahkan!'); window.location='kelola_mhs.php';</script>";
 
     } catch (Exception $e) {
         pg_query($conn, "ROLLBACK");

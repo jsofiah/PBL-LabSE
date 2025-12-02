@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-// Ambil data jenis fasilitas
 $qJenis = "SELECT * FROM jenis_fasilitas ORDER BY id_jenisfasilitas";
 $rJenis = pg_query($conn, $qJenis);
 
@@ -36,8 +35,6 @@ while ($row = pg_fetch_assoc($rJenis)) {
     <?php include 'sidebar.php'; ?>
 
     <div class="content-area container">
-
-        <!-- HEADER -->
         <div class="mb-4">
             <h2 class="mb-2">Kelola Jenis Fasilitas</h2>
             <a href="tambah_jenisfasilitas.php" class="btn btn-success btn-sm">
@@ -45,7 +42,6 @@ while ($row = pg_fetch_assoc($rJenis)) {
             </a>
         </div>
 
-        <!-- TABEL -->
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>

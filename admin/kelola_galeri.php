@@ -6,23 +6,6 @@
     }
     require_once '../config.php';
 
-    // NAV
-    $qViewNav = "SELECT * FROM vw_nav ORDER BY id_nav, id_subnav";
-    $rViewNav = pg_query($conn, $qViewNav);
-
-    $navs = [];
-    while ($row = pg_fetch_assoc($rViewNav)) {
-        $idNav = $row['id_nav'];
-        if (!isset($navs[$idNav])) {
-            $navs[$idNav] = [
-                'id_nav' => $row['id_nav'],
-                'nama_nav' => $row['nama_nav'],
-                'url_nav' => $row['url_nav']
-            ];
-        }
-    }
-
-    // GALERI
     $qGaleri = pg_query($conn, "SELECT * FROM galeri ORDER BY id_galeri ASC");
 ?>
 
