@@ -14,20 +14,33 @@ $rSelect = pg_query_params($conn, $qSelect, [$id]);
 $data = pg_fetch_assoc($rSelect);
 
 if (!$data) {
-    die("Data tidak ditemukan!");
+    echo "<script>alert('Data tidak ditemukan!'); window.location.href='kelola_jenisFasilitas.php';</script>";
+    exit;
 }
 
 if (isset($_POST['submit'])) {
     $nama = $_POST['nama_jenisfasilitas'];
 
-    $qUpdate = "UPDATE jenis_fasilitas SET nama_jenisfasilitas = $1 WHERE id_jenisfasilitas = $2";
-    $result = pg_query_params($conn, $qUpdate, [$nama, $id]);
+    $qUpdate = "CALL sp_update_jenis_fasilitas($1, $2)";
+
+    $result = pg_query_params($conn, $qUpdate, [$id, $nama]);
 
     if ($result) {
-        header("Location: kelola_jenisFasilitas.php");
+        echo "
+        <script>
+            alert('Jenis Fasilitas berhasil diperbarui!');
+            window.location.href = 'kelola_jenisFasilitas.php';
+        </script>
+        ";
         exit;
     } else {
-        echo "Gagal mengupdate data!";
+        echo "
+        <script>
+            alert('Gagal mengupdate data! Error: " . pg_last_error($conn) . "');
+            window.location.href = 'kelola_jenisFasilitas.php';
+        </script>
+        ";
+        exit;
     }
 }
 ?>
