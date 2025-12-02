@@ -57,24 +57,6 @@ nav > ul > li > a:hover,
 nav > ul > li > a.active {
   color: #FFD601;
 }
-/* 
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 40px;
-  left: 0;
-  width: 200px;
-  background: rgb(255, 255, 255);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-  z-index: 100;
-  overflow: hidden !important;
-} */
 
 .dropdown-scroll {
   padding: 10px 0;
@@ -437,4 +419,102 @@ nav > ul > li > a.active {
 
 .mobile-dropdown-btn.active i {
   transform: rotate(180deg);
+}
+
+.to-top-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #ffd600 0%, #ffed4e 100%);
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 6px 20px rgba(255, 214, 0, 0.4);
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.to-top-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1f82d8 0%, #14286F 100%);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: -1;
+}
+
+.to-top-btn.scrolling::before {
+  transform: scale(1);
+}
+
+.to-top-btn.scrolling {
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+}
+
+.to-top-btn.scrolling i {
+  color: #fff;
+  animation: arrowBounce 0.6s ease-in-out;
+}
+
+.to-top-btn:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.to-top-btn:active {
+  transform: scale(0.95);
+}
+
+.to-top-btn i {
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-8px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.to-top-btn.show {
+  display: flex;
+  animation: fadeInUp 0.4s ease;
+}
+
+.scroll-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background: #ffd600;
+  z-index: 10000;
+  transition: width 0.1s ease;
 }
