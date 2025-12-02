@@ -6,37 +6,62 @@ if (!isset($_SESSION['username'])) {
 }
 require '../config.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: kelola_galeri.php");
+    exit;
+}
+
 $id = $_GET['id'];
 
-$qData = pg_query($conn, "SELECT * FROM galeri WHERE id_galeri=$id");
+$qData = pg_query_params($conn, "SELECT * FROM galeri WHERE id_galeri=$1", [$id]);
 $data = pg_fetch_assoc($qData);
+
+if (!$data) {
+    echo "Data galeri tidak ditemukan.";
+    exit;
+}
 
 if (isset($_POST['submit'])) {
     $desk = $_POST['deskripsi_galeri'];
+    $gambarLama = $data['url_gambar_galeri']; 
+    $pathDb = $gambarLama;
 
-    // cek apakah user upload gambar baru
     if (!empty($_FILES['gambar']['name'])) {
-
+        
         $folder = "../img/galeri/";
+        
+        
         $namaFile = time() . "_" . basename($_FILES['gambar']['name']);
         $target = $folder . $namaFile;
-
-        move_uploaded_file($_FILES['gambar']['tmp_name'], $target);
-
-        $pathDb = "img/galeri/" . $namaFile;
-
-        $qUpdate = "UPDATE galeri 
-                    SET deskripsi_galeri='$desk', url_gambar_galeri='$pathDb'
-                    WHERE id_galeri=$id";
-    } else {
-        $qUpdate = "UPDATE galeri 
-                    SET deskripsi_galeri='$desk'
-                    WHERE id_galeri=$id";
+        
+        if (move_uploaded_file($_FILES['gambar']['tmp_name'], $target)) {
+            
+            $pathDb = "img/galeri/" . $namaFile;
+            
+            if (!empty($gambarLama)) {
+                $pathLama = '../' . $gambarLama; 
+                
+                if (file_exists($pathLama)) {
+                    unlink($pathLama); 
+                }
+            }
+        } else {
+             echo "<script>alert('Gagal mengunggah gambar baru!');</script>";
+        }
     }
+    
+    $qUpdate = "UPDATE galeri 
+                SET deskripsi_galeri=$1, url_gambar_galeri=$2
+                WHERE id_galeri=$3";
+    
+    $result = pg_query_params($conn, $qUpdate, [$desk, $pathDb, $id]);
 
-    pg_query($conn, $qUpdate);
-    header("Location: kelola_galeri.php");
-    exit;
+    if ($result) {
+        header("Location: kelola_galeri.php");
+        exit;
+    } else {
+        echo "Gagal memperbarui data galeri di database.";
+    }
 }
 ?>
 
