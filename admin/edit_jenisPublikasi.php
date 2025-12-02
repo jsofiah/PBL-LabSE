@@ -31,7 +31,7 @@ if (isset($_POST['update'])) {
 
     echo "
         <script>
-            alert('Data berhasil diperbarui!');
+            alert('Jenis Publikasi berhasil diperbarui!');
             window.location.href = 'kelola_jenispublikasi.php';
         </script>
     ";
