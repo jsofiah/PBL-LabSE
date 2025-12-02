@@ -7,7 +7,7 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$qView = "SELECT * FROM roadmap ORDER BY id_roadmap ASC";
+$qView = "SELECT * FROM vw_roadmap ORDER BY id_roadmap ASC";
 $rView = pg_query($conn, $qView);
 ?>
 
