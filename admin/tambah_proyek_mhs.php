@@ -4,6 +4,7 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
+
 require "../config.php";
 
 // Load proyek
@@ -12,59 +13,86 @@ $rProyek = pg_query($conn, "SELECT id_proyek, judul_proyek FROM proyek ORDER BY 
 // Load mahasiswa
 $rMhs = pg_query($conn, "SELECT id_mhs, nama_mhs FROM mhs_segeeks ORDER BY id_mhs");
 
-if (isset($_POST['simpan'])) {
-    $p_id_proyek = $_POST['id_proyek'];
-    $p_id_mhs    = $_POST['id_mhs'];
+if (isset($_POST['submit'])) {
 
-    $q = "CALL sp_create_proyek_mhs($p_id_proyek, $p_id_mhs)";
-    $res = pg_query($conn, $q);
+    $id_proyek = $_POST['id_proyek'];
+    $id_mhs    = $_POST['id_mhs'];
+
+    $query = "CALL sp_create_proyek_mhs($1, $2)";
+    $params = array($id_proyek, $id_mhs);
+
+    $res = pg_query_params($conn, $query, $params);
 
     if ($res) {
-        echo "<script>alert('Relasi berhasil ditambahkan!'); window.location='kelola_proyek.php';</script>";
+        echo "<script>
+                alert('Relasi proyek–mahasiswa berhasil ditambahkan!');
+                window.location='kelola_proyek.php';
+              </script>";
         exit;
     } else {
-        echo "<script>alert('Gagal menambahkan relasi!');</script>";
+        $error = "Gagal menambahkan relasi!";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Proyek–Mahasiswa</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Tambah Proyek – Mahasiswa</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="css/styleForm.css" rel="stylesheet">
+
 </head>
 
-<body class="container mt-4">
+<body class="p-4">
+<div class="content-area container">
 
-<h2>Tambah Relasi Proyek – Mahasiswa</h2>
+    <h1 class="mb-4 fw-bold text-center">Tambah Relasi Proyek – Mahasiswa</h1>
 
-<form method="POST">
+    <div class="card shadow-sm p-4 form-card">
 
-    <label>Proyek</label>
-    <select name="id_proyek" class="form-control" required>
-        <option value="">-- Pilih Proyek --</option>
-        <?php while ($p = pg_fetch_assoc($rProyek)) : ?>
-            <option value="<?= $p['id_proyek']; ?>">
-                <?= $p['id_proyek']; ?> - <?= htmlspecialchars($p['judul_proyek']); ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+        <?php if (isset($error)) : ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+        <?php endif; ?>
 
-    <label class="mt-3">Mahasiswa</label>
-    <select name="id_mhs" class="form-control" required>
-        <option value="">-- Pilih Mahasiswa --</option>
-        <?php while ($m = pg_fetch_assoc($rMhs)) : ?>
-            <option value="<?= $m['id_mhs']; ?>">
-                <?= $m['id_mhs']; ?> - <?= htmlspecialchars($m['nama_mhs']); ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
+        <form method="POST">
 
-    <br>
-    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
-    <a href="kelola_proyek.php" class="btn btn-secondary">Kembali</a>
+            <div class="mb-3">
+                <label class="form-label text-white">Pilih Proyek</label>
+                <select name="id_proyek" class="form-control" required>
+                    <option value="">-- Pilih Proyek --</option>
+                    <?php while ($p = pg_fetch_assoc($rProyek)) : ?>
+                        <option value="<?= $p['id_proyek']; ?>">
+                            <?= $p['id_proyek']; ?> - <?= htmlspecialchars($p['judul_proyek']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
-</form>
+            <div class="mb-3">
+                <label class="form-label text-white">Pilih Mahasiswa</label>
+                <select name="id_mhs" class="form-control" required>
+                    <option value="">-- Pilih Mahasiswa --</option>
+                    <?php while ($m = pg_fetch_assoc($rMhs)) : ?>
+                        <option value="<?= $m['id_mhs']; ?>">
+                            <?= $m['id_mhs']; ?> - <?= htmlspecialchars($m['nama_mhs']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
 
+            <div class="d-flex gap-2">
+                <button name="submit" class="btn btn-primary">Simpan</button>
+                <a href="kelola_proyek.php" class="btn btn-secondary">Kembali</a>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 </body>
 </html>
