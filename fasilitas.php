@@ -70,6 +70,7 @@
 </head>
 
 <body class="fasilitas-page">
+    <div id="scrollIndicator" class="scroll-indicator"></div>
     <div class="header-container">
         <div class="logo">
             <?php if ($rowLogo): ?>
@@ -173,24 +174,22 @@
         <h2 class="fw-bold text-center mb-5">SARANA DAN PRASARANA PENDUKUNG</h2>
         <h3>FASILITAS AKADEMIK</h3>
         <div class="fasilitas-slider">
-    <button class="slide-btn left" onclick="slideLeft('akad')">
-        <i class="bi bi-chevron-left"></i>
-    </button>
-    
-    <div class="fasilitas-track" id="track-akad">
-        <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
-            <div class="fasilitas-card">
-                <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
-                <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
-                <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
-            </div>
-        <?php endwhile; ?>
-    </div>
-
-    <button class="slide-btn right" onclick="slideRight('akad')">
-        <i class="bi bi-chevron-right"></i>
-    </button>
-</div>
+        <button class="slide-btn left" onclick="slideLeft('akad')">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        
+        <div class="fasilitas-track" id="track-akad">
+            <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
+                <div class="fasilitas-card">
+                    <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
+                    <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
+                    <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
+                </div>
+            <?php endwhile; ?>
+        </div>
+        <button class="slide-btn right" onclick="slideRight('akad')">
+            <i class="bi bi-chevron-right"></i>
+        </button>
         <hr class="my-5">
 
         <h3>FASILITAS NON AKADEMIK</h3>
@@ -233,8 +232,13 @@
         </div>
     </div>
 
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>

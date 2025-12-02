@@ -152,6 +152,7 @@
     <link rel="stylesheet" href="css/styleProyek.css">
 </head>
 <body>
+    <div id="scrollIndicator" class="scroll-indicator"></div>
     <div class="header-container">
         <div class="logo">
             <?php if ($rowLogo): ?>
@@ -351,8 +352,13 @@
         <?php endif; ?>
     </div>
     
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
     <script src="js/navigation.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
