@@ -183,8 +183,9 @@
                 <img src="img/bgroadmap.jpg" alt="Roadmap Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">ROADMAP</h1>
-                </div>
+                <h1 class="hero-title">
+                    ROADMAP
+                </h1>
             </div>
         </div>
     </div>

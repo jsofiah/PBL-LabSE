@@ -257,6 +257,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
+    <script src="js/navigation.js"></script>
 
     <script>
         function slideLeft(id){document.getElementById("track-"+id).scrollBy({left:-330,behavior:'smooth'})}
