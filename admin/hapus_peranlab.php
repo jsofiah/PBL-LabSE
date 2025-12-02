@@ -9,14 +9,14 @@ require_once '../config.php';
 
 $id = $_GET['id'];
 
-$q = "DELETE FROM peran_lab WHERE id_peran = $id";
-pg_query($conn, $q);
+$q = "CALL sp_delete_peran_lab($1)";
+pg_query_params($conn, $q, array($id));
+
 echo "
     <script>
         alert('Peran lab berhasil dihapus!');
         window.location.href = 'kelola_peranLab.php';
     </script>
-    ";
-
-header("Location: kelola_peranLab.php");
+";
 exit;
+?>
