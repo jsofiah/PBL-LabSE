@@ -6,8 +6,6 @@
     }
 
     require_once '../config.php';
-
-    // Ambil data publikasi dari view
     $qView = "SELECT * FROM vw_publikasi_dosen ORDER BY id_publikasi ASC";
     $rView = pg_query($conn, $qView);
 ?>

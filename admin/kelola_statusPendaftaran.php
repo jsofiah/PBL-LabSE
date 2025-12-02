@@ -6,7 +6,6 @@ if (!isset($_SESSION['username'])) {
 }
 require_once '../config.php';
 
-// Ambil data status dari tabel bawaan
 $qStatus = "SELECT * FROM status_pendaftaran ORDER BY id_statusPendaftaran ASC";
 $rStatus = pg_query($conn, $qStatus);
 

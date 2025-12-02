@@ -7,16 +7,14 @@ if (!isset($_SESSION['username'])) {
 
 require "../config.php";
 
-// Pastikan parameter ada
 if (!isset($_GET['id_proyek']) || !isset($_GET['id_mhs'])) {
     header("Location: kelola_proyek.php");
     exit;
 }
 
-$id_proyek_lama = intval($_GET['id_proyek']);
-$id_mhs_lama    = intval($_GET['id_mhs']);
+$id_proyek = intval($_GET['id_proyek']);
+$id_mhs_lama = intval($_GET['id_mhs']);
 
-// Ambil data relasi lama
 $qRelasi = "
     SELECT pm.id_proyek, pm.id_mhs, 
            p.judul_proyek, 
@@ -27,7 +25,7 @@ $qRelasi = "
     WHERE pm.id_proyek = $1 AND pm.id_mhs = $2
 ";
 
-$rRelasi = pg_query_params($conn, $qRelasi, [$id_proyek_lama, $id_mhs_lama]);
+$rRelasi = pg_query_params($conn, $qRelasi, [$id_proyek, $id_mhs_lama]);
 $data = pg_fetch_assoc($rRelasi);
 
 if (!$data) {
@@ -35,28 +33,19 @@ if (!$data) {
     exit;
 }
 
-// Ambil daftar proyek & mahasiswa
-$rProyek = pg_query($conn, "SELECT id_proyek, judul_proyek FROM proyek ORDER BY id_proyek");
-$rMhs    = pg_query($conn, "SELECT id_mhs, nama_mhs FROM mhs_segeeks ORDER BY id_mhs");
+$rMhs = pg_query($conn, "SELECT id_mhs, nama_mhs FROM mhs_segeeks ORDER BY id_mhs");
 
-// Proses update
 if (isset($_POST['update'])) {
-    $id_proyek_baru = $_POST['id_proyek'];
-    $id_mhs_baru    = $_POST['id_mhs'];
+    $id_mhs_baru = intval($_POST['id_mhs']);
 
-    $qUpdate = "CALL sp_update_proyek_mhs($1, $2, $3, $4)";
-    $params  = array(
-        $id_proyek_lama,
-        $id_mhs_lama,
-        $id_proyek_baru,
-        $id_mhs_baru
-    );
+    $qUpdate = "CALL sp_update_proyek_mhs($1, $2, $3)";
+    $params = array($id_proyek, $id_mhs_lama, $id_mhs_baru);
 
     $res = pg_query_params($conn, $qUpdate, $params);
 
     if ($res) {
         echo "<script>
-                alert('Relasi proyek–mahasiswa berhasil diperbarui!');
+                alert('Mahasiswa pada proyek berhasil diperbarui!');
                 window.location='kelola_proyek.php';
               </script>";
         exit;
@@ -73,6 +62,7 @@ if (isset($_POST['update'])) {
 <title>Edit Proyek–Mahasiswa</title>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link href="css/styleForm.css" rel="stylesheet">
 
 </head>
@@ -81,7 +71,7 @@ if (isset($_POST['update'])) {
 
 <div class="content-area container">
 
-    <h1 class="fw-bold text-center mb-4">Edit Relasi Proyek – Mahasiswa</h1>
+    <h1 class="fw-bold text-center mb-4">Edit Relasi Proyek - Mahasiswa</h1>
 
     <div class="card shadow-sm p-4 form-card">
 
@@ -90,21 +80,6 @@ if (isset($_POST['update'])) {
         <?php endif; ?>
 
         <form method="POST">
-
-            <!-- Proyek -->
-            <div class="mb-3">
-                <label class="form-label text-white">Proyek</label>
-                <select name="id_proyek" class="form-control" required>
-                    <?php while ($p = pg_fetch_assoc($rProyek)): ?>
-                        <option value="<?= $p['id_proyek']; ?>"
-                            <?= $p['id_proyek'] == $data['id_proyek'] ? 'selected' : '' ?>>
-                            <?= $p['id_proyek']; ?> - <?= htmlspecialchars($p['judul_proyek']); ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
-
-            <!-- Mahasiswa -->
             <div class="mb-3">
                 <label class="form-label text-white">Mahasiswa</label>
                 <select name="id_mhs" class="form-control" required>

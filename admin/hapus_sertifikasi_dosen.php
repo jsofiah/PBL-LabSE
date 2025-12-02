@@ -18,7 +18,6 @@ if ($id_dosen == 0 || $id_sertifikasi == 0) {
     exit;
 }
 
-// Hapus
 $q = "CALL sp_delete_dosen_sertifikasi($1, $2)";
 pg_query_params($conn, $q, [$id_dosen, $id_sertifikasi]);
 

@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once "../config.php";
 
-// Ambil jenis artikel
 $qJenis = "SELECT * FROM jenis_artikel ORDER BY id_jenisartikel ASC";
 $rJenis = pg_query($conn, $qJenis);
 
@@ -79,17 +78,17 @@ if (isset($_POST['simpan'])) {
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul</label>
-                <input type='text' name='judul' class='form-control' placeholder="masukkan judul artikel" required>
+                <input type='text' name='judul' class='form-control' placeholder="Masukkan judul artikel" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Isi Artikel</label>
-                <textarea name='isi' class='form-control' rows='5' placeholder="masukkan isi artikel" required></textarea>
+                <textarea name='isi' class='form-control' rows='5' placeholder="Masukkan isi artikel" required></textarea>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Penulis</label>
-                <input type='text' name='penulis' class='form-control' placeholder="masukkan penulis" required>
+                <input type='text' name='penulis' class='form-control' placeholder="Masukkan penulis" required>
             </div>
 
             <div class='mb-3'>
@@ -104,7 +103,7 @@ if (isset($_POST['simpan'])) {
 
             <div class='d-flex gap-2 mt-3'>
                 <button type='submit' name='simpan' class='btn btn-primary'>
-                    <i class='fa fa-plus'></i> Tambah Artikel
+                    <i class='fa fa-plus'></i> Simpan
                 </button>
 
                 <a href='kelola_artikel.php' class='btn btn-secondary'>

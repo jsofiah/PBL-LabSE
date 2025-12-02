@@ -10,7 +10,6 @@
     $id = $_GET['id'] ?? 0;
     $id = intval($id);
 
-    // Ambil data publikasi
     $qPub = "SELECT * FROM publikasi WHERE id_publikasi = $id";
     $rPub = pg_query($conn, $qPub);
     $pub = pg_fetch_assoc($rPub);
@@ -20,7 +19,6 @@
         exit;
     }
 
-    // Ambil opsi
     $qJenis = "SELECT id_jenispublikasi, nama_jenispublikasi FROM jenis_publikasi ORDER BY id_jenispublikasi ASC";
     $rJenis = pg_query($conn, $qJenis);
 
