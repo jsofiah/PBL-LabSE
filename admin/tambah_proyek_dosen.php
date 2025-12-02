@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
     if ($res) {
         echo "<script>
                 alert('Relasi proyek–dosen berhasil ditambahkan!');
-                window.location='kelola_proyek_dosen.php';
+                window.location='kelola_proyek.php';
               </script>";
         exit;
     } else {
@@ -56,9 +56,9 @@ if (isset($_POST['submit'])) {
         <form method="POST">
 
             <div class="mb-3">
-                <label class="form-label text-white">Pilih Proyek</label>
+                <label class="form-label text-white">Proyek</label>
                 <select name="id_proyek" class="form-control" required>
-                    <option value="">-- Pilih Proyek --</option>
+                    <option value="">Pilih Proyek</option>
                     <?php while ($p = pg_fetch_assoc($rProyek)) : ?>
                         <option value="<?= $p['id_proyek']; ?>">
                             <?= $p['id_proyek']; ?> - <?= htmlspecialchars($p['judul_proyek']); ?>
@@ -68,9 +68,9 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-white">Pilih Dosen</label>
+                <label class="form-label text-white">Dosen</label>
                 <select name="id_dosen" class="form-control" required>
-                    <option value="">-- Pilih Dosen --</option>
+                    <option value="">Pilih Dosen</option>
                     <?php while ($d = pg_fetch_assoc($rDosen)) : ?>
                         <option value="<?= $d['id_dosen']; ?>">
                             <?= $d['id_dosen']; ?> - <?= htmlspecialchars($d['nama_dosen']); ?>

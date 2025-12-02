@@ -55,7 +55,7 @@
                             <td class="text-center"><?= htmlspecialchars($keahlian['nama_keahlian']); ?></td>
                             <td class="text-center">
                                 <a href="edit_keahlianDosen.php?id_dosen=<?= $keahlian['id_dosen'] ?>&id_keahlian=<?= $keahlian['id_keahlian'] ?>" 
-                                class="btn btn-warning btn-sm">
+                                class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>
                                     Edit
                                 </a>
 

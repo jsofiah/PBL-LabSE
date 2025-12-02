@@ -55,8 +55,6 @@ $rPD = pg_query($conn, $qPD);
 <?php include 'sidebar.php'; ?>
 
 <div class="content-area container">
-
-    <!-- ================= PROYEK ================= -->
     <div class="mb-4">
         <h2 class="mb-2">Kelola Proyek</h2>
         <a href="tambah_proyek.php" class="btn btn-success btn-sm">
@@ -113,10 +111,10 @@ $rPD = pg_query($conn, $qPD);
 
                 <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                     <a href="hapus_proyek.php?id=<?= $pm['id_proyek'] ?>" 
                        onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                       class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</a>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -126,7 +124,6 @@ $rPD = pg_query($conn, $qPD);
 
     <hr class="my-5">
 
-    <!-- ================= PROYEK - MAHASISWA ================= -->
     <div class="mb-4">
         <h2>Kelola Proyek Mahasiswa</h2>
         <a href="tambah_proyek_mhs.php" class="btn btn-success btn-sm">
@@ -172,10 +169,17 @@ $rPD = pg_query($conn, $qPD);
 
                 <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek_mhs.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="hapus_proyek_mhs.php?id=<?= $pm['id_proyek'] ?>" 
-                       onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>" 
+                    class="btn btn-warning btn-sm">
+                    <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
+                    onclick="return confirm('Yakin ingin menghapus?')"
+                    class="btn btn-danger btn-sm">
+                    <i class="fa fa-trash"></i> Hapus
+                    </a>
+
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -218,24 +222,23 @@ $rPD = pg_query($conn, $qPD);
 
         <?php while($pd = pg_fetch_assoc($rPD)): ?>
             <tr>
-                <!-- ID Proyek Dosen -->
                 <td class="text-center" ><?= $pd['id_proyek'] ?></td>
-
-                <!-- ID Dosen -->
                 <td class="text-center" ><?= $pd['id_dosen'] ?></td>
-
-                <!-- Judul Proyek -->
                 <td class="text-center" ><?= $pd['judul_proyek'] ?></td>
-
-                <!-- Nama Dosen -->
                 <td class="text-center" ><?= $pd['nama_dosen'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek_dosen.php?id=<?= $pd['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="hapus_proyek_dosen.php?id=<?= $pd['id_proyek'] ?>" 
-                       onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="edit_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
+                    class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
+                    onclick="return confirm('Yakin ingin menghapus?')"
+                    class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i> Hapus
+                    </a>
+
                 </td>
             </tr>
         <?php endwhile; ?>

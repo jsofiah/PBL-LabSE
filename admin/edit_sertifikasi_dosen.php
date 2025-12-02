@@ -63,7 +63,7 @@
 
 <body class='p-4'>
 <div class='container'>
-    <h2 class='mb-4'>Edit Sertifikasi Dosen</h2>
+    <h2 class='mb-4 fw-bold text-center'>Edit Sertifikasi Dosen</h2>
     <div class='card shadow-sm p-4'>
         <form method="POST">
         <div class="mb-3">

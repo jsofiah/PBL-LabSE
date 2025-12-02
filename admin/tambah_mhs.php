@@ -6,7 +6,6 @@ if (!isset($_SESSION['username'])) {
 }
 require_once '../config.php';
 
-// Ambil data keahlian untuk checkbox
 $qSkills = "SELECT * FROM bidang_keahlian ORDER BY nama_keahlian ASC";
 $rSkills = pg_query($conn, $qSkills);
 
@@ -79,12 +78,12 @@ if (isset($_POST['submit'])) {
             </div>
 
             <div class="mb-3">
-                <label class="form-label text-white">Prodi</label>
+                <label class="form-label text-white">Program Studi</label>
                 <select name="prodi" class="form-select" required>
-                    <option value="">- Pilih -</option>
+                    <option value="">Pilih Program Studi</option>
                     <option value="Sistem Informasi Bisnis">Sistem Informasi Bisnis</option>
                     <option value="Teknik Informatika">Teknik Informatika</option>
-                    <option value="PPLS">PPLS</option>
+                    <option value="Pengembangan Perangkat Lunak Situs">Pengembangan Perangkat Lunak Situs</option>
                 </select>
             </div>
 
@@ -107,14 +106,14 @@ if (isset($_POST['submit'])) {
                     <?php while($skill = pg_fetch_assoc($rSkills)): ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="keahlian[]" value="<?= $skill['id_keahlian']; ?>">
-                            <label class="form-check-label"> <?= $skill['nama_keahlian']; ?> </label>
+                            <label class="form-check-label text-white"> <?= $skill['nama_keahlian']; ?> </label>
                         </div>
                     <?php endwhile; ?>
                 </div>
             </div>
 
             <div class="d-flex gap-2">
-                <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+                <button type="submit" name="submit" class="btn btn-primary">Simpan</button>
                 <a href="kelola_mhs.php" class="btn btn-secondary">Batal</a>
             </div>
         </form>
