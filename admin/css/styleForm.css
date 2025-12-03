@@ -3,12 +3,24 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+.content-area {
+    margin-left: 290px;
+    max-width: 1000px !important;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
 .card {
     background: linear-gradient(135deg, #000046 0%, #1CB5E0 100%);
     border-radius: 15px;
     border: none;
     box-shadow: 0 10px 30px rgba(20, 136, 204, 0.15);
     padding: 30px;
+    max-width: 950px;
+}
+
+h1.text-center{
+    max-width: 950px;
 }
 
 .card-header {
