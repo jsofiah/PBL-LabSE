@@ -47,35 +47,37 @@
             </colgroup>
 
             <thead class="table-primary">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Nama Jenis Publikasi</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Nama Jenis Publikasi</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
 
             <tbody>
+                <?php $no = 1; ?>
                 <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
                     <tr>
-                        <td class="text-center"><?= $j['id_jenispublikasi']; ?></td>
+                        <td class="text-center"><?= $no++; ?></td>
 
                         <td><?= htmlspecialchars($j['nama_jenispublikasi']); ?></td>
 
                         <td class="text-center">
-                            <a href="edit_jenispublikasi.php?id=<?= $j['id_jenispublikasi']; ?>"
-                               class="btn btn-warning btn-sm">
+                            <a href="edit_jenispublikasi.php?id=<?= $j['id_jenispublikasi']; ?>" 
+                            class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
 
                             <a href="hapus_jenispublikasi.php?id=<?= $j['id_jenispublikasi']; ?>"
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Yakin ingin menghapus jenis publikasi ini?')">
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus jenis publikasi ini?')">
                                 <i class="fa fa-trash"></i> Hapus
                             </a>
                         </td>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
+            <?php endwhile; ?>
+        </tbody>
+
         </table>
     </div>
 </div>

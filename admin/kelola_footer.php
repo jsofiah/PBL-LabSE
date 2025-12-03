@@ -49,28 +49,29 @@
                     <col style="width:200px;">
                 </colgroup>
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Logo</th>
-                        <th class="text-center">Judul</th>
-                        <th class="text-center">Hari Kerja</th>
-                        <th class="text-center">Jam Kerja</th>
-                        <th class="text-center">Telepon 1</th>
-                        <th class="text-center">Telepon 2</th>
-                        <th class="text-center">Alamat</th>
-                        <th class="text-center">Email</th>
-                        <th class="text-center">Instagram</th>
-                        <th class="text-center">YouTube</th>
-                        <th class="text-center">LinkedIn</th>
-                        <th class="text-center">Maps</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Logo</th>
+                    <th class="text-center">Judul</th>
+                    <th class="text-center">Hari Kerja</th>
+                    <th class="text-center">Jam Kerja</th>
+                    <th class="text-center">Telepon 1</th>
+                    <th class="text-center">Telepon 2</th>
+                    <th class="text-center">Alamat</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Instagram</th>
+                    <th class="text-center">YouTube</th>
+                    <th class="text-center">LinkedIn</th>
+                    <th class="text-center">Maps</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
 
                 <tbody>
+                    <?php $no = 1; ?>
                     <?php while($footer = pg_fetch_assoc($rViewFooter)) : ?>
                         <tr>
-                            <td class="text-center"><?= $footer['id_footer']; ?></td>
+                            <td class="text-center"><?= $no++; ?></td>
                             <td class="text-center"><?= htmlspecialchars($footer['url_logo_footer']); ?></td>
                             <td class="text-center"><?= htmlspecialchars($footer['judul_footer']); ?></td>
                             <td class="text-center"><?= htmlspecialchars($footer['hari_kerja']); ?></td>
@@ -85,37 +86,25 @@
                             <td class="text-center"><?= htmlspecialchars($footer['email']); ?></td>
 
                             <td class="text-center">
-                                <a href="<?= htmlspecialchars($footer['link_instagram']); ?>" 
-                                target="_blank" 
-                                class="link-truncate"
-                                title="<?= htmlspecialchars($footer['link_instagram']); ?>">
-                                <?= htmlspecialchars($footer['link_instagram']); ?>
+                                <a href="<?= htmlspecialchars($footer['link_instagram']); ?>" target="_blank" class="link-truncate">
+                                    <?= htmlspecialchars($footer['link_instagram']); ?>
                                 </a>
                             </td>
 
                             <td class="text-center">
-                                <a href="<?= htmlspecialchars($footer['link_youtube']); ?>" 
-                                target="_blank" 
-                                class="link-truncate"
-                                title="<?= htmlspecialchars($footer['link_youtube']); ?>">
-                                <?= htmlspecialchars($footer['link_youtube']); ?>
+                                <a href="<?= htmlspecialchars($footer['link_youtube']); ?>" target="_blank" class="link-truncate">
+                                    <?= htmlspecialchars($footer['link_youtube']); ?>
                                 </a>
                             </td>
 
                             <td class="text-center">
-                                <a href="<?= htmlspecialchars($footer['link_linkedin']); ?>" 
-                                target="_blank" 
-                                class="link-truncate"
-                                title="<?= htmlspecialchars($footer['link_linkedin']); ?>">
-                                <?= htmlspecialchars($footer['link_linkedin']); ?>
+                                <a href="<?= htmlspecialchars($footer['link_linkedin']); ?>" target="_blank" class="link-truncate">
+                                    <?= htmlspecialchars($footer['link_linkedin']); ?>
                                 </a>
                             </td>
 
                             <td class="text-center">
-                                <a href="<?= htmlspecialchars($footer['link_maps']); ?>" target="_blank" 
-                                target="_blank"
-                                class="link-truncate"
-                                title="<?= htmlspecialchars($footer['link_maps']); ?>">
+                                <a href="<?= htmlspecialchars($footer['link_maps']); ?>" target="_blank" class="link-truncate">
                                     <?= htmlspecialchars($footer['link_maps']); ?>
                                 </a>
                             </td>
@@ -124,8 +113,7 @@
                                 <a href="edit_footer.php?id=<?= $footer['id_footer']; ?>" class="btn btn-warning btn-sm">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-                                <a href="hapus_footer.php?id=<?= $footer['id_footer']; ?>"
-                                class="btn btn-danger btn-sm"
+                                <a href="hapus_footer.php?id=<?= $footer['id_footer']; ?>" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Yakin ingin menghapus Footer ini?')">
                                     <i class="fa fa-trash"></i> Hapus
                                 </a>
@@ -133,6 +121,7 @@
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
             </table>
         </div>
     </div>

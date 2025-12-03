@@ -70,44 +70,46 @@
             </colgroup>
 
             <thead class="table-primary">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Judul Konten</th>
-                    <th class="text-center">Isi Konten</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Judul Konten</th>
+                <th class="text-center">Isi Konten</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
 
             <tbody>
-                <?php if ($fetched_rows > 0): ?>
-                    <?php while($k = pg_fetch_assoc($rViewKonten)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $k['id_konten']; ?></td>
-
-                            <td><?= htmlspecialchars($k['judul_konten']); ?></td>
-
-                            <td><?= nl2br(htmlspecialchars(substr($k['isi_konten'], 0, 80))); ?>...</td>
-
-                            <td class="text-center">
-                                <a href="edit_kontenLab.php?id=<?= $k['id_konten']; ?>" 
-                                   class="btn btn-warning btn-sm my-1">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-
-                                <a href="hapus_kontenLab.php?id=<?= $k['id_konten']; ?>"
-                                   class="btn btn-danger btn-sm my-1"
-                                   onclick="return confirm('Yakin ingin menghapus konten ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
+            <?php if ($fetched_rows > 0): ?>
+                <?php $no = $offset + 1; ?>
+                <?php while($k = pg_fetch_assoc($rViewKonten)) : ?>
                     <tr>
-                        <td colspan="4" class="text-center">Tidak ada data konten laboratorium.</td>
+                        <td class="text-center"><?= $no++; ?></td>
+
+                        <td><?= htmlspecialchars($k['judul_konten']); ?></td>
+
+                        <td><?= nl2br(htmlspecialchars(substr($k['isi_konten'], 0, 80))); ?>...</td>
+
+                        <td class="text-center">
+                            <a href="edit_kontenLab.php?id=<?= $k['id_konten']; ?>" 
+                            class="btn btn-warning btn-sm my-1">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_kontenLab.php?id=<?= $k['id_konten']; ?>"
+                            class="btn btn-danger btn-sm my-1"
+                            onclick="return confirm('Yakin ingin menghapus konten ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
                     </tr>
-                <?php endif; ?>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4" class="text-center">Tidak ada data konten laboratorium.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
+
         </table>
     </div>
 

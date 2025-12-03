@@ -79,37 +79,35 @@
                 </colgroup>
 
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Jenis</th>
-                        <th class="text-center">Nama</th>
-                        <th class="text-center">Isi</th>
-                        <th class="text-center">Preview Gambar</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Jenis</th>
+                    <th class="text-center">Nama</th>
+                    <th class="text-center">Isi</th>
+                    <th class="text-center">Preview Gambar</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
 
                 <tbody>
                     <?php if (count($fasilitas) > 0): ?>
+                        <?php $no = $offset + 1; ?>
                         <?php foreach($fasilitas as $row) : ?>
                         <tr>
-                            <td class="text-center"><?= $row['id_fasilitas']; ?></td>
+                            <td class="text-center"><?= $no++; ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['nama_jenisfasilitas']); ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['nama_fasilitas']); ?></td>
                             <td><?= nl2br(htmlspecialchars($row['isi_fasilitas'])); ?></td>
-                           <td class="text-center">
-                                <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>"
-                                     alt="Gambar Fasilitas"
-                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                            </td>
-
 
                             <td class="text-center">
-                                <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
-                                class="btn btn-warning btn-sm">
+                                <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>"
+                                    style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                            </td>
+
+                            <td class="text-center">
+                                <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>" class="btn btn-warning btn-sm">
                                     <i class="fa fa-edit"></i> Edit
                                 </a>
-
                                 <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
                                 class="btn btn-danger btn-sm"
                                 onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
@@ -124,6 +122,7 @@
                         </tr>
                     <?php endif; ?>
                 </tbody>
+
 
             </table>
         </div>

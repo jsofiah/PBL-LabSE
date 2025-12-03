@@ -77,52 +77,61 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Edit Fasilitas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body class="container p-4">
 
-<h1 class="mb-4 fw-bold text-center">Edit Fasilitas</h1>
+<body class="p-4">
+    <?php include 'sidebar.php'; ?>
 
-<form method="POST" enctype="multipart/form-data">
-<div class="card shadow-sm p-4">
-    <div class="mb-3">
-        <label class="text-white">Jenis Fasilitas</label>
-        <select name="id_jenisfasilitas" class="form-control" required>
-            <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
-                <option value="<?= $j['id_jenisfasilitas']; ?>"
-                    <?= $j['id_jenisfasilitas'] == $data['id_jenisfasilitas'] ? 'selected' : '' ?>>
-                    <?= $j['nama_jenisfasilitas']; ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-    </div>
+    <div class="content-area container">
+        <h1 class="mb-4 fw-bold text-center">Edit Fasilitas</h1>
 
-    <div class="mb-3">
-        <label class="form-label text-white">Nama Fasilitas</label>
-        <input type="text" name="nama_fasilitas" class="form-control"
-                value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
-    </div>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="card shadow-sm p-4">
+                <div class="mb-3">
+                    <label class="text-white">Jenis Fasilitas</label>
+                    <select name="id_jenisfasilitas" class="form-control" required>
+                        <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
+                        <option value="<?= $j['id_jenisfasilitas']; ?>"
+                            <?= $j['id_jenisfasilitas'] == $data['id_jenisfasilitas'] ? 'selected' : '' ?>>
+                            <?= $j['nama_jenisfasilitas']; ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-    <div class="mb-3">
-        <label class="form-label text-white">Isi Fasilitas</label>
-        <textarea name="isi_fasilitas" class="form-control" rows="4" required><?= htmlspecialchars($data['isi_fasilitas']); ?></textarea>
-    </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">Nama Fasilitas</label>
+                    <input type="text" name="nama_fasilitas" class="form-control"
+                        value="<?= htmlspecialchars($data['nama_fasilitas']); ?>" required>
+                </div>
 
-    <div class="mb-3">
-        <label class="form-label text-white">Upload Gambar Baru</label>
-        <input type="file" name="gambar" class="form-control">
-    </div>
-    <div class="d-flex gap-2 mt-3">
-        <button name="submit" class="btn btn-primary">Simpan perubahan</button>
-        <a href="kelola_fasilitas.php" class="btn btn-secondary">Kembali</a>
-    </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">Isi Fasilitas</label>
+                    <textarea name="isi_fasilitas" class="form-control" rows="4"
+                        required><?= htmlspecialchars($data['isi_fasilitas']); ?></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-white">Upload Gambar Baru</label>
+                    <input type="file" name="gambar" class="form-control">
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button name="submit" class="btn btn-primary">Simpan perubahan</button>
+                    <a href="kelola_fasilitas.php" class="btn btn-secondary">Kembali</a>
+                </div>
             </div>
 
-</form>
-
+        </form>
+    </div>
+    <script src="js/sidebar.js"></script>
 </body>
+
 </html>
