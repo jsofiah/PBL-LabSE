@@ -62,6 +62,21 @@
         LIMIT 5
     ";
     $resultTopMhs = pg_query($conn, $queryTopMhs);
+
+    $status_backup = ''; 
+    $nama_file     = '';
+    $pesan_error   = '';
+
+    if (isset($_GET['status'])) {
+        $status_backup = $_GET['status']; 
+        
+        if ($status_backup == 'sukses') {
+            $nama_file = htmlspecialchars($_GET['file']);
+        } 
+        elseif ($status_backup == 'gagal') {
+            $pesan_error = htmlspecialchars($_GET['pesan']);
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -304,6 +319,31 @@
                 </div>
             </div>
         </div>
+
+        <?php if ($status_backup == 'sukses') : ?>
+            <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                <h4 class="alert-heading"><i class="fas fa-check-circle"></i> Backup Berhasil!</h4>
+                <p>Database dan Foto berhasil diamankan di folder server (<code>backup_data</code>).</p>
+                <hr>
+                <p class="mb-0">Nama File: <strong><?php echo $nama_file; ?></strong></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($status_backup == 'gagal') : ?>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+                <strong><i class="fas fa-exclamation-triangle"></i> Gagal Backup!</strong> <?php echo $pesan_error; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <div class="mb-4">
+            <a href="proses_backup.php" class="btn btn-warning btn-lg shadow-sm text-dark fw-bold" onclick="return confirm('Proses ini memakan waktu 10-30 detik karena ukuran file besar. Lanjutkan?');">
+                <i class="fas fa-database me-2"></i> Backup Data & Foto
+            </a>
+            <p class="text-muted mt-2 small">*Klik sekali dan tunggu halaman loading sampai selesai.</p>
+        </div>
+
     </div>
     <script src="js/sidebar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
