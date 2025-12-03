@@ -6,7 +6,7 @@
     }
     require_once '../config.php';
 
-    $qGaleri = pg_query($conn, "SELECT * FROM galeri ORDER BY id_galeri ASC");
+    $qGaleri = pg_query($conn, "SELECT * FROM vw_galeri ORDER BY id_galeri ASC");
 ?>
 
 <!DOCTYPE html>

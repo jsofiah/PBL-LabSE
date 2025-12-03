@@ -38,12 +38,8 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-    $qRoadmap = "SELECT 
-                    id_roadmap,
-                    judul_roadmap, 
-                    deskripsi_roadmap, 
-                    tanggal_roadmap 
-                FROM roadmap 
+    $qRoadmap = "SELECT *
+                FROM vw_roadmap 
                 ORDER BY tanggal_roadmap ASC, id_roadmap ASC"; 
     $rRoadmap = pg_query($conn, $qRoadmap);
 
@@ -92,6 +88,7 @@
     <link rel="stylesheet" href="css/styleRoadmap.css">
 </head>
 <body>
+    <div id="scrollIndicator" class="scroll-indicator"></div>
     <div class="header-container">
         <div class="logo">
             <?php if ($rowLogo): ?>
@@ -186,8 +183,9 @@
                 <img src="img/bgroadmap.jpg" alt="Roadmap Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <h1 class="hero-title">ROADMAP</h1>
-                </div>
+                <h1 class="hero-title">
+                    ROADMAP
+                </h1>
             </div>
         </div>
     </div>
@@ -228,8 +226,13 @@
         </div>
     </div>
 
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
     <script src="js/navigation.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>

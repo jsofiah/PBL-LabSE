@@ -9,7 +9,7 @@ require_once '../config.php';
 if (isset($_GET['id'])) {
     $id_mhs = intval($_GET['id']);
     
-    $query = "DELETE FROM mhs_segeeks WHERE id_mhs = $1";
+    $query = "CALL sp_delete_mhs($1)";
     $result = pg_query_params($conn, $query, array($id_mhs));
     
     if ($result) {

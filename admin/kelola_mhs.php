@@ -18,7 +18,8 @@
                 v.daftar_proyek 
             FROM mhs_segeeks m
             LEFT JOIN vw_mhs_full v ON m.id_mhs = v.id_mhs
-            ORDER BY m.nama_mhs ASC";
+            ORDER BY m.id_mhs ASC";
+
             
     $rMhs = pg_query($conn, $qMhs);
     $mahasiswa = [];
@@ -58,7 +59,7 @@
                     <table class="table table-bordered table-striped table-hover align-middle">
                         <thead class="table-primary">
                             <tr>
-                                <th class="text-center" style="width: 5%;">No</th>
+                                <th class="text-center" style="width: 5%;">ID</th>
                                 <th class="text-center" style="width: 15%;">NIM</th>
                                 <th style="width: 25%;">Nama Mahasiswa</th>
                                 <th style="width: 20%;">Prodi</th>
@@ -72,7 +73,7 @@
                             <?php if (count($mahasiswa) > 0): ?>
                             <?php $no = 1; foreach($mahasiswa as $mhs) : ?>
                             <tr>
-                                <td class="text-center"><?= $no++; ?></td>
+                                <td class="text-center"><?= htmlspecialchars($mhs['id_mhs']); ?></td>
 
                                 <td class="text-center"><?= htmlspecialchars($mhs['nim_mhs']); ?></td>
 

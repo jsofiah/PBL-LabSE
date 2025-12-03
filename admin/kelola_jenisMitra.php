@@ -21,7 +21,6 @@ $rJenis = pg_query($conn, $qJenis);
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
-    <link rel="stylesheet" href="css/styleForm.css">
 </head>
 <body>
 

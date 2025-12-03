@@ -132,13 +132,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
-    <!-- <link rel="stylesheet" href="css/styleIndex.css"> -->
     <link rel="stylesheet" href="css/styleArtikel.css">
     <link rel="stylesheet" href="css/styleFooter.css">
 
 </head>
 
 <body>
+    <div id="scrollIndicator" class="scroll-indicator"></div>
     <div class="header-container">
         <div class="logo">
             <?php if ($rowLogo): ?>
@@ -410,8 +410,13 @@
 
     </div>
 
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
     <script src="js/navigation.js" defer></script>
     <script src="js/dropdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

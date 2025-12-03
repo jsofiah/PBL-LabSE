@@ -7,37 +7,16 @@ if (!isset($_SESSION['username'])) {
 
 require "../config.php";
 
-/* Ambil semua proyek */
-$qProyek = "SELECT * FROM proyek ORDER BY id_proyek ASC";
+$qProyek = "SELECT * FROM vw_proyek ORDER BY id_proyek ASC";
 $rProyek = pg_query($conn, $qProyek);
 
-/* Ambil relasi proyek–mahasiswa */
-$qPM = "
-    SELECT pm.id_proyek,
-           p.judul_proyek,
-           pm.id_mhs,
-           m.nama_mhs
-    FROM proyek_mhs pm
-    JOIN proyek p ON pm.id_proyek = p.id_proyek
-    JOIN mhs_segeeks m ON pm.id_mhs = m.id_mhs
-    ORDER BY pm.id_proyek ASC
-";
+$qPM = "SELECT * FROM vw_proyek_mhs ORDER BY id_proyek ASC";
 $rPM = pg_query($conn, $qPM);
 
-/* Ambil relasi proyek–dosen */
-$qPD = "
-    SELECT pd.id_proyek,
-           p.judul_proyek,
-           pd.id_dosen,
-           d.nama_dosen
-    FROM proyek_dosen pd
-    JOIN proyek p ON pd.id_proyek = p.id_proyek
-    JOIN dosen d ON pd.id_dosen = d.id_dosen
-    ORDER BY pd.id_proyek ASC
-";
+$qPD = "SELECT * FROM vw_proyek_dosen ORDER BY id_proyek ASC";
 $rPD = pg_query($conn, $qPD);
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -88,27 +67,20 @@ $rPD = pg_query($conn, $qPD);
         <tbody>
         <?php while($pm = pg_fetch_assoc($rProyek)): ?>
             <tr>
-                <!-- ID -->
                 <td class="text-center"><?= $pm['id_proyek'] ?></td>
 
-                <!-- Gambar -->
                 <td class="text-center" >
                     <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" width="80">
                 </td>
 
-                <!-- Judul -->
                 <td class="text-center" ><?= htmlspecialchars($pm['judul_proyek']) ?></td>
 
-                <!-- Deskripsi -->
                 <td class="text-center" ><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
 
-                <!-- Tanggal -->
                 <td class="text-center" ><?= $pm['tanggal_terbit_proyek'] ?></td>
 
-                <!-- Penulis -->
                 <td class="text-center" ><?= $pm['penulis_proyek'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
                     <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                     <a href="hapus_proyek.php?id=<?= $pm['id_proyek'] ?>" 
@@ -154,19 +126,14 @@ $rPD = pg_query($conn, $qPD);
         <tbody>
         <?php while($pm = pg_fetch_assoc($rPM)): ?>
             <tr>
-                <!-- ID Proyek Mahasiswa -->
                 <td class="text-center" ><?= $pm['id_proyek'] ?></td>
 
-                <!-- ID Mahasiswa -->
                 <td class="text-center" ><?= $pm['id_mhs'] ?></td>
 
-                <!-- Judul -->
                 <td class="text-center" ><?= $pm['judul_proyek'] ?></td>
 
-                <!-- Nama Mahasiswa -->
                 <td class="text-center" ><?= $pm['nama_mhs'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
                     <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>" 
                     class="btn btn-warning btn-sm">
@@ -188,7 +155,6 @@ $rPD = pg_query($conn, $qPD);
 
     <hr class="my-5">
 
-    <!-- ================= PROYEK - DOSEN ================= -->
     <div class="mb-4">
         <h2>Kelola Proyek Dosen</h2>
         <a href="tambah_proyek_dosen.php" class="btn btn-success btn-sm">

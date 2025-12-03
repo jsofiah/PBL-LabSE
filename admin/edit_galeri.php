@@ -6,25 +6,18 @@ if (!isset($_SESSION['username'])) {
 }
 require '../config.php';
 
-$id = intval($_GET['id']);
+$id = $_GET['id'];
 
-$qData = pg_query_params($conn, "SELECT * FROM galeri WHERE id_galeri=$1", [$id]);
+
+$qData = pg_query_params($conn, "SELECT * FROM vw_galeri WHERE id_galeri=$1", array($id));
 $data = pg_fetch_assoc($qData);
-
-if (!$data) {
-    die("Data tidak ditemukan!");
-}
 
 if (isset($_POST['submit'])) {
 
     $desk = $_POST['deskripsi_galeri'];
-    $gambarLama = $data['url_gambar_galeri'];
+    $newPath = $data['url_gambar_galeri'];
 
     if (!empty($_FILES['gambar']['name'])) {
-        $filePath = "../" . $gambarLama;
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
 
         $folder = "../img/galeri/";
         $namaFile = time() . "_" . basename($_FILES['gambar']['name']);
@@ -32,25 +25,21 @@ if (isset($_POST['submit'])) {
 
         move_uploaded_file($_FILES['gambar']['tmp_name'], $target);
 
-        $pathDb = "img/galeri/" . $namaFile;
-
-        $qUpdate = "UPDATE galeri 
-                    SET deskripsi_galeri=$1, url_gambar_galeri=$2
-                    WHERE id_galeri=$3";
-
-        pg_query_params($conn, $qUpdate, [$desk, $pathDb, $id]);
-
-    } else {
-
-        $qUpdate = "UPDATE galeri 
-                    SET deskripsi_galeri=$1
-                    WHERE id_galeri=$2";
-
-        pg_query_params($conn, $qUpdate, [$desk, $id]);
+        $newPath = "img/galeri/" . $namaFile;
     }
 
-    header("Location: kelola_galeri.php");
-    exit;
+    $query = "CALL sp_update_galeri($1, $2, $3)";
+    $params = array($id, $desk, $newPath);
+
+    $res = pg_query_params($conn, $query, $params);
+
+    if ($res) {
+        echo "<script>alert('Galeri berhasil diperbarui!');
+              window.location='kelola_galeri.php';</script>";
+        exit;
+    } else {
+        echo "<script>alert('Gagal memperbarui galeri!');</script>";
+    }
 }
 ?>
 
@@ -60,7 +49,6 @@ if (isset($_POST['submit'])) {
 <head>
     <title>Edit Galeri</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
@@ -73,8 +61,13 @@ if (isset($_POST['submit'])) {
 
     <div class="mb-3">
         <label class="form-label text-white">Deskripsi</label>
-        <input type="text" name="deskripsi_galeri" class="form-control" placeholder="Masukkan deskripsi"
+        <input type="text" name="deskripsi_galeri" class="form-control"
                value="<?= htmlspecialchars($data['deskripsi_galeri']); ?>" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">Gambar Saat Ini</label><br>
+        <img src="../<?= $data['url_gambar_galeri']; ?>" style="width:150px;">
     </div>
 
     <div class="mb-3">
@@ -82,7 +75,7 @@ if (isset($_POST['submit'])) {
         <input type="file" name="gambar" class="form-control" accept="image/*">
     </div>
     <div class="d-flex gap-2 mt-3">
-    <button class="btn btn-primary" name="submit">Simpan Perbaruan</button>
+    <button class="btn btn-primary" name="submit">Update</button>
     <a href="kelola_galeri.php" class="btn btn-secondary">Kembali</a>
     
 </form>
