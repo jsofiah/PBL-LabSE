@@ -7,8 +7,33 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$qView = "SELECT * FROM vw_roadmap ORDER BY id_roadmap ASC";
+$limit = 20; 
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+$offset = ($page - 1) * $limit;
+
+$qTotal = "SELECT COUNT(*) FROM vw_roadmap";
+$rTotal = pg_query($conn, $qTotal);
+$total_records = pg_fetch_result($rTotal, 0, 0);
+
+$total_pages = ceil($total_records / $limit);
+
+if ($page > $total_pages && $total_pages > 0) {
+    $page = $total_pages;
+    $offset = ($page - 1) * $limit;
+} elseif ($total_pages === 0) {
+    $page = 0;
+    $offset = 0;
+}
+
+$qView = "SELECT * FROM vw_roadmap ORDER BY id_roadmap ASC LIMIT $limit OFFSET $offset";
 $rView = pg_query($conn, $qView);
+
+if (!$rView) {
+    die("Query error: " . pg_last_error($conn));
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,30 +83,70 @@ $rView = pg_query($conn, $qView);
             </thead>
 
             <tbody>
-                <?php while ($row = pg_fetch_assoc($rView)) : ?>
-                    <tr>
-                        <td class="text-center"><?= $row['id_roadmap']; ?></td>
-                        <td><?= htmlspecialchars($row['judul_roadmap']); ?></td>
-                        <td><?= nl2br(htmlspecialchars($row['deskripsi_roadmap'])); ?></td>
-                        <td class="text-center"><?= $row['tanggal_roadmap']; ?></td>
+                <?php if (pg_num_rows($rView) > 0): ?>
+                    <?php while ($row = pg_fetch_assoc($rView)) : ?>
+                        <tr>
+                            <td class="text-center"><?= $row['id_roadmap']; ?></td>
+                            <td><?= htmlspecialchars($row['judul_roadmap']); ?></td>
+                            <td><?= nl2br(htmlspecialchars($row['deskripsi_roadmap'])); ?></td>
+                            <td class="text-center"><?= $row['tanggal_roadmap']; ?></td>
 
-                        <td class="text-center">
-                            <a href="edit_roadmap.php?id=<?= $row['id_roadmap']; ?>" class="btn btn-warning btn-sm">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
+                            <td class="text-center">
+                                <a href="edit_roadmap.php?id=<?= $row['id_roadmap']; ?>" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
 
-                            <a href="hapus_roadmap.php?id=<?= $row['id_roadmap']; ?>"
-                               onclick="return confirm('Yakin ingin menghapus roadmap ini?')"
-                               class="btn btn-danger btn-sm">
-                                <i class="fa fa-trash"></i> Hapus
-                            </a>
-                        </td>
+                                <a href="hapus_roadmap.php?id=<?= $row['id_roadmap']; ?>"
+                                   onclick="return confirm('Yakin ingin menghapus roadmap ini?')"
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                     <tr>
+                        <td colspan="5" class="text-center">Tidak ada data roadmap.</td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endif; ?>
             </tbody>
 
         </table>
     </div>
+
+    <?php if ($total_pages > 1): ?>
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Sebelumnya</span>
+                    </a>
+                </li>
+
+                <?php 
+                $start_page = max(1, $page - 2);
+                $end_page = min($total_pages, $page + 2);
+                
+                for ($i = $start_page; $i <= $end_page; $i++): 
+                ?>
+                    <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+
+                <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                        <span aria-hidden="true">Berikutnya &raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <p class="text-center text-muted mt-2">
+        Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+    </p>
+    <?php endif; ?>
 
 </div>
 
