@@ -74,7 +74,7 @@ if (!$rView) {
 
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">Judul</th>
                     <th class="text-center">Deskripsi</th>
                     <th class="text-center">Tanggal</th>
@@ -83,33 +83,36 @@ if (!$rView) {
             </thead>
 
             <tbody>
-                <?php if (pg_num_rows($rView) > 0): ?>
-                    <?php while ($row = pg_fetch_assoc($rView)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $row['id_roadmap']; ?></td>
-                            <td><?= htmlspecialchars($row['judul_roadmap']); ?></td>
-                            <td><?= nl2br(htmlspecialchars($row['deskripsi_roadmap'])); ?></td>
-                            <td class="text-center"><?= $row['tanggal_roadmap']; ?></td>
+            <?php $no = $offset + 1; ?>
+            <?php if (pg_num_rows($rView) > 0): ?>
+                <?php while ($row = pg_fetch_assoc($rView)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($row['judul_roadmap']); ?></td>
+                        <td><?= nl2br(htmlspecialchars($row['deskripsi_roadmap'])); ?></td>
+                        <td class="text-center"><?= $row['tanggal_roadmap']; ?></td>
 
-                            <td class="text-center">
-                                <a href="edit_roadmap.php?id=<?= $row['id_roadmap']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
+                        <td class="text-center">
+                            <a href="edit_roadmap.php?id=<?= $row['id_roadmap']; ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
 
-                                <a href="hapus_roadmap.php?id=<?= $row['id_roadmap']; ?>"
-                                   onclick="return confirm('Yakin ingin menghapus roadmap ini?')"
-                                   class="btn btn-danger btn-sm">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
+                            <a href="hapus_roadmap.php?id=<?= $row['id_roadmap']; ?>"
+                            onclick="return confirm('Yakin ingin menghapus roadmap ini?')"
+                            class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
-                     <tr>
-                        <td colspan="5" class="text-center">Tidak ada data roadmap.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada data roadmap.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+
 
         </table>
     </div>

@@ -36,7 +36,7 @@
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>
-                    <col style="width:40px;">
+                    <col style="width:50px;">
                     <col style="width:290px;">
                     <col style="width:290px;">
                     <col style="width:100px;">
@@ -44,7 +44,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Sertifikasi</th>
                         <th class="text-center">Penyelenggara</th>
                         <th class="text-center">Tahun Sertifikasi</th>
@@ -53,25 +53,27 @@
                 </thead>
 
                 <tbody>
-                    <?php while($sertifikasi = pg_fetch_assoc($rViewSertifikasi)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $sertifikasi['id_sertifikasi']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sertifikasi['nama_sertifikasi']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sertifikasi['penyelenggara']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sertifikasi['tahun_sertifikasi']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_sertifikasi.php?id=<?= $sertifikasi['id_sertifikasi']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                                <a href="hapus_sertifikasi.php?id=<?= $sertifikasi['id_sertifikasi']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Sertifikasi ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                <?php $no = 1; ?>
+                <?php while($sertifikasi = pg_fetch_assoc($rViewSertifikasi)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sertifikasi['nama_sertifikasi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sertifikasi['penyelenggara']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sertifikasi['tahun_sertifikasi']); ?></td>
+                        <td class="text-center">
+                            <a href="edit_sertifikasi.php?id=<?= $sertifikasi['id_sertifikasi']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a href="hapus_sertifikasi.php?id=<?= $sertifikasi['id_sertifikasi']; ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus Sertifikasi ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+
             </table>
         </div>
 
@@ -83,7 +85,7 @@
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>
-                    <col style="width:100px;">
+                    <col style="width:50px;">
                     <col style="width:290px;">
                     <col style="width:290px;">
                     <col style="width:290px;">
@@ -92,7 +94,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID Sertifikasi</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Dosen</th>
                         <th class="text-center">Nama Sertifikasi</th>
                         <th class="text-center">Penyelenggara</th>
@@ -102,26 +104,31 @@
                 </thead>
 
                 <tbody>
-                    <?php while($dosen = pg_fetch_assoc($rViewSertifikasiDosen)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $dosen['id_sertifikasi']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['nama_sertifikasi']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['penyelenggara']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['tahun_sertifikasi']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_sertifikasi_dosen.php?id=<?= $dosen['id_sertifikasi']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                                <a href="hapus_sertifikasi_dosen.php?id_dosen=<?= $dosen['id_dosen']; ?>&id_sertifikasi=<?= $dosen['id_sertifikasi']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Sertifikasi Dosen ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                <?php $no = 1; ?>
+                <?php while($dosen = pg_fetch_assoc($rViewSertifikasiDosen)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['nama_sertifikasi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['penyelenggara']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['tahun_sertifikasi']); ?></td>
+
+                        <td class="text-center">
+                            <a href="edit_sertifikasi_dosen.php?id=<?= $dosen['id_sertifikasi']; ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_sertifikasi_dosen.php?id_dosen=<?= $dosen['id_dosen']; ?>&id_sertifikasi=<?= $dosen['id_sertifikasi']; ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus Sertifikasi Dosen ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+
             </table>
         </div>
     </div>

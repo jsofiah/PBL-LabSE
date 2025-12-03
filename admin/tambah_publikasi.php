@@ -54,10 +54,10 @@
 <body class='p-4'>
     <?php include 'sidebar.php'; ?>
 
-<div class='container'>
+<div class='content-area container'>
     <h1 class='mb-4 fw-bold text-center'>Tambah Publikasi</h1>
 
-    <div class='content-area container'>
+    <div class='card shadow-sm p-4 form-card'>
         <form method='POST'>
 
             <div class='mb-3'>
