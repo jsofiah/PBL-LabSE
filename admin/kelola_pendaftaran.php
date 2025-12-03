@@ -43,7 +43,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Pendaftar</th>
                         <th class="text-center">NIM Pendaftar</th>
                         <th class="text-center">Program Studi</th>
@@ -54,38 +54,42 @@
                 </thead>
 
                 <tbody>
-                    <?php while($pendaftar = pg_fetch_assoc($rViewPendaftar)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $pendaftar['id_pendaftar']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($pendaftar['nama_pendaftar']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($pendaftar['nim_pendaftar']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($pendaftar['prodi_pendaftar']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($pendaftar['angkatan_pendaftar']); ?></td>
-                            <td class="text-center">
-                                <?php 
-                                    if ($pendaftar['status_pendaftaran']) {
-                                        echo htmlspecialchars($pendaftar['status_pendaftaran']);
-                                    } else {
-                                        echo "Belum dikonfirmasi";
-                                    }
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <a href="terima_pendaftar.php?id=<?= $pendaftar['id_pendaftar'] ?>" 
+                <?php $no = 1; ?>
+                <?php while($pendaftar = pg_fetch_assoc($rViewPendaftar)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars($pendaftar['nama_pendaftar']); ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars($pendaftar['nim_pendaftar']); ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars($pendaftar['prodi_pendaftar']); ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars($pendaftar['angkatan_pendaftar']); ?></td>
+
+                        <td class="text-center">
+                            <?= $pendaftar['status_pendaftaran'] 
+                                    ? htmlspecialchars($pendaftar['status_pendaftaran']) 
+                                    : "Belum dikonfirmasi"; ?>
+                        </td>
+
+                        <td class="text-center">
+                            <a href="terima_pendaftar.php?id=<?= $pendaftar['id_pendaftar'] ?>" 
                                 class="btn btn-success btn-sm"
                                 onclick="return confirm('Terima pendaftar ini?')">
                                 <i class="fa fa-check"></i> Terima
-                                </a>
+                            </a>
 
-                                <a href="tolak_pendaftar.php?id=<?= $pendaftar['id_pendaftar'] ?>" 
+                            <a href="tolak_pendaftar.php?id=<?= $pendaftar['id_pendaftar'] ?>" 
                                 class="btn btn-danger btn-sm"
                                 onclick="return confirm('Tolak pendaftar ini?')">
                                 <i class="fa fa-times"></i> Tolak
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+
             </table>
         </div>
     </div>
