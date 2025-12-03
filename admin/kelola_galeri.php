@@ -73,37 +73,36 @@
             </colgroup>
 
             <thead class="table-primary">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Deskripsi</th>
-                    <th class="text-center">Gambar</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Deskripsi</th>
+                <th class="text-center">Gambar</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
 
             <tbody>
                 <?php if (pg_num_rows($rGaleri) > 0): ?>
+                    <?php $no = $offset + 1; ?>
                     <?php while ($g = pg_fetch_assoc($rGaleri)) : ?>
                     <tr>
-                        <td class="text-center"><?= $g['id_galeri']; ?></td>
+                        <td class="text-center"><?= $no++; ?></td>
 
                         <td class="text-center"><?= htmlspecialchars($g['deskripsi_galeri']); ?></td>
 
                         <td class="text-center">
-                            <img src="../<?= htmlspecialchars($g['url_gambar_galeri']); ?>" 
-                                 alt="Preview Gambar Galeri"
-                                 style="width:120px; height: 80px; object-fit: cover; border-radius:6px;">
+                            <img src="../<?= htmlspecialchars($g['url_gambar_galeri']); ?>"
+                                style="width:120px; height:80px; object-fit:cover; border-radius:6px;">
                         </td>
 
                         <td class="text-center">
                             <a href="edit_galeri.php?id=<?= $g['id_galeri']; ?>" class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
-
-                            <a href="hapus_galeri.php?id=<?= $g['id_galeri']; ?>" 
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Yakin ingin menghapus gambar ini?')">
-                               <i class="fa fa-trash"></i> Hapus
+                            <a href="hapus_galeri.php?id=<?= $g['id_galeri']; ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus gambar ini?')">
+                                <i class="fa fa-trash"></i> Hapus
                             </a>
                         </td>
                     </tr>
@@ -114,6 +113,7 @@
                     </tr>
                 <?php endif; ?>
             </tbody>
+
 
         </table>
     </div>
