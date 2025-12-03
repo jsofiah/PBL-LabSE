@@ -7,41 +7,30 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-// ==========================================================
-// LOGIKA PAGINATION
-// ==========================================================
-$limit = 20; // Jumlah data per halaman
+$limit = 20; 
 
-// Tentukan halaman saat ini
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 
-// Hitung offset (awal data yang diambil)
 $offset = ($page - 1) * $limit;
 
-// Query untuk menghitung total data (menggunakan vw_peran_lab)
 $qTotal = "SELECT COUNT(*) FROM vw_peran_lab";
 $rTotal = pg_query($conn, $qTotal);
 $total_records = pg_fetch_result($rTotal, 0, 0);
 
-// Hitung total halaman
 $total_pages = ceil($total_records / $limit);
 
-// Pastikan halaman yang diminta tidak melebihi total halaman
 if ($page > $total_pages && $total_pages > 0) {
     $page = $total_pages;
     $offset = ($page - 1) * $limit;
 } elseif ($total_pages === 0) {
-    // Jika tidak ada data, set page dan offset ke 0
     $page = 0;
     $offset = 0;
 }
 
-// Query untuk mengambil data sesuai limit dan offset
 $query = "SELECT * FROM vw_peran_lab ORDER BY id_peran ASC LIMIT $limit OFFSET $offset";
 $result = pg_query($conn, $query);
 
-// Cek apakah query berhasil dieksekusi
 if (!$result) {
     die("Query error: " . pg_last_error($conn));
 }
@@ -124,7 +113,7 @@ if (!$result) {
             </table>
         </div>
 
-        <?php if ($total_pages > 1): // Tampilkan pagination hanya jika lebih dari 1 halaman ?>
+        <?php if ($total_pages > 1): ?>
         <div class="d-flex justify-content-center mt-4">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -136,7 +125,6 @@ if (!$result) {
                     </li>
 
                     <?php 
-                    // Tampilkan link ke beberapa halaman di sekitar halaman saat ini
                     $start_page = max(1, $page - 2);
                     $end_page = min($total_pages, $page + 2);
                     
@@ -147,7 +135,6 @@ if (!$result) {
                         </li>
                     <?php endfor; ?>
 
-                    <!-- Tombol Next -->
                     <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
                         <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
                             <span aria-hidden="true">Berikutnya &raquo;</span>
