@@ -175,27 +175,27 @@
                 <div class="quick-actions-card">
                     <h5 class="section-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
                     <div class="quick-actions-grid">
-                        <a href="artikel_create.php" class="action-btn blue">
+                        <a href="tambah_artikel.php" class="action-btn blue">
                             <i class="fas fa-plus-circle"></i>
                             <span>Tambah Artikel</span>
                         </a>
-                        <a href="proyek_create.php" class="action-btn purple">
+                        <a href="tambah_proyek.php" class="action-btn purple">
                             <i class="fas fa-folder-plus"></i>
                             <span>Tambah Proyek</span>
                         </a>
-                        <a href="galeri_upload.php" class="action-btn green">
+                        <a href="tambah_galeri.php" class="action-btn green">
                             <i class="fas fa-upload"></i>
                             <span>Upload Galeri</span>
                         </a>
-                        <a href="dosen_create.php" class="action-btn orange">
+                        <a href="tambah_dosen.php" class="action-btn orange">
                             <i class="fas fa-user-plus"></i>
                             <span>Tambah Dosen</span>
                         </a>
-                        <a href="mhs_create.php" class="action-btn pink">
+                        <a href="tambah_mhs.php" class="action-btn pink">
                             <i class="fas fa-user-graduate"></i>
                             <span>Tambah Mahasiswa</span>
                         </a>
-                        <a href="fasilitas_create.php" class="action-btn teal">
+                        <a href="tambah_fasilitas.php" class="action-btn teal">
                             <i class="fas fa-building"></i>
                             <span>Tambah Fasilitas</span>
                         </a>
