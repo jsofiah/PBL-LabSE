@@ -50,37 +50,38 @@ $rArtikel = pg_query($conn, $qArtikel);
             </colgroup>
 
             <thead class="table-primary">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Judul Artikel</th>
-                    <th class="text-center">Jenis</th>
-                    <th class="text-center">Tanggal</th>
-                    <th class="text-center">Penulis</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Judul Artikel</th>
+                <th class="text-center">Jenis</th>
+                <th class="text-center">Tanggal</th>
+                <th class="text-center">Penulis</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
 
             <tbody>
+                <?php $no = 1; ?>
                 <?php while($a = pg_fetch_assoc($rArtikel)) : ?>
-                <tr>
-                    <td class="text-center"><?= $a['id_artikel']; ?></td>
-                    <td><?= htmlspecialchars($a['judul_artikel']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($a['nama_jenisartikel']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($a['tanggal_terbit_artikel']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($a['penulis_artikel']); ?></td>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($a['judul_artikel']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($a['nama_jenisartikel']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($a['tanggal_terbit_artikel']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($a['penulis_artikel']); ?></td>
 
-                    <td class="text-center">
-                        <a href="edit_artikel.php?id=<?= $a['id_artikel']; ?>" class="btn btn-warning btn-sm">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
+                        <td class="text-center">
+                            <a href="edit_artikel.php?id=<?= $a['id_artikel']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
 
-                        <a href="hapus_artikel.php?id=<?= $a['id_artikel']; ?>"
+                            <a href="hapus_artikel.php?id=<?= $a['id_artikel']; ?>"
                             onclick="return confirm('Yakin ingin menghapus artikel ini?')"
                             class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash"></i> Hapus
-                        </a>
-                    </td>
-                </tr>
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
                 <?php endwhile; ?>
             </tbody>
 
