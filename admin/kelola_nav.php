@@ -63,26 +63,28 @@
                     <col style="width:90px">
                 </colgroup>
                 <thead class="table-primary">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Nav</th>
+                    <th class="text-center">URL Nav</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; ?>
+                <?php foreach ($navs as $nav) : ?>
                     <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Nama Nav</th>
-                        <th class="text-center">URL Nav</th>
-                        <th class="text-center">Aksi</th>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($nav['nama_nav']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($nav['url_nav']); ?></td>
+                        <td class="text-center">
+                            <a href="edit_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                            <a href="hapus_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus Nav ini?')"><i class="fa fa-trash"></i> Hapus</a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($navs as $nav) : ?>
-                        <tr>
-                            <td class="text-center"><?= $nav['id_nav']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($nav['nama_nav']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($nav['url_nav']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                                <a href="hapus_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus Nav ini?')"><i class="fa fa-trash"></i> Hapus</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                <?php endforeach; ?>
+            </tbody>
+
             </table>
         </div>
 
@@ -101,28 +103,34 @@
                     <col style="width:100px">
                 </colgroup>
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Nama Subnav</th>
-                        <th class="text-center">URL Subnav</th>
-                        <th class="text-center">Parent Nav</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Subnav</th>
+                    <th class="text-center">URL Subnav</th>
+                    <th class="text-center">Parent Nav</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($subnavs as $sub) : ?>
+                    <?php $noSub = 1; ?>
+                    <?php foreach ($subnavs as $sub) : ?>
                         <tr>
-                            <td class="text-center"><?= $sub['id_subnav']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sub['nama_subnav']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sub['url_subnav']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($sub['parent_nav']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_subnav.php?id=<?= $sub['id_subnav']; ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                                <a href="hapus_subnav.php?id=<?= $sub['id_subnav']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus Subnav ini?')"><i class="fa fa-trash"></i> Hapus</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                        <td class="text-center"><?= $noSub++; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sub['nama_subnav']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sub['url_subnav']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($sub['parent_nav']); ?></td>
+                        <td class="text-center">
+                            <a href="edit_subnav.php?id=<?= $sub['id_subnav']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a href="hapus_subnav.php?id=<?= $sub['id_subnav']; ?>" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus Subnav ini?')">
+                            <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
             </table>
         </div>
     </div>
