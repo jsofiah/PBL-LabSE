@@ -42,7 +42,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Dosen</th>
                         <th class="text-center">Foto Dosen</th>
                         <th class="text-center">Jabatan</th>
@@ -52,36 +52,43 @@
                 </thead>
 
                 <tbody>
-                    <?php while($dosen = pg_fetch_assoc($rViewDosen)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $dosen['id_dosen']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
-                            <td class="text-center">
-                                <img src="../<?= htmlspecialchars($dosen['url_foto_dosen']); ?>" 
-                                    alt="Foto <?= htmlspecialchars($dosen['nama_dosen']); ?>" 
-                                    style="width:80px; height:auto; border-radius:5px;">
-                            </td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['jabatan_lab']); ?></td>
-                            <td class="text-center">
-                                <a href="mailto:<?= htmlspecialchars($dosen['email_dosen']); ?>" 
-                                class="text-primary">
-                                <?= htmlspecialchars($dosen['email_dosen']); ?>
-                                </a>
-                            </td>
+                <?php $no = 1; ?>
+                <?php while($dosen = pg_fetch_assoc($rViewDosen)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
 
-                            <td class="text-center">
-                                <a href="edit_dosen.php?id=<?= $dosen['id_dosen']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                                <a href="hapus_dosen.php?id=<?= $dosen['id_dosen']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Dosen ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                        <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
+
+                        <td class="text-center">
+                            <img src="../<?= htmlspecialchars($dosen['url_foto_dosen']); ?>" 
+                                alt="Foto <?= htmlspecialchars($dosen['nama_dosen']); ?>" 
+                                style="width:80px; height:auto; border-radius:5px;">
+                        </td>
+
+                        <td class="text-center"><?= htmlspecialchars($dosen['jabatan_lab']); ?></td>
+
+                        <td class="text-center">
+                            <a href="mailto:<?= htmlspecialchars($dosen['email_dosen']); ?>" class="text-primary">
+                                <?= htmlspecialchars($dosen['email_dosen']); ?>
+                            </a>
+                        </td>
+
+                        <td class="text-center">
+                            <a href="edit_dosen.php?id=<?= $dosen['id_dosen']; ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_dosen.php?id=<?= $dosen['id_dosen']; ?>"
+                            onclick="return confirm('Yakin ingin menghapus Dosen ini?')"
+                            class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+
             </table>
         </div>
     </div>

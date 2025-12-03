@@ -47,7 +47,7 @@
 
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">Judul</th>
                     <th class="text-center">Tahun</th>
                     <th class="text-center">Jenis</th>
@@ -57,28 +57,33 @@
             </thead>
 
             <tbody>
-                <?php while($p = pg_fetch_assoc($rView)) : ?>
-                <tr>
-                    <td class="text-center"><?= $p['id_publikasi']; ?></td>
-                    <td><?= htmlspecialchars($p['judul_publikasi']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($p['tahun_publikasi']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($p['nama_jenispublikasi']); ?></td>
-                    <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
+            <?php $no = 1; ?>
+            <?php while($p = pg_fetch_assoc($rView)) : ?>
+            <tr>
+                <td class="text-center"><?= $no++; ?></td>
 
-                    <td class="text-center">
-                        <a href="edit_publikasi.php?id=<?= $p['id_publikasi']; ?>" class="btn btn-warning btn-sm">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
+                <td><?= htmlspecialchars($p['judul_publikasi']); ?></td>
 
-                        <a href="hapus_publikasi.php?id=<?= $p['id_publikasi']; ?>"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Yakin ingin menghapus publikasi ini?')">
-                            <i class="fa fa-trash"></i> Hapus
-                        </a>
-                    </td>
-                </tr>
-                <?php endwhile; ?>
-            </tbody>
+                <td class="text-center"><?= htmlspecialchars($p['tahun_publikasi']); ?></td>
+
+                <td class="text-center"><?= htmlspecialchars($p['nama_jenispublikasi']); ?></td>
+
+                <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
+
+                <td class="text-center">
+                    <a href="edit_publikasi.php?id=<?= $p['id_publikasi']; ?>" class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_publikasi.php?id=<?= $p['id_publikasi']; ?>"
+                    onclick="return confirm('Yakin ingin menghapus publikasi ini?')"
+                    class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i> Hapus
+                    </a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </tbody>
 
         </table>
     </div>
