@@ -6,8 +6,35 @@
     }
     require_once '../config.php';
 
-    $qViewDosen = "SELECT * FROM vw_detail_dosen ORDER BY id_dosen";
+    $limit = 20; 
+
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+
+    $qTotal = "SELECT COUNT(*) FROM dosen"; 
+    $rTotal = pg_query($conn, $qTotal);
+    $total_records = pg_fetch_result($rTotal, 0, 0);
+
+    $total_pages = ceil($total_records / $limit);
+
+    if ($total_pages === 0) {
+        $page = 0;
+        $offset = 0;
+    } else {
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+        $offset = ($page - 1) * $limit;
+    }
+
+    $qViewDosen = "SELECT * FROM vw_detail_dosen 
+                   ORDER BY id_dosen ASC 
+                   LIMIT $limit OFFSET $offset";
     $rViewDosen = pg_query($conn, $qViewDosen);
+    
+    if (!$rViewDosen) {
+        die("Query error: " . pg_last_error($conn));
+    }
 ?>
 
 <!DOCTYPE html>
@@ -52,8 +79,11 @@
                 </thead>
 
                 <tbody>
-                <?php $no = 1; ?>
-                <?php while($dosen = pg_fetch_assoc($rViewDosen)) : ?>
+                <?php 
+                    if (pg_num_rows($rViewDosen) > 0) :
+                        $no = $offset + 1; 
+                        while($dosen = pg_fetch_assoc($rViewDosen)) : 
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
 
@@ -62,7 +92,7 @@
                         <td class="text-center">
                             <img src="../<?= htmlspecialchars($dosen['url_foto_dosen']); ?>" 
                                 alt="Foto <?= htmlspecialchars($dosen['nama_dosen']); ?>" 
-                                style="width:80px; height:auto; border-radius:5px;">
+                                style="width:80px; height:auto; border-radius:5px; object-fit: cover;">
                         </td>
 
                         <td class="text-center"><?= htmlspecialchars($dosen['jabatan_lab']); ?></td>
@@ -86,12 +116,52 @@
                             </a>
                         </td>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
+                <?php 
+                        endwhile; 
+                    else: 
+                ?>
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data dosen yang ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
 
             </table>
         </div>
-    </div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
 
     </div>
     <script src="js/sidebar.js"></script>
