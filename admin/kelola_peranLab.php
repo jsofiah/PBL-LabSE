@@ -72,7 +72,7 @@ if (!$result) {
 
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Peran</th>
                         <th class="text-center">Deskripsi</th>
                         <th class="text-center">Icon (Text)</th>
@@ -81,34 +81,36 @@ if (!$result) {
                 </thead>
 
                 <tbody>
-                    <?php if (pg_num_rows($result) > 0): ?>
-                        <?php while ($row = pg_fetch_assoc($result)) : ?>
-                            <tr>
-                                <td class="text-center"><?= $row['id_peran'] ?></td>
-                                <td class="text-center"><?= htmlspecialchars($row['nama_peran']) ?></td>
-                                <td class="text-center"><?= htmlspecialchars($row['deskripsi_peran']) ?></td>
-                                <td class="text-center"><?= htmlspecialchars($row['icon']) ?></td>
+                <?php $no = $offset + 1; ?>
+                <?php if (pg_num_rows($result) > 0): ?>
+                    <?php while ($row = pg_fetch_assoc($result)) : ?>
+                        <tr>
+                            <td class="text-center"><?= $no++; ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['nama_peran']) ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['deskripsi_peran']) ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['icon']) ?></td>
 
-                                <td class="text-center">
-                                    <a href="edit_peranLab.php?id=<?= $row['id_peran'] ?>" 
-                                       class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
+                            <td class="text-center">
+                                <a href="edit_peranLab.php?id=<?= $row['id_peran'] ?>" 
+                                class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
 
-                                    <a href="hapus_peranLab.php?id=<?= $row['id_peran'] ?>" 
-                                       class="btn btn-danger btn-sm"
-                                       onclick="return confirm('Yakin ingin menghapus peran ini?')">
-                                        <i class="fa fa-trash"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada data peran laboratorium.</td>
+                                <a href="hapus_peranLab.php?id=<?= $row['id_peran'] ?>" 
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin ingin menghapus peran ini?')">
+                                    <i class="fa fa-trash"></i> Hapus
+                                </a>
+                            </td>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5" class="text-center">Tidak ada data peran laboratorium.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+
 
             </table>
         </div>

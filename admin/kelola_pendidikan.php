@@ -52,7 +52,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Dosen</th>
                         <th class="text-center">Universitas</th>
                         <th class="text-center">Jenjang</th>
@@ -64,28 +64,33 @@
                 </thead>
 
                 <tbody>
-                    <?php while($dosen = pg_fetch_assoc($rViewPendidikanDosen)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $dosen['id_pendidikan']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['universitas']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['jenjang']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['bidang_studi']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['gelar']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($dosen['tahun_lulus']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                                <a href="hapus_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Pendidikan Dosen ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+                <?php $no = 1; ?>
+                <?php while($dosen = pg_fetch_assoc($rViewPendidikanDosen)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['universitas']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['jenjang']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['bidang_studi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['gelar']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($dosen['tahun_lulus']); ?></td>
+
+                        <td class="text-center">
+                            <a href="edit_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus Pendidikan Dosen ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+
             </table>
         </div>
     </div>

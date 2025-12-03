@@ -47,30 +47,40 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Edit Jenis Fasilitas</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
-<body class="container mt-4">
+<body class="p-4">
+    <?php include 'sidebar.php'; ?>
 
-<h1 class="mb-4 fw-bold text-center">Edit Jenis Fasilitas</h1>
+    <div class="content-area container">
+        <h1 class="mb-4 fw-bold text-center">Edit Jenis Fasilitas</h1>
 
-<form method="POST">
-    <div class="card shadow-sm p-4">
-    <div class="mb-3">
-        <label class="form-label text-white">Nama Jenis Fasilitas</label>
-        <input type="text" name="nama_jenisfasilitas" class="form-control" placeholder="Masukkan jenis fasilitas" value="<?= htmlspecialchars($data['nama_jenisfasilitas']); ?>" required>
+        <form method="POST">
+            <div class="card shadow-sm p-4">
+                <div class="mb-3">
+                    <label class="form-label text-white">Nama Jenis Fasilitas</label>
+                    <input type="text" name="nama_jenisfasilitas" class="form-control"
+                        placeholder="Masukkan jenis fasilitas"
+                        value="<?= htmlspecialchars($data['nama_jenisfasilitas']); ?>" required>
+                </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" name="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="kelola_jenisFasilitas.php" class="btn btn-secondary">Kembali</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="d-flex gap-2 mt-3">
-    <button type="submit" name="submit" class="btn btn-primary">Simpan Perubahan</button>
-    <a href="kelola_jenisFasilitas.php" class="btn btn-secondary">Kembali</a>
-</div>
-</form>
-</div>
-
+    <script src="js/sidebar.js"></script>
 </body>
 </html>
