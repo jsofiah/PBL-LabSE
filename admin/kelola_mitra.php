@@ -77,7 +77,7 @@ if (!$rViewMitra) {
 
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">Gambar</th>
                     <th class="text-center">Nama Mitra</th>
                     <th class="text-center">Isi Mitra</th>
@@ -87,48 +87,47 @@ if (!$rViewMitra) {
             </thead>
 
             <tbody>
-                <?php if (pg_num_rows($rViewMitra) > 0): ?>
-                    <?php while ($m = pg_fetch_assoc($rViewMitra)) : ?>
-                        <tr>
-
-                            <td class="text-center"><?= $m['id_mitra']; ?></td>
-
-                            <td class="text-center">
-                                <?php if (!empty($m['url_gambar_mitra'])) : ?>
-                                    <img src="../<?= htmlspecialchars($m['url_gambar_mitra']); ?>"
-                                         alt="Logo Mitra"
-                                         style="width:100px; border-radius:5px;">
-                                <?php else : ?>
-                                    <span class="text-muted">Tidak ada gambar</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <td class="text-center"><?= htmlspecialchars($m['nama_mitra']); ?></td>
-
-                            <td class="text-center">
-                                <?= htmlspecialchars(substr($m['isi_mitra'], 0, 60)); ?>...
-                            </td>
-
-                            <td class="text-center"><?= htmlspecialchars($m['nama_jenismitra']); ?></td>
-
-                            <td class="text-center">
-                                <a href="edit_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-
-                                <a href="hapus_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Yakin ingin menghapus mitra ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
+            <?php if (pg_num_rows($rViewMitra) > 0): ?>
+                <?php $no = 1; ?>
+                <?php while ($m = pg_fetch_assoc($rViewMitra)) : ?>
                     <tr>
-                        <td colspan="6" class="text-center">Tidak ada data mitra.</td>
+
+                        <td class="text-center"><?= $no++; ?></td>
+
+                        <td class="text-center">
+                            <?php if (!empty($m['url_gambar_mitra'])) : ?>
+                                <img src="../<?= htmlspecialchars($m['url_gambar_mitra']); ?>"
+                                    alt="Logo Mitra"
+                                    style="width:100px; border-radius:5px;">
+                            <?php else : ?>
+                                <span class="text-muted">Tidak ada gambar</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <td class="text-center"><?= htmlspecialchars($m['nama_mitra']); ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars(substr($m['isi_mitra'], 0, 60)); ?>...</td>
+
+                        <td class="text-center"><?= htmlspecialchars($m['nama_jenismitra']); ?></td>
+
+                        <td class="text-center">
+                            <a href="edit_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus mitra ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+
                     </tr>
-                <?php endif; ?>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada data mitra.</td>
+                </tr>
+            <?php endif; ?>
             </tbody>
 
         </table>
