@@ -29,10 +29,12 @@
 
     while ($d = pg_fetch_assoc($rDosen)) {
         $url = "dosen_detail.php?id=" . $d['id_dosen'];
-        $navItems[3]['subnav'][] = [
-            'nama_subnav' => $d['nama_dosen'],
-            'url_subnav'  => $url
-        ];
+        if (isset($navItems[3])) {
+            $navItems[3]['subnav'][] = [
+                'nama_subnav' => $d['nama_dosen'],
+                'url_subnav'  => $url
+            ];
+        }
     }
 
     $qLogo = "SELECT * FROM vw_logo_cta";
@@ -55,18 +57,28 @@
     }
 
     $emailDosen = $profil['email_dosen'] ?? '';
-    $default_avatar = 'img/default_dosen.png';
-
+    
     $qPendidikanTerakhir = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC LIMIT 1";
     $rPendidikanTerakhir = pg_query($conn, $qPendidikanTerakhir);
     $pendidikanTerakhir = pg_fetch_assoc($rPendidikanTerakhir);
 
-    $qPenelitian = "SELECT * FROM vw_penelitian_dosen WHERE id_dosen = $id ORDER BY tahun_penelitian DESC";
+
+    $limit = 5; 
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $start = ($page > 1) ? ($page * $limit) - $limit : 0;
+
+    $qCount = "SELECT count(*) as total FROM vw_penelitian_dosen WHERE id_dosen = $id";
+    $rCount = pg_query($conn, $qCount);
+    $rowCount = pg_fetch_assoc($rCount);
+    $totalData = $rowCount['total'];
+    $totalPage = ceil($totalData / $limit);
+
+    $qPenelitian = "SELECT * FROM vw_penelitian_dosen WHERE id_dosen = $id ORDER BY tahun_penelitian DESC LIMIT $limit OFFSET $start";
     $rPenelitian = pg_query($conn, $qPenelitian);
 
     function h($s) {
-    return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');
-}
+        return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');
+    }
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -78,9 +90,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleDosenPenelitian.css">
@@ -185,7 +195,7 @@
                 </div>
             </div>
         </div>
-        <div class="container my-3" style="margin-left: 0px; padding-left: 0px; margin-right: 0px; padding-right: 0px;">
+        <div class="container my-3 mb-5" style="margin-left: 0px; padding-left: 0px; margin-right: 0px; padding-right: 0px;">
             <div class="row" style="width: 1350px;">
                 <div class="sidebar-wrapper">
                     <a href="dosen_detail.php?id=<?php echo $id; ?>" class="btn-menu">Profil</a>
@@ -249,6 +259,31 @@
                             </div>
                         <?php endif; ?>
                     </div>
+
+                    <?php if ($totalPage > 1): ?>
+                        <div class="pagination-wrapper mt-4">
+
+                            <?php if ($page > 1): ?>
+                                <a href="?id=<?= $id ?>&page=<?= $page - 1; ?>" class="btn-pagination">
+                                    <i class="bi bi-caret-left-fill me-1"></i> Previous
+                                </a>
+                            <?php else: ?>
+                                <button class="btn-pagination" disabled>Previous</button>
+                            <?php endif; ?>
+
+                            <span class="pagination-info">Halaman <?php echo $page; ?> dari <?php echo $totalPage; ?></span>
+
+                            <?php if ($page < $totalPage): ?>
+                                <a href="?id=<?= $id ?>&page=<?= $page + 1; ?>" class="btn-pagination">
+                                    Next <i class="bi bi-caret-right-fill ms-1"></i>
+                                </a>
+                            <?php else: ?>
+                                <button class="btn-pagination" disabled>Next</button>
+                            <?php endif; ?>
+
+                        </div>
+                    <?php endif; ?>
+
                 </div>
             </div>
         </div>
