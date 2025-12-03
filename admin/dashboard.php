@@ -338,7 +338,7 @@
         <?php endif; ?>
 
         <div class="mb-4">
-            <a href="proses_backup.php" class="btn btn-warning btn-lg shadow-sm text-dark fw-bold" onclick="return confirm('Proses ini memakan waktu 10-30 detik karena ukuran file besar. Lanjutkan?');">
+            <a href="backup_db.php" class="btn btn-warning btn-lg shadow-sm text-dark fw-bold" onclick="return confirm('Proses ini memakan waktu 10-30 detik karena ukuran file besar. Lanjutkan?');">
                 <i class="fas fa-database me-2"></i> Backup Data & Foto
             </a>
         </div>
