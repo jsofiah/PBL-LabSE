@@ -40,7 +40,7 @@
                 </colgroup>
                 <thead class="table-primary">
                     <tr>
-                        <th class="text-center">ID</th>
+                        <th class="text-center">No</th>
                         <th class="text-center">Nama Mahasiswa</th>
                         <th class="text-center">Nama Keahlian</th>
                         <th class="text-center">Aksi</th>
@@ -48,26 +48,30 @@
                 </thead>
 
                 <tbody>
-                    <?php while($keahlian = pg_fetch_assoc($rViewKeahlian)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $keahlian['id_mhs']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($keahlian['nama_mhs']); ?></td>
-                            <td class="text-center"><?= htmlspecialchars($keahlian['nama_keahlian']); ?></td>
-                            <td class="text-center">
-                                <a href="edit_keahlianMhs.php?id_mhs=<?= $keahlian['id_mhs'] ?>&id_keahlian=<?= $keahlian['id_keahlian'] ?>" 
-                                class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>
-                                    Edit
-                                </a>
+                <?php $no = 1; while($keahlian = pg_fetch_assoc($rViewKeahlian)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
 
-                                <a href="hapus_keahlianMhs.php?id_mhs=<?= $keahlian['id_mhs']; ?>&id_keahlian=<?= $keahlian['id_keahlian']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Keahlian ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
+                        <td class="text-center"><?= htmlspecialchars($keahlian['nama_mhs']); ?></td>
+
+                        <td class="text-center"><?= htmlspecialchars($keahlian['nama_keahlian']); ?></td>
+
+                        <td class="text-center">
+                            <a href="edit_keahlianMhs.php?id_mhs=<?= $keahlian['id_mhs'] ?>&id_keahlian=<?= $keahlian['id_keahlian'] ?>" 
+                            class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+
+                            <a href="hapus_keahlianMhs.php?id_mhs=<?= $keahlian['id_mhs']; ?>&id_keahlian=<?= $keahlian['id_keahlian']; ?>"
+                            class="btn btn-danger btn-sm"
+                            onclick="return confirm('Yakin ingin menghapus Keahlian ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
                 </tbody>
+
             </table>
         </div>
     </div>
