@@ -39,31 +39,39 @@
                     <col style="width:100px">
                 </colgroup>
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Foto</th>
-                        <th class="text-center">Username</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Foto</th>
+                    <th class="text-center">Username</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
+                    <?php $no = 1; ?>
                     <?php while ($row = pg_fetch_assoc($rViewAdmin)) : ?>
                         <tr>
-                            <td class="text-center"><?= $row['id']; ?></td>
+                            <td class="text-center"><?= $no++; ?></td>
+
                             <td class="text-center">
                                 <?php if (!empty($row['foto_admin'])): ?>
-                                    <img src="<?= htmlspecialchars($row['foto_admin']); ?>" 
-                                    alt="Foto Admin"
-                                    style="width:80px; height:auto; border-radius:5px;">
+                                    <img src="<?= htmlspecialchars($row['foto_admin']); ?>" style="width:80px; border-radius:5px;">
                                 <?php else: ?>
                                     <span class="text-muted">No Image</span>
                                 <?php endif; ?>
                             </td>
+
                             <td class="text-center"><?= htmlspecialchars($row['username']); ?></td>
+
                             <td class="text-center">
-                                <a href="edit_admin.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                                <a href="edit_admin.php?id=<?= $row['id']; ?>" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+
                                 <?php if ($row['username'] !== $_SESSION['username']): ?>
-                                    <a href="hapus_admin.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus Admin ini?')"><i class="fa fa-trash"></i> Hapus</a>
+                                    <a href="hapus_admin.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus Admin ini?')">
+                                    <i class="fa fa-trash"></i> Hapus
+                                    </a>
                                 <?php else: ?>
                                     <button class="btn btn-secondary btn-sm" disabled><i class="fa fa-trash"></i></button>
                                 <?php endif; ?>
