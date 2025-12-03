@@ -1,5 +1,6 @@
 <?php
     require 'config.php';
+
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
     $navItems = [];
@@ -16,7 +17,9 @@
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
     while ($d = pg_fetch_assoc($rDosen)) {
-        $navItems[3]['subnav'][] = ['nama_subnav' => $d['nama_dosen'], 'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']];
+        if (isset($navItems[3])) {
+            $navItems[3]['subnav'][] = ['nama_subnav' => $d['nama_dosen'], 'url_subnav' => "dosen_detail.php?id=" . $d['id_dosen']];
+        }
     }
 
     $qLogo = "SELECT * FROM vw_logo_cta";
@@ -36,7 +39,6 @@
     $query = "SELECT * FROM vw_galeri ORDER BY id_galeri DESC LIMIT $limit OFFSET $start";
     $result = pg_query($conn, $query);
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -153,7 +155,7 @@
         </div>
     </div>
     
-    <div class="container py-3">
+    <div class="container py-3 mb-5">
         <h2 class="gallery-title">Potret Kegiatan dan Prestasi Kami</h2>
         <div class="custom-grid-container">
             <?php
@@ -174,7 +176,7 @@
             <?php
                 }
             } else {
-                echo "<div style='grid-column: span 4; text-align: center; padding: 50px;'>Belum ada foto yang diunggah.</div>";
+                echo '<div class="gallery-empty">Belum ada foto yang diunggah.</div>';
             }
             ?>
         </div>
