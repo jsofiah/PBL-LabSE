@@ -44,49 +44,48 @@
                 </colgroup>
 
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Logo</th>
-                        <th class="text-center">Judul</th>
-                        <th class="text-center">Link</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Logo</th>
+                    <th class="text-center">Judul</th>
+                    <th class="text-center">Link</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
 
                 <tbody>
-                    <?php while ($logo = pg_fetch_assoc($rViewLogo)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $logo['id_logo_cta']; ?></td>
+                <?php $no = 1; ?>
+                <?php while ($logo = pg_fetch_assoc($rViewLogo)) : ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
 
-                            <td class="text-center">
-                                <img src="../<?= htmlspecialchars($logo['url_logo']); ?>"
-                                    alt="Logo CTA"
-                                    style="width:80px; height:auto; border-radius:5px;">
-                            </td>
+                        <td class="text-center">
+                            <img src="../<?= htmlspecialchars($logo['url_logo']); ?>"
+                                alt="Logo CTA"
+                                style="width:80px; height:auto; border-radius:5px;">
+                        </td>
 
-                            <td class="text-center"><?= htmlspecialchars($logo['judul_cta']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($logo['judul_cta']); ?></td>
 
-                            <td class="text-center">
-                                <a href="<?= htmlspecialchars($logo['link_cta']); ?>"
-                                target="_blank"
-                                class="text-primary">
-                                    <?= htmlspecialchars($logo['link_cta']); ?>
-                                </a>
-                            </td>
+                        <td class="text-center">
+                            <a href="<?= htmlspecialchars($logo['link_cta']); ?>" target="_blank" class="text-primary">
+                                <?= htmlspecialchars($logo['link_cta']); ?>
+                            </a>
+                        </td>
 
-                            <td class="text-center">
-                                <a href="edit_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
+                        <td class="text-center">
+                            <a href="edit_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
 
-                                <a href="hapus_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>"
-                                    class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Yakin ingin menghapus Logo CTA ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
+                            <a href="hapus_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin ingin menghapus Logo CTA ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
                 </tbody>
 
             </table>
