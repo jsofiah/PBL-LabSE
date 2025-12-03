@@ -69,10 +69,13 @@ if (isset($_POST['update'])) {
 <title>Edit Proyek</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/styleSidebar.css">
 <link href="css/styleForm.css" rel="stylesheet">
 </head>
 
 <body class="p-4">
+    <?php include 'sidebar.php'; ?>
 
 <div class="content-area container">
     <h1 class="mb-4 fw-bold text-center">Edit Proyek</h1>
@@ -132,6 +135,6 @@ if (isset($_POST['update'])) {
         </form>
     </div>
 </div>
-
+<script src="js/sidebar.js"></script>
 </body>
 </html>
