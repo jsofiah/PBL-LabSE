@@ -59,7 +59,7 @@
                     <table class="table table-bordered table-striped table-hover align-middle">
                         <thead class="table-primary">
                             <tr>
-                                <th class="text-center" style="width: 5%;">ID</th>
+                                <th class="text-center" style="width: 5%;">No</th>
                                 <th class="text-center" style="width: 15%;">NIM</th>
                                 <th style="width: 25%;">Nama Mahasiswa</th>
                                 <th style="width: 20%;">Prodi</th>
@@ -67,66 +67,55 @@
                                 <th style="width: 25%;">Keahlian</th>
                                 <th class="text-center" style="width: 150px;">Aksi</th>
                             </tr>
+
                         </thead>
-
                         <tbody>
-                            <?php if (count($mahasiswa) > 0): ?>
-                            <?php $no = 1; foreach($mahasiswa as $mhs) : ?>
-                            <tr>
-                                <td class="text-center"><?= htmlspecialchars($mhs['id_mhs']); ?></td>
+                        <?php if (count($mahasiswa) > 0): ?>
+                        <?php $no = 1; foreach($mahasiswa as $mhs) : ?>
+                        <tr>
+                            <td class="text-center"><?= $no++; ?></td>
 
-                                <td class="text-center"><?= htmlspecialchars($mhs['nim_mhs']); ?></td>
+                            <td class="text-center"><?= htmlspecialchars($mhs['nim_mhs']); ?></td>
 
-                                <td class="text-truncate" style="max-width: 200px;"
-                                    title="<?= htmlspecialchars($mhs['nama_mhs']); ?>">
-                                    <?= htmlspecialchars($mhs['nama_mhs']); ?>
-                                </td>
+                            <td class="text-truncate" style="max-width: 200px;"
+                                title="<?= htmlspecialchars($mhs['nama_mhs']); ?>">
+                                <?= htmlspecialchars($mhs['nama_mhs']); ?>
+                            </td>
 
-                                <td><?= htmlspecialchars($mhs['prodi_mhs']); ?></td>
+                            <td><?= htmlspecialchars($mhs['prodi_mhs']); ?></td>
 
-                                <td class="text-center">
-                                    <?php if($mhs['status'] == 't'): ?>
-                                    Aktif
-                                    <?php else: ?>
-                                    <span class="text-danger">Non-Aktif</span>
-                                    <?php endif; ?>
-                                </td>
+                            <td class="text-center">
+                                <?= $mhs['status'] == 't' ? 'Aktif' : '<span class="text-danger">Non-Aktif</span>' ?>
+                            </td>
 
-                                <td class="text-truncate" style="max-width: 200px;">
-                                    <?php 
-                            if (!empty($mhs['daftar_keahlian'])) {
-                                echo htmlspecialchars($mhs['daftar_keahlian']);
-                            } else {
-                                echo '-';
-                            }
-                            ?>
-                                </td>
+                            <td class="text-truncate" style="max-width: 200px;">
+                                <?= !empty($mhs['daftar_keahlian']) ? htmlspecialchars($mhs['daftar_keahlian']) : '-' ?>
+                            </td>
 
-                                <td class="text-center align-top text-nowrap">
-                                    <div class="d-flex justify-content-center gap-1">
+                            <td class="text-center text-nowrap">
+                                <div class="d-flex justify-content-center gap-1">
 
-                                        <a href="edit_mhs.php?id=<?= $mhs['id_mhs']; ?>"
-                                            class="btn btn-warning btn-sm"
-                                            title="Edit">
-                                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                                        </a>
+                                    <a href="edit_mhs.php?id=<?= $mhs['id_mhs']; ?>" class="btn btn-warning btn-sm">
+                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                                    </a>
 
-                                        <a href="hapus_mhs.php?id=<?= $mhs['id_mhs']; ?>"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin ingin menghapus data ini?')" title="Hapus">
-                                            <i class="fa-solid fa-trash me-2"></i>Hapus
-                                        </a>
+                                    <a href="hapus_mhs.php?id=<?= $mhs['id_mhs']; ?>"
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                        <i class="fa-solid fa-trash me-2"></i>Hapus
+                                    </a>
 
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            <?php else: ?>
-                            <tr>
-                                <td colspan="7" class="text-center">Tidak ada data mahasiswa.</td>
-                            </tr>
-                            <?php endif; ?>
-                        </tbody>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada data mahasiswa.</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+
                     </table>
                 </div>
             </div>
