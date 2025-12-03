@@ -48,39 +48,41 @@ while ($row = pg_fetch_assoc($rStatus)) {
                 <table class="table table-bordered table-striped table-hover align-middle">
                     <thead class="table-primary">
                         <tr>
-                            <th class="text-center" style="width: 80px;">ID</th>
+                            <th class="text-center" style="width: 80px;">No</th>
                             <th>Nama Status</th>
                             <th class="text-center" style="width: 200px;">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <?php if (count($statusList) > 0) : ?>
-                            <?php foreach ($statusList as $st) : ?>
-                                <tr>
-                                    <td class="text-center"><?= $st['id_statuspendaftaran']; ?></td>
-                                    <td><?= htmlspecialchars($st['nama_statuspendaftaran']); ?></td>
-
-                                    <td class="text-center">
-                                        <a href="edit_status.php?id=<?= $st['id_statuspendaftaran']; ?>"
-                                           class="btn btn-warning btn-sm">
-                                            <i class="fa fa-edit me-1"></i>Edit
-                                        </a>
-
-                                        <a href="hapus_status.php?id=<?= $st['id_statuspendaftaran']; ?>"
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Yakin ingin menghapus status ini?')">
-                                            <i class="fa fa-trash me-1"></i>Hapus
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                    <?php $no = 1; ?>
+                    <?php if (count($statusList) > 0) : ?>
+                        <?php foreach ($statusList as $st) : ?>
                             <tr>
-                                <td colspan="3" class="text-center">Tidak ada data status.</td>
+                                <td class="text-center"><?= $no++; ?></td>
+                                <td><?= htmlspecialchars($st['nama_statuspendaftaran']); ?></td>
+
+                                <td class="text-center">
+                                    <a href="edit_status.php?id=<?= $st['id_statuspendaftaran']; ?>"
+                                    class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit me-1"></i>Edit
+                                    </a>
+
+                                    <a href="hapus_status.php?id=<?= $st['id_statuspendaftaran']; ?>"
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus status ini?')">
+                                        <i class="fa fa-trash me-1"></i>Hapus
+                                    </a>
+                                </td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr>
+                            <td colspan="3" class="text-center">Tidak ada data status.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+
 
                 </table>
             </div>
