@@ -7,7 +7,7 @@
 
     require_once '../config.php';
 
-    $qJenis = "SELECT * FROM jenis_publikasi ORDER BY id_jenispublikasi ASC";
+    $qJenis = "SELECT * FROM vw_jenis_publikasi ORDER BY id_jenispublikasi ASC";
     $rJenis = pg_query($conn, $qJenis);
 ?>
 

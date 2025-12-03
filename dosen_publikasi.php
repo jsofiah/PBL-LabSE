@@ -28,10 +28,12 @@
 
     while ($d = pg_fetch_assoc($rDosen)) {
         $url = "dosen_detail.php?id=" . $d['id_dosen'];
-        $navItems[3]['subnav'][] = [
-            'nama_subnav' => $d['nama_dosen'],
-            'url_subnav'  => $url
-        ];
+        if (isset($navItems[3])) {
+            $navItems[3]['subnav'][] = [
+                'nama_subnav' => $d['nama_dosen'],
+                'url_subnav'  => $url
+            ];
+        }
     }
     
     $qLogo = "SELECT * FROM vw_logo_cta";
@@ -54,20 +56,53 @@
     }
 
     $emailDosen = $profil['email_dosen'] ?? '';
-    $default_avatar = 'img/default_dosen.png';
-
+    
     $qPendidikanTerakhir = "SELECT * FROM vw_riwayat_pendidikan WHERE id_dosen = $id ORDER BY tahun_lulus DESC LIMIT 1";
     $rPendidikanTerakhir = pg_query($conn, $qPendidikanTerakhir);
     $pendidikanTerakhir = pg_fetch_assoc($rPendidikanTerakhir);
 
-    $qPublikasi = "SELECT * FROM vw_publikasi_dosen WHERE id_dosen = $id ORDER BY nama_jenispublikasi, tahun_publikasi DESC, judul_publikasi";
-    $rPublikasi = pg_query($conn, $qPublikasi);
+    function buildUrl($key, $val) {
+        $params = $_GET;
+        $params[$key] = $val;
+        return '?' . http_build_query($params);
+    }
 
-    $publikasiGroup = [];
-    if ($rPublikasi) {
-        while ($p = pg_fetch_assoc($rPublikasi)) {
-            $jenis = $p['nama_jenispublikasi'] ?: 'Lainnya';
-            $publikasiGroup[$jenis][] = $p;
+    $qJenis = "SELECT DISTINCT nama_jenispublikasi FROM vw_publikasi_dosen WHERE id_dosen = $id ORDER BY nama_jenispublikasi ASC";
+    $rJenis = pg_query($conn, $qJenis);
+
+    $publikasiData = []; 
+
+    if ($rJenis) {
+        while ($rowJenis = pg_fetch_assoc($rJenis)) {
+            $jenis = $rowJenis['nama_jenispublikasi'];
+            if (empty($jenis)) continue;
+            
+            $paramKey = 'page_' . md5($jenis); 
+            
+            $limit = 5; 
+            $page = isset($_GET[$paramKey]) ? (int)$_GET[$paramKey] : 1;
+            $start = ($page > 1) ? ($page * $limit) - $limit : 0;
+
+            $qCount = "SELECT count(*) as total FROM vw_publikasi_dosen WHERE id_dosen = $id AND nama_jenispublikasi = '$jenis'";
+            $rCount = pg_query($conn, $qCount);
+            $totalData = pg_fetch_assoc($rCount)['total'];
+            $totalPage = ceil($totalData / $limit);
+
+            $qData = "SELECT * FROM vw_publikasi_dosen WHERE id_dosen = $id AND nama_jenispublikasi = '$jenis' ORDER BY tahun_publikasi DESC, judul_publikasi ASC LIMIT $limit OFFSET $start";
+            $rData = pg_query($conn, $qData);
+            
+            $items = [];
+            while ($p = pg_fetch_assoc($rData)) {
+                $items[] = $p;
+            }
+
+            $publikasiData[] = [
+                'nama_jenis' => $jenis,
+                'items' => $items,
+                'page' => $page,
+                'totalPage' => $totalPage,
+                'paramKey' => $paramKey
+            ];
         }
     }
 
@@ -77,9 +112,10 @@
         'media'    => 'fa-regular fa-image',
         'lainnya'  => 'fa-regular fa-file-lines'
     ];
+    
     function h($s) {
-    return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');}
-
+        return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8');
+    }
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -91,9 +127,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleDosenPublikasi.css">
@@ -240,24 +274,36 @@
                         </div>
                     </div>
   
-                    <?php if (empty($publikasiGroup)): ?>
+                    <?php if (empty($publikasiData)): ?>
                         <div class="card card-rounded p-3">
                             Tidak ada publikasi untuk dosen ini.
                         </div>
                     <?php else: ?>
-                        <?php foreach ($publikasiGroup as $jenis => $items): ?>
+                        <?php foreach ($publikasiData as $data): ?>
+                            <?php 
+                                $jenis = $data['nama_jenis'];
+                                $items = $data['items'];
+                            ?>
+
                             <div class="section-card">
                                 <div class="publikasi-header my-3">
                                     <?= h(ucwords(strtolower($jenis))) ?>
                                 </div>
-                                <ul class="list-unstyled publikasi-list mb-0">
+
+                                <div class="list-unstyled publikasi-list mb-0">
                                     <?php 
                                         $jenisKey = strtolower($jenis);
-                                        $iconClass = $iconMap[$jenisKey] ?? 'fa-regular fa-file-lines';
+                                        $iconClass = 'fa-regular fa-file-lines';
+                                        foreach($iconMap as $key => $val) {
+                                            if (strpos($jenisKey, $key) !== false) {
+                                                $iconClass = $val;
+                                                break;
+                                            }
+                                        }
                                     ?>
+                                    
                                     <?php foreach ($items as $it): ?>
                                     <div class="publikasi-card">
-                                        
                                         <div class="publikasi-icon-box">
                                             <i class="<?= $iconClass ?>"></i>
                                         </div>
@@ -271,12 +317,41 @@
                                                 Ketua Publikasi : <?= h($it['nama_dosen']) ?><br>
                                                 Tahun : <?= h($it['tahun_publikasi']) ?>
                                             </div>
+                                            
+                                            <?php if (!empty($it['link_publikasi'])): ?>
+                                                <a href="<?= h($it['link_publikasi']) ?>" target="_blank" class="btn btn-sm btn-outline-primary mt-2 rounded-pill" style="font-size: 0.8rem;">
+                                                    Lihat Publikasi <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
-
                                     </div>
-                                <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                </div>
 
-                                </ul>
+                                <?php if ($data['totalPage'] > 1): ?>
+                                    <div class="pagination-wrapper mb-5">
+                                        <?php if ($data['page'] > 1): ?>
+                                            <a href="<?= buildUrl($data['paramKey'], $data['page'] - 1) ?>" class="btn-pagination">
+                                                <i class="bi bi-caret-left-fill me-1"></i> Previous
+                                            </a>
+                                        <?php else: ?>
+                                            <button class="btn-pagination" disabled>Previous</button>
+                                        <?php endif; ?>
+
+                                        <span class="pagination-info">
+                                            Halaman <?= $data['page'] ?> dari <?= $data['totalPage'] ?>
+                                        </span>
+
+                                        <?php if ($data['page'] < $data['totalPage']): ?>
+                                            <a href="<?= buildUrl($data['paramKey'], $data['page'] + 1) ?>" class="btn-pagination">
+                                                Next <i class="bi bi-caret-right-fill ms-1"></i>
+                                            </a>
+                                        <?php else: ?>
+                                            <button class="btn-pagination" disabled>Next</button>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -297,3 +372,4 @@
     <script src="js/dropdown.js"></script>
 </body>
 </html>
+<?php pg_close($conn); ?>
