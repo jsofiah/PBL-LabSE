@@ -7,7 +7,6 @@
 
     require_once '../config.php';
 
-    // LOGIKA PAGINATION
     $limit = 20; 
 
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
