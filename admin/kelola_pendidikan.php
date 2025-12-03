@@ -6,16 +6,42 @@
     }
     require_once '../config.php';
 
+    $limit = 20; 
+
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+
+    $qTotal = "SELECT COUNT(*) FROM pendidikan_dosen"; 
+    $rTotal = pg_query($conn, $qTotal);
+    $total_records = pg_fetch_result($rTotal, 0, 0);
+
+    $total_pages = ceil($total_records / $limit);
+
+    if ($total_pages === 0) {
+        $page = 0;
+        $offset = 0;
+    } else {
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+        $offset = ($page - 1) * $limit;
+    }
+
     $qViewPendidikanDosen = "
         SELECT 
-                rp.*, 
-                d.nama_dosen
+            rp.*, 
+            d.nama_dosen
         FROM vw_riwayat_pendidikan rp
         JOIN dosen d ON d.id_dosen = rp.id_dosen
-        ORDER BY rp.id_pendidikan;
+        ORDER BY rp.id_pendidikan
+        LIMIT $limit OFFSET $offset;
         ";
 
     $rViewPendidikanDosen = pg_query($conn, $qViewPendidikanDosen);
+    
+    if (!$rViewPendidikanDosen) {
+        die("Query error: " . pg_last_error($conn));
+    }
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +61,7 @@
     <div class="content-area container-fluid px-3">
         <div class="mb-4">
             <h2 class="mb-2">Kelola Riwayat Pendidikan Dosen</h2>
-            <a href="tambah_pendidikan_dosen.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Dosen</a>
+            <a href="tambah_pendidikan_dosen.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Riwayat Pendidikan</a>
         </div>
         
         <div class="table-responsive">
@@ -64,8 +90,11 @@
                 </thead>
 
                 <tbody>
-                <?php $no = 1; ?>
-                <?php while($dosen = pg_fetch_assoc($rViewPendidikanDosen)) : ?>
+                <?php 
+                    if (pg_num_rows($rViewPendidikanDosen) > 0) :
+                        $no = $offset + 1; 
+                        while($dosen = pg_fetch_assoc($rViewPendidikanDosen)) : 
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td class="text-center"><?= htmlspecialchars($dosen['nama_dosen']); ?></td>
@@ -83,19 +112,59 @@
 
                             <a href="hapus_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>"
                             class="btn btn-danger btn-sm"
-                            onclick="return confirm('Yakin ingin menghapus Pendidikan Dosen ini?')">
+                            onclick="return confirm('Yakin ingin menghapus Riwayat Pendidikan ini?')">
                                 <i class="fa fa-trash"></i> Hapus
                             </a>
                         </td>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
+                <?php 
+                        endwhile; 
+                    else: 
+                ?>
+                    <tr>
+                        <td colspan="8" class="text-center">Tidak ada data riwayat pendidikan dosen yang ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
 
             </table>
         </div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
     </div>
 
-    </div>
     <script src="js/sidebar.js"></script>
 </body>
 </html>
