@@ -79,29 +79,28 @@ while ($row = pg_fetch_assoc($rJenis)) {
                 </colgroup>
 
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Nama Jenis Fasilitas</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Jenis Fasilitas</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
 
                 <tbody>
                     <?php if (count($jenisFasilitas) > 0) : ?>
+                        <?php $no = $offset + 1; ?>
                         <?php foreach ($jenisFasilitas as $jf) : ?>
                             <tr>
-                                <td class="text-center"><?= $jf['id_jenisfasilitas']; ?></td>
+                                <td class="text-center"><?= $no++; ?></td>
                                 <td class="text-center"><?= htmlspecialchars($jf['nama_jenisfasilitas']); ?></td>
 
                                 <td class="text-center">
-                                    <a href="edit_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
-                                       class="btn btn-warning btn-sm">
+                                    <a href="edit_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
-
                                     <a href="hapus_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
-                                       class="btn btn-danger btn-sm"
-                                       onclick="return confirm('Yakin ingin menghapus jenis fasilitas ini?')">
+                                    onclick="return confirm('Yakin ingin menghapus jenis fasilitas ini?')"
+                                    class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Hapus
                                     </a>
                                 </td>
