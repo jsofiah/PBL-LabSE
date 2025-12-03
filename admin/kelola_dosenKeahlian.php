@@ -39,35 +39,38 @@
                     <col style="width:200px;">
                 </colgroup>
                 <thead class="table-primary">
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th class="text-center">Nama Dosen</th>
-                        <th class="text-center">Nama Keahlian</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Dosen</th>
+                    <th class="text-center">Nama Keahlian</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
 
                 <tbody>
+                    <?php $no = 1; ?>
                     <?php while($keahlian = pg_fetch_assoc($rViewKeahlian)) : ?>
                         <tr>
-                            <td class="text-center"><?= $keahlian['id_dosen']; ?></td>
+                            <td class="text-center"><?= $no++; ?></td>
                             <td class="text-center"><?= htmlspecialchars($keahlian['nama_dosen']); ?></td>
                             <td class="text-center"><?= htmlspecialchars($keahlian['nama_keahlian']); ?></td>
+
                             <td class="text-center">
-                                <a href="edit_keahlianDosen.php?id_dosen=<?= $keahlian['id_dosen'] ?>&id_keahlian=<?= $keahlian['id_keahlian'] ?>" 
-                                class="btn btn-warning btn-sm"><i class="fa fa-edit"></i>
-                                    Edit
+                                <a href="edit_keahlianDosen.php?id_dosen=<?= $keahlian['id_dosen']; ?>&id_keahlian=<?= $keahlian['id_keahlian']; ?>" 
+                                class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
                                 </a>
 
                                 <a href="hapus_keahlianDosen.php?id_dosen=<?= $keahlian['id_dosen']; ?>&id_keahlian=<?= $keahlian['id_keahlian']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Keahlian ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
+                                onclick="return confirm('Yakin ingin menghapus Keahlian ini?')"
+                                class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Hapus
                                 </a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
+
             </table>
         </div>
     </div>
