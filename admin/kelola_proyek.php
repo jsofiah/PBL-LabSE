@@ -54,7 +54,7 @@ $rPD = pg_query($conn, $qPD);
 
         <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">Gambar</th>
                     <th class="text-center">Judul</th>
                     <th class="text-center">Deskripsi</th>
@@ -64,32 +64,39 @@ $rPD = pg_query($conn, $qPD);
                 </tr>
             </thead>
 
-        <tbody>
-        <?php while($pm = pg_fetch_assoc($rProyek)): ?>
+            <tbody>
+            <?php $no = 1; ?>
+            <?php while($pm = pg_fetch_assoc($rProyek)): ?>
             <tr>
-                <td class="text-center"><?= $pm['id_proyek'] ?></td>
+                <td class="text-center"><?= $no++; ?></td>
 
-                <td class="text-center" >
+                <td class="text-center">
                     <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" width="80">
                 </td>
 
-                <td class="text-center" ><?= htmlspecialchars($pm['judul_proyek']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($pm['judul_proyek']) ?></td>
 
-                <td class="text-center" ><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
+                <td class="text-center"><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
 
-                <td class="text-center" ><?= $pm['tanggal_terbit_proyek'] ?></td>
+                <td class="text-center"><?= $pm['tanggal_terbit_proyek'] ?></td>
 
-                <td class="text-center" ><?= $pm['penulis_proyek'] ?></td>
+                <td class="text-center"><?= $pm['penulis_proyek'] ?></td>
 
-                <td class="text-center" >
-                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                    <a href="hapus_proyek.php?id=<?= $pm['id_proyek'] ?>" 
-                       onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</a>
+                <td class="text-center">
+                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_proyek.php?id=<?= $pm['id_proyek'] ?>"
+                    onclick="return confirm('Yakin ingin menghapus?')"
+                    class="btn btn-danger btn-sm">
+                    <i class="fa fa-trash"></i> Hapus
+                    </a>
                 </td>
             </tr>
-        <?php endwhile; ?>
+            <?php endwhile; ?>
         </tbody>
+
     </table>
     </div>
 
@@ -114,7 +121,7 @@ $rPD = pg_query($conn, $qPD);
 
         <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">ID Mahasiswa</th>
                     <th class="text-center">Judul Proyek</th>
                     <th class="text-center">Nama Mahasiswa</th>
@@ -124,32 +131,33 @@ $rPD = pg_query($conn, $qPD);
                 </tr>
             </thead>
         <tbody>
+        <?php $no = 1; ?>
         <?php while($pm = pg_fetch_assoc($rPM)): ?>
-            <tr>
-                <td class="text-center" ><?= $pm['id_proyek'] ?></td>
+        <tr>
+            <td class="text-center"><?= $no++; ?></td>
 
-                <td class="text-center" ><?= $pm['id_mhs'] ?></td>
+            <td class="text-center"><?= $pm['id_mhs'] ?></td>
 
-                <td class="text-center" ><?= $pm['judul_proyek'] ?></td>
+            <td class="text-center"><?= $pm['judul_proyek'] ?></td>
 
-                <td class="text-center" ><?= $pm['nama_mhs'] ?></td>
+            <td class="text-center"><?= $pm['nama_mhs'] ?></td>
 
-                <td class="text-center" >
-                    <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>" 
-                    class="btn btn-warning btn-sm">
+            <td class="text-center">
+                <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
+                class="btn btn-warning btn-sm">
                     <i class="fa fa-edit"></i> Edit
-                    </a>
+                </a>
 
-                    <a href="hapus_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
-                    onclick="return confirm('Yakin ingin menghapus?')"
-                    class="btn btn-danger btn-sm">
+                <a href="hapus_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
+                onclick="return confirm('Yakin ingin menghapus?')"
+                class="btn btn-danger btn-sm">
                     <i class="fa fa-trash"></i> Hapus
-                    </a>
-
-                </td>
-            </tr>
+                </a>
+            </td>
+        </tr>
         <?php endwhile; ?>
-        </tbody>
+    </tbody>
+
     </table>
     </div>
 
@@ -174,7 +182,7 @@ $rPD = pg_query($conn, $qPD);
 
         <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">ID Dosen</th>
                     <th class="text-center">Judul Proyek</th>
                     <th class="text-center">Nama Dosen</th>
@@ -184,30 +192,33 @@ $rPD = pg_query($conn, $qPD);
                 </tr>
             </thead>
         <tbody>
-
+        <?php $no = 1; ?>
         <?php while($pd = pg_fetch_assoc($rPD)): ?>
-            <tr>
-                <td class="text-center" ><?= $pd['id_proyek'] ?></td>
-                <td class="text-center" ><?= $pd['id_dosen'] ?></td>
-                <td class="text-center" ><?= $pd['judul_proyek'] ?></td>
-                <td class="text-center" ><?= $pd['nama_dosen'] ?></td>
+        <tr>
+            <td class="text-center"><?= $no++; ?></td>
 
-                <td class="text-center" >
-                    <a href="edit_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
-                    class="btn btn-warning btn-sm">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
+            <td class="text-center"><?= $pd['id_dosen'] ?></td>
 
-                    <a href="hapus_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
-                    onclick="return confirm('Yakin ingin menghapus?')"
-                    class="btn btn-danger btn-sm">
-                        <i class="fa fa-trash"></i> Hapus
-                    </a>
+            <td class="text-center"><?= htmlspecialchars($pd['judul_proyek']) ?></td>
 
-                </td>
-            </tr>
+            <td class="text-center"><?= htmlspecialchars($pd['nama_dosen']) ?></td>
+
+            <td class="text-center">
+                <a href="edit_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>"
+                class="btn btn-warning btn-sm">
+                    <i class="fa fa-edit"></i> Edit
+                </a>
+
+                <a href="hapus_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>"
+                onclick="return confirm('Yakin ingin menghapus?')"
+                class="btn btn-danger btn-sm">
+                <i class="fa fa-trash"></i> Hapus
+                </a>
+            </td>
+        </tr>
         <?php endwhile; ?>
-        </tbody>
+    </tbody>
+
     </table>
     </div>
 </div>
