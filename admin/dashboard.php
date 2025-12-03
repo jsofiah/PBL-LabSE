@@ -63,18 +63,16 @@
     ";
     $resultTopMhs = pg_query($conn, $queryTopMhs);
 
-    $status_backup = ''; 
-    $nama_file     = '';
-    $pesan_error   = '';
+    $script_popup = ""; 
 
     if (isset($_GET['status'])) {
-        $status_backup = $_GET['status']; 
-        
-        if ($status_backup == 'sukses') {
-            $nama_file = htmlspecialchars($_GET['file']);
+        if ($_GET['status'] == 'sukses') {
+            $file = htmlspecialchars($_GET['file']);
+            $script_popup = "alert(' BACKUP SUKSES!\\n\\nFile berhasil disimpan di folder server.\\nNama File: $file'); window.location.href='dashboard.php';";
         } 
-        elseif ($status_backup == 'gagal') {
-            $pesan_error = htmlspecialchars($_GET['pesan']);
+        elseif ($_GET['status'] == 'gagal') {
+            $pesan = htmlspecialchars($_GET['pesan']);
+            $script_popup = "alert(' BACKUP GAGAL!\\n\\nPenyebab: $pesan'); window.location.href='dashboard.php';";
         }
     }
 ?>
@@ -99,6 +97,14 @@
                     <h1 class="welcome-title">Dashboard LAB SE</h1>
                     <p class="welcome-subtitle">Selamat datang kembali, <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>!</p>
                 </div>
+            </div>
+
+            <div class="header-right">
+                <a href="backup_db.php" 
+                class="btn-backup" 
+                onclick="return confirm('Proses ini memakan waktu 10-30 detik. Lanjutkan?');">
+                    <i class="fas fa-database"></i> Backup Data
+                </a>
             </div>
         </div>
         
@@ -320,29 +326,6 @@
             </div>
         </div>
 
-        <?php if ($status_backup == 'sukses') : ?>
-            <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
-                <h4 class="alert-heading"><i class="fas fa-check-circle"></i> Backup Berhasil!</h4>
-                <p>Database dan Foto berhasil diamankan di folder server (<code>backup_data</code>).</p>
-                <hr>
-                <p class="mb-0">Nama File: <strong><?php echo $nama_file; ?></strong></p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($status_backup == 'gagal') : ?>
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
-                <strong><i class="fas fa-exclamation-triangle"></i> Gagal Backup!</strong> <?php echo $pesan_error; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php endif; ?>
-
-        <div class="mb-4">
-            <a href="backup_db.php" class="btn btn-warning btn-lg shadow-sm text-dark fw-bold" onclick="return confirm('Proses ini memakan waktu 10-30 detik karena ukuran file besar. Lanjutkan?');">
-                <i class="fas fa-database me-2"></i> Backup Data & Foto
-            </a>
-        </div>
-
     </div>
     <script src="js/sidebar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -350,4 +333,9 @@
         const artikelData = <?php echo json_encode($artikelData); ?>;
     </script>
     <script src="js/chart.js"></script>
+    <?php if (!empty($script_popup)) : ?>
+        <script>
+            <?php echo $script_popup; ?>
+        </script>
+    <?php endif; ?>
 </body>
