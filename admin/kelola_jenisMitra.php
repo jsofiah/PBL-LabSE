@@ -72,27 +72,28 @@ if (!$rJenis) {
             </colgroup>
 
             <thead class="table-primary">
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Nama Jenis Mitra</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">Nama Jenis Mitra</th>
+                <th class="text-center">Aksi</th>
+            </tr>
             </thead>
 
             <tbody>
                 <?php if (pg_num_rows($rJenis) > 0) : ?>
+                    <?php $no = $offset + 1; ?>
                     <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
                         <tr>
-                            <td class="text-center"><?= $j['id_jenismitra'] ?></td>
-
-                            <td class="text-center"><?= htmlspecialchars($j['nama_jenismitra'] ?? '') ?></td>
-
+                            <td class="text-center"><?= $no++; ?></td>
+                            <td class="text-center"><?= htmlspecialchars($j['nama_jenismitra']); ?></td>
                             <td class="text-center">
-                                <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                                <a href="hapus_jenisMitra.php?id=<?= $j['id_jenismitra'] ?>"
-                                   onclick="return confirm('Yakin ingin menghapus jenis mitra ini?')"
-                                   class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
-                                    Hapus
+                                <a href="edit_jenisMitra.php?id=<?= $j['id_jenismitra']; ?>" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                                <a href="hapus_jenisMitra.php?id=<?= $j['id_jenismitra']; ?>"
+                                onclick="return confirm('Yakin ingin menghapus jenis mitra ini?')"
+                                class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Hapus
                                 </a>
                             </td>
                         </tr>
@@ -103,6 +104,7 @@ if (!$rJenis) {
                     </tr>
                 <?php endif; ?>
             </tbody>
+
         </table>
     </div>
 
