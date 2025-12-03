@@ -40,12 +40,14 @@
 
     function getMitra($conn, $jenis) {
         $jenis = intval($jenis);
-        $q = "SELECT m.*, jm.nama_jenismitra 
-              FROM public.mitra m
-              JOIN public.jenis_mitra jm ON m.id_jenismitra = jm.id_jenismitra
-              WHERE m.id_jenismitra = $jenis 
-              ORDER BY m.id_mitra";
-        
+
+        $q = "SELECT m.*, jm.nama_jenismitra
+            FROM vw_mitra m
+            JOIN jenis_mitra jm 
+                ON m.nama_jenismitra = jm.nama_jenismitra
+            WHERE jm.id_jenismitra = $jenis
+            ORDER BY m.id_mitra";
+
         return pg_query($conn, $q);
     }
 
@@ -74,6 +76,7 @@
 </head>
 
 <body class="Mitra-page">
+    <div id="scrollIndicator" class="scroll-indicator"></div>
     <div class="header-container">
         <div class="logo">
             <?php if ($rowLogo): ?>
@@ -174,83 +177,87 @@
     </div>
 
     <div class="container py-3">
-    <h2 class="fw-bold text-center mb-5">DIDUKUNG OLEH MITRA TERPERCAYA KAMI</h2>
-
-    <h3>MITRA AKADEMIK</h3>
-    <div class="mitra-slider">
-        <button class="slide-btn left" onclick="slideLeft('akad')">
-            <i class="bi bi-chevron-left"></i>
-        </button>
+        <h2 class="fw-bold text-center mb-5">DIDUKUNG OLEH MITRA TERPERCAYA KAMI</h2>
+        <h3>MITRA AKADEMIK</h3>
+        <div class="mitra-slider">
+            <button class="slide-btn left" onclick="slideLeft('akad')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
         
-        <div class="mitra-track" id="track-akad">
-            <?php $r = getMitra($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
-                <div class="mitra-card">
-                    <div class="mitra-icon-wrapper">
-                        <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
+            <div class="mitra-track" id="track-akad">
+                <?php $r = getMitra($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
+                    <div class="mitra-card">
+                        <div class="mitra-icon-wrapper">
+                            <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
+                        </div>
+                        <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
+                        <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
                     </div>
-                    <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
-                    <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
+                <?php endwhile; ?>
+            </div>
+
+            <button class="slide-btn right" onclick="slideRight('akad')">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+    
+        <hr class="my-5">
+        <h3>MITRA TEKNOLOGI</h3>
+        <div class="mitra-slider">
+            <button class="slide-btn left" onclick="slideLeft('non')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+                <div class="mitra-track" id="track-non">
+                    <?php $r = getMitra($conn, 2); while ($row = pg_fetch_assoc($r)): ?>
+                        <div class="mitra-card">
+                            <div class="mitra-icon-wrapper">
+                                <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
+                            </div>
+                            <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
+                            <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
+                        </div>
+                    <?php endwhile; ?>
                 </div>
-            <?php endwhile; ?>
+            <button class="slide-btn right" onclick="slideRight('non')">
+                <i class="bi bi-chevron-right"></i>
+            </button>
         </div>
 
-        <button class="slide-btn right" onclick="slideRight('akad')">
-            <i class="bi bi-chevron-right"></i>
-        </button>
-    </div>
-    
-    <hr class="my-5">
+        <hr class="my-5">
 
-    <h3>MITRA TEKNOLOGI</h3>
-    <div class="mitra-slider">
-        <button class="slide-btn left" onclick="slideLeft('non')">
-            <i class="bi bi-chevron-left"></i>
-        </button>
-            <div class="mitra-track" id="track-non">
-                <?php $r = getMitra($conn, 2); while ($row = pg_fetch_assoc($r)): ?>
-                    <div class="mitra-card">
-                        <div class="mitra-icon-wrapper">
-                            <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
+        <h3>MITRA INDUSTRI</h3>
+        <div class="mitra-slider">
+            <button class="slide-btn left" onclick="slideLeft('adm')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+                <div class="mitra-track" id="track-adm">
+                    <?php $r = getMitra($conn, 3); while ($row = pg_fetch_assoc($r)): ?>
+                        <div class="mitra-card">
+                            <div class="mitra-icon-wrapper">
+                                <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
+                            </div>
+                            <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
+                            <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
                         </div>
-                        <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
-                        <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
-                    </div>
-                <?php endwhile; ?>
-            </div>
-        <button class="slide-btn right" onclick="slideRight('non')">
-            <i class="bi bi-chevron-right"></i>
-        </button>
+                    <?php endwhile; ?>
+                </div>
+            <button class="slide-btn right" onclick="slideRight('adm')">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
     </div>
 
-    <hr class="my-5">
-
-    <h3>MITRA INDUSTRI</h3>
-    <div class="mitra-slider">
-        <button class="slide-btn left" onclick="slideLeft('adm')">
-            <i class="bi bi-chevron-left"></i>
-        </button>
-            <div class="mitra-track" id="track-adm">
-                <?php $r = getMitra($conn, 3); while ($row = pg_fetch_assoc($r)): ?>
-                    <div class="mitra-card">
-                        <div class="mitra-icon-wrapper">
-                            <img src="<?= htmlspecialchars($row['url_gambar_mitra']) ?>" alt="Logo Mitra">
-                        </div>
-                        <h5><?= htmlspecialchars($row['nama_mitra']) ?></h5>
-                        <p><?= htmlspecialchars($row['isi_mitra']) ?></p>
-                    </div>
-                <?php endwhile; ?>
-            </div>
-        <button class="slide-btn right" onclick="slideRight('adm')">
-            <i class="bi bi-chevron-right"></i>
-        </button>
-    </div>
-</div>
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
+    <script src="js/navigation.js"></script>
 
     <script>
         function slideLeft(id){document.getElementById("track-"+id).scrollBy({left:-330,behavior:'smooth'})}

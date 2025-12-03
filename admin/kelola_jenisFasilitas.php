@@ -7,8 +7,36 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$qJenis = "SELECT * FROM jenis_fasilitas ORDER BY id_jenisfasilitas";
+
+$limit = 20;
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+$qTotal = "SELECT COUNT(*) FROM jenis_fasilitas";
+$rTotal = pg_query($conn, $qTotal);
+$total_records = pg_fetch_result($rTotal, 0, 0);
+
+$total_pages = ceil($total_records / $limit);
+
+if ($total_pages === 0) {
+    $page = 0;
+    $offset = 0;
+} else {
+    if ($page > $total_pages) {
+        $page = $total_pages;
+    }
+    $offset = ($page - 1) * $limit;
+}
+
+$qJenis = "SELECT * FROM jenis_fasilitas 
+           ORDER BY id_jenisfasilitas ASC 
+           LIMIT $limit OFFSET $offset";
 $rJenis = pg_query($conn, $qJenis);
+
+if (!$rJenis) {
+    die("Query error: " . pg_last_error($conn));
+}
 
 $jenisFasilitas = [];
 while ($row = pg_fetch_assoc($rJenis)) {
@@ -59,29 +87,70 @@ while ($row = pg_fetch_assoc($rJenis)) {
                 </thead>
 
                 <tbody>
-                    <?php foreach ($jenisFasilitas as $jf) : ?>
+                    <?php if (count($jenisFasilitas) > 0) : ?>
+                        <?php foreach ($jenisFasilitas as $jf) : ?>
+                            <tr>
+                                <td class="text-center"><?= $jf['id_jenisfasilitas']; ?></td>
+                                <td class="text-center"><?= htmlspecialchars($jf['nama_jenisfasilitas']); ?></td>
+
+                                <td class="text-center">
+                                    <a href="edit_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
+                                       class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+
+                                    <a href="hapus_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Yakin ingin menghapus jenis fasilitas ini?')">
+                                        <i class="fa fa-trash"></i> Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
-                            <td class="text-center"><?= $jf['id_jenisfasilitas']; ?></td>
-                            <td class="text-center"><?= htmlspecialchars($jf['nama_jenisfasilitas']); ?></td>
-
-                            <td class="text-center">
-                                <a href="edit_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
-                                   class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-
-                                <a href="hapus_jenisfasilitas.php?id=<?= $jf['id_jenisfasilitas']; ?>" 
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Yakin ingin menghapus jenis fasilitas ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
+                            <td colspan="3" class="text-center">Tidak ada data jenis fasilitas.</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
 
             </table>
         </div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
+
     </div>
 
     <script src="js/sidebar.js"></script>

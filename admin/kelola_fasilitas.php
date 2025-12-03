@@ -6,8 +6,35 @@
     }
     require_once '../config.php';
 
-    $qFasilitas = "SELECT * FROM vw_fasilitas_lengkap ORDER BY id_fasilitas ASC";
+    $limit = 20; 
+
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+
+    $offset = ($page - 1) * $limit;
+
+    $qTotal = "SELECT COUNT(*) FROM vw_fasilitas_lengkap";
+    $rTotal = pg_query($conn, $qTotal);
+    $total_records = pg_fetch_result($rTotal, 0, 0);
+
+    $total_pages = ceil($total_records / $limit);
+
+    if ($page > $total_pages && $total_pages > 0) {
+        $page = $total_pages;
+        $offset = ($page - 1) * $limit;
+    } elseif ($total_pages === 0) {
+        $page = 0;
+        $offset = 0;
+    }
+
+    $qFasilitas = "SELECT * FROM vw_fasilitas_lengkap 
+                   ORDER BY id_fasilitas ASC 
+                   LIMIT $limit OFFSET $offset";
     $rFasilitas = pg_query($conn, $qFasilitas);
+
+    if (!$rFasilitas) {
+        die("Query error: " . pg_last_error($conn));
+    }
 
     $fasilitas = [];
     while ($row = pg_fetch_assoc($rFasilitas)) {
@@ -63,37 +90,78 @@
                 </thead>
 
                 <tbody>
-                    <?php foreach($fasilitas as $row) : ?>
-                    <tr>
-                        <td class="text-center"><?= $row['id_fasilitas']; ?></td>
-                        <td class="text-center"><?= htmlspecialchars($row['nama_jenisfasilitas']); ?></td>
-                        <td class="text-center"><?= htmlspecialchars($row['nama_fasilitas']); ?></td>
-                        <td><?= nl2br(htmlspecialchars($row['isi_fasilitas'])); ?></td>
-                       <td class="text-center">
-                            <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>"
-                                alt="Gambar Fasilitas"
-                                style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                        </td>
+                    <?php if (count($fasilitas) > 0): ?>
+                        <?php foreach($fasilitas as $row) : ?>
+                        <tr>
+                            <td class="text-center"><?= $row['id_fasilitas']; ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['nama_jenisfasilitas']); ?></td>
+                            <td class="text-center"><?= htmlspecialchars($row['nama_fasilitas']); ?></td>
+                            <td><?= nl2br(htmlspecialchars($row['isi_fasilitas'])); ?></td>
+                           <td class="text-center">
+                                <img src="../<?= htmlspecialchars($row['url_gambar_fasilitas']); ?>"
+                                     alt="Gambar Fasilitas"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                            </td>
 
 
-                        <td class="text-center">
-                            <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
-                            class="btn btn-warning btn-sm">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
+                            <td class="text-center">
+                                <a href="edit_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
+                                class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
 
-                            <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
-                            class="btn btn-danger btn-sm"
-                            onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
-                                <i class="fa fa-trash"></i> Hapus
-                            </a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
+                                <a href="hapus_fasilitas.php?id=<?= $row['id_fasilitas']; ?>"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Yakin ingin menghapus fasilitas ini?');">
+                                    <i class="fa fa-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada data fasilitas.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
 
             </table>
         </div>
+        
+        <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
+
     </div>
 
     <script src="js/sidebar.js"></script>

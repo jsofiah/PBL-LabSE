@@ -10,14 +10,25 @@ require_once '../config.php';
 if (isset($_POST['submit'])) {
     $nama = $_POST['nama_jenisfasilitas'];
 
-    $qInsert = "INSERT INTO jenis_fasilitas (nama_jenisfasilitas) VALUES ($1)";
+    $qInsert = "CALL sp_create_jenis_fasilitas($1)";
     $result = pg_query_params($conn, $qInsert, [$nama]);
 
     if ($result) {
-        header("Location: kelola_jenisFasilitas.php");
+        echo "
+        <script>
+            alert('Jenis Fasilitas baru berhasil ditambahkan!');
+            window.location.href = 'kelola_jenisFasilitas.php';
+        </script>
+        ";
         exit;
     } else {
-        echo "Gagal menambahkan jenis fasilitas!";
+        echo "
+        <script>
+            alert('Gagal menambahkan jenis fasilitas! Error: " . pg_last_error($conn) . "');
+            window.location.href = 'kelola_jenisFasilitas.php'; // Atau tetap di halaman ini jika ingin menampilkan form lagi
+        </script>
+        ";
+        exit;
     }
 }
 ?>
