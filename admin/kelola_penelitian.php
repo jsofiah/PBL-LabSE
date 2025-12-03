@@ -50,7 +50,7 @@
 
             <thead class="table-primary">
                 <tr>
-                    <th class="text-center">ID</th>
+                    <th class="text-center">No</th>
                     <th class="text-center">Judul Penelitian</th>
                     <th class="text-center">Tahun</th>
                     <th class="text-center">Nama Dosen</th>
@@ -59,31 +59,30 @@
             </thead>
 
             <tbody>
-                <?php while($p = pg_fetch_assoc($rViewPenelitian)) : ?>
-                    <tr>
-                        <td class="text-center"><?= $p['id_penelitian']; ?></td>
+            <?php $no = 1; ?>
+            <?php while($p = pg_fetch_assoc($rViewPenelitian)) : ?>
+                <tr>
+                    <td class="text-center"><?= $no++; ?></td>
+                    <td><?= htmlspecialchars($p['judul_penelitian']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($p['tahun_penelitian']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
 
-                        <td><?= htmlspecialchars($p['judul_penelitian']); ?></td>
+                    <td class="text-center">
+                        <a href="edit_penelitian.php?id=<?= $p['id_penelitian']; ?>" 
+                        class="btn btn-warning btn-sm">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
 
-                        <td class="text-center"><?= htmlspecialchars($p['tahun_penelitian']); ?></td>
+                        <a href="hapus_penelitian.php?id=<?= $p['id_penelitian']; ?>"
+                        class="btn btn-danger btn-sm"
+                        onclick="return confirm('Yakin ingin menghapus penelitian ini?')">
+                            <i class="fa fa-trash"></i> Hapus
+                        </a>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
 
-                        <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
-
-                        <td class="text-center">
-                            <a href="edit_penelitian.php?id=<?= $p['id_penelitian']; ?>" 
-                               class="btn btn-warning btn-sm">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
-
-                            <a href="hapus_penelitian.php?id=<?= $p['id_penelitian']; ?>"
-                               class="btn btn-danger btn-sm"
-                               onclick="return confirm('Yakin ingin menghapus penelitian ini?')">
-                                <i class="fa fa-trash"></i> Hapus
-                            </a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
 
         </table>
     </div>
