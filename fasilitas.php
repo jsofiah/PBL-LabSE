@@ -39,7 +39,6 @@
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-
     function getFasilitas($conn, $jenis) {
         $jenis = intval($jenis);
         return pg_query($conn, "
@@ -57,61 +56,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fasilitas - Laboratorium Software Engineer</title>
+    <link rel="icon" href="img/Logo-hitam.png" type="image" sizes="30x30">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleFasilitas.css">
 </head>
 
 <body class="fasilitas-page">
-    <div class="logo">
-        <?php if ($rowLogo): ?>
-            <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
-        <?php else: ?>
-            <img src="img/logo.png" alt="LABSE" class="logo-img">
-        <?php endif; ?>
+    <div id="scrollIndicator" class="scroll-indicator"></div>
+
+    <div class="header-container">
+        <div class="logo">
+            <?php if ($rowLogo): ?>
+                <img src="<?= htmlspecialchars($rowLogo['url_logo']) ?>" alt="LABSE" class="logo-img">
+            <?php else: ?>
+                <img src="img/logo.png" alt="LABSE" class="logo-img">
+            <?php endif; ?>
+        </div>
+
+        <div class="desktop-nav">
+            <nav>
+                <ul id="nav-list" class="nav-collapse">
+                    <?php foreach ($navItems as $nav): ?>
+                        <?php if (count($nav['subnav']) > 0): ?>
+                            <li class="dropdown">
+                                <a href="<?= htmlspecialchars($nav['url_nav']) ?>" class="dropbtn">
+                                    <?= htmlspecialchars($nav['nama_nav']) ?>
+                                    <i class="bi bi-chevron-down"></i>
+                                </a>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+                                        <?php foreach ($nav['subnav'] as $sub): ?>
+                                            <a href="<?= htmlspecialchars($sub['url_subnav']) ?>">
+                                                <?= htmlspecialchars($sub['nama_subnav']) ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php else: ?>
+                            <li>
+                                <a href="<?= htmlspecialchars($nav['url_nav']) ?>">
+                                    <?= htmlspecialchars($nav['nama_nav']) ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+
+            <?php if($rowLogo): ?>
+                <a href="<?= htmlspecialchars($rowLogo['link_cta']) ?>" class="cta-button">
+                    <span class="cta-text"><?= htmlspecialchars($rowLogo['judul_cta']) ?></span>
+                </a>
+            <?php endif; ?>
+        </div>
+
+        <div class="mobile-nav-toggle">
+            <i class="bi bi-list"></i>
+        </div>
     </div>
 
-    <nav>
-        <ul id="nav-list" class="nav-collapse">
+    <div class="mobile-nav">
+        <ul class="mobile-nav-list">
             <?php foreach ($navItems as $nav): ?>
                 <?php if (count($nav['subnav']) > 0): ?>
-                    <li class="dropdown">
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                    <li>
+                        <button class="mobile-dropdown-btn">
+                            <?= htmlspecialchars($nav['nama_nav']) ?>
                             <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <div class="dropdown-content">
-                            <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
-                                <?php foreach ($nav['subnav'] as $sub): ?>
-                                    <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
-                                        <?php echo htmlspecialchars($sub['nama_subnav']); ?>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
+                        </button>
+                        <div class="mobile-dropdown-content">
+                            <?php foreach ($nav['subnav'] as $sub): ?>
+                                <a href="<?= htmlspecialchars($sub['url_subnav']) ?>">
+                                    <?= htmlspecialchars($sub['nama_subnav']) ?>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
                     </li>
                 <?php else: ?>
                     <li>
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                        <a href="<?= htmlspecialchars($nav['url_nav']) ?>">
+                            <?= htmlspecialchars($nav['nama_nav']) ?>
                         </a>
                     </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
-    </nav>
 
-    <?php if($rowLogo): ?>
-        <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
-            <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
-        </a>
-    <?php endif; ?>
+        <?php if($rowLogo): ?>
+            <div class="mobile-cta">
+                <a href="<?= htmlspecialchars($rowLogo['link_cta']) ?>" class="cta-button">
+                    <span class="cta-text"><?= htmlspecialchars($rowLogo['judul_cta']) ?></span>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
     
     <div class="hero-wrapper">
         <div class="hero-container">
@@ -119,84 +163,109 @@
                 <img src="img/bgfasilitas.png" alt="Fasilitas Background">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                <h1 class="hero-title">FASILITAS</h1>
+                    <h1 class="hero-title">FASILITAS</h1>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="container py-3">
+
         <h2 class="fw-bold text-center mb-5">SARANA DAN PRASARANA PENDUKUNG</h2>
         <h3>FASILITAS AKADEMIK</h3>
         <div class="fasilitas-slider">
-    <button class="slide-btn left" onclick="slideLeft('akad')">
-        <i class="bi bi-chevron-left"></i>
-    </button>
-    
-    <div class="fasilitas-track" id="track-akad">
-        <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
-            <div class="fasilitas-card">
-                <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
-                <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
-                <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
-            </div>
-        <?php endwhile; ?>
-    </div>
+            <button class="slide-btn left" onclick="slideLeft('akad')">
+                <i class="bi bi-chevron-left"></i>
+            </button>
 
-    <button class="slide-btn right" onclick="slideRight('akad')">
-        <i class="bi bi-chevron-right"></i>
-    </button>
-</div>
+            <div class="fasilitas-track" id="track-akad">
+                <?php $r = getFasilitas($conn, 1); while ($row = pg_fetch_assoc($r)): ?>
+                    <div class="fasilitas-card">
+                        <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
+                        <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
+                        <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+
+            <button class="slide-btn right" onclick="slideRight('akad')">
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+
         <hr class="my-5">
 
         <h3>FASILITAS NON AKADEMIK</h3>
         <div class="fasilitas-slider">
-            <button class="slide-btn left" onclick="slideLeft('akad')">
+            <button class="slide-btn left" onclick="slideLeft('non')">
                 <i class="bi bi-chevron-left"></i>
             </button>
-                <div class="fasilitas-track" id="track-non">
-                    <?php $r = getFasilitas($conn, 2); while ($row = pg_fetch_assoc($r)): ?>
-                        <div class="fasilitas-card">
-                            <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
-                            <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
-                            <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-            <button class="slide-btn right" onclick="slideRight('akad')">
+
+            <div class="fasilitas-track" id="track-non">
+                <?php $r = getFasilitas($conn, 2); while ($row = pg_fetch_assoc($r)): ?>
+                    <div class="fasilitas-card">
+                        <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
+                        <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
+                        <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+
+            <button class="slide-btn right" onclick="slideRight('non')">
                 <i class="bi bi-chevron-right"></i>
             </button>
         </div>
+
         <hr class="my-5">
 
         <h3>FASILITAS ADMINISTRASI</h3>
         <div class="fasilitas-slider">
-            <button class="slide-btn left" onclick="slideLeft('akad')">
+            <button class="slide-btn left" onclick="slideLeft('adm')">
                 <i class="bi bi-chevron-left"></i>
             </button>
-                <div class="fasilitas-track" id="track-adm">
-                    <?php $r = getFasilitas($conn, 3); while ($row = pg_fetch_assoc($r)): ?>
-                        <div class="fasilitas-card">
-                            <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
-                            <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
-                            <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-            <button class="slide-btn right" onclick="slideRight('akad')">
+
+            <div class="fasilitas-track" id="track-adm">
+                <?php $r = getFasilitas($conn, 3); while ($row = pg_fetch_assoc($r)): ?>
+                    <div class="fasilitas-card">
+                        <img src="<?= htmlspecialchars($row['url_gambar_fasilitas']) ?>">
+                        <h5><?= htmlspecialchars($row['nama_fasilitas']) ?></h5>
+                        <p><?= htmlspecialchars($row['isi_fasilitas']) ?></p>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+
+            <button class="slide-btn right" onclick="slideRight('adm')">
                 <i class="bi bi-chevron-right"></i>
-            </button>   
+            </button>
         </div>
+
     </div>
+
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
-
+    <script src="js/scroll-top.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
+    <script src="js/navigation.js"></script>
 
     <script>
-        function slideLeft(id){document.getElementById("track-"+id).scrollBy({left:-330,behavior:'smooth'})}
-        function slideRight(id){document.getElementById("track-"+id).scrollBy({left:330,behavior:'smooth'})}
+        function slideLeft(id){
+            document.getElementById("track-" + id).scrollBy({
+                left: -330,
+                behavior: 'smooth'
+            });
+        }
+        function slideRight(id){
+            document.getElementById("track-" + id).scrollBy({
+                left: 330,
+                behavior: 'smooth'
+            });
+        }
     </script>
+
 </body>
 </html>

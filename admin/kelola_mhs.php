@@ -6,7 +6,6 @@
     }
     require_once '../config.php';
 
-    // Query menggabungkan tabel master (untuk ambil NIM/Email) dengan View (untuk ambil list keahlian/proyek)
     $qMhs = "SELECT 
                 m.id_mhs, 
                 m.nim_mhs, 
@@ -19,7 +18,8 @@
                 v.daftar_proyek 
             FROM mhs_segeeks m
             LEFT JOIN vw_mhs_full v ON m.id_mhs = v.id_mhs
-            ORDER BY m.nama_mhs ASC";
+            ORDER BY m.id_mhs ASC";
+
             
     $rMhs = pg_query($conn, $qMhs);
     $mahasiswa = [];
@@ -34,7 +34,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelola Mahasiswa - SE Geeks</title>
+    <title>Kelola Mahasiswa</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -59,7 +59,7 @@
                     <table class="table table-bordered table-striped table-hover align-middle">
                         <thead class="table-primary">
                             <tr>
-                                <th class="text-center" style="width: 5%;">No</th>
+                                <th class="text-center" style="width: 5%;">ID</th>
                                 <th class="text-center" style="width: 15%;">NIM</th>
                                 <th style="width: 25%;">Nama Mahasiswa</th>
                                 <th style="width: 20%;">Prodi</th>
@@ -73,7 +73,7 @@
                             <?php if (count($mahasiswa) > 0): ?>
                             <?php $no = 1; foreach($mahasiswa as $mhs) : ?>
                             <tr>
-                                <td class="text-center"><?= $no++; ?></td>
+                                <td class="text-center"><?= htmlspecialchars($mhs['id_mhs']); ?></td>
 
                                 <td class="text-center"><?= htmlspecialchars($mhs['nim_mhs']); ?></td>
 

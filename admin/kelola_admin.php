@@ -30,13 +30,6 @@
             <a href="tambah_admin.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Admin</a>
         </div>
         
-        <?php if (isset($_SESSION['pesan'])): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= $_SESSION['pesan']; unset($_SESSION['pesan']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php endif; ?>
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-fixed">
                 <colgroup>

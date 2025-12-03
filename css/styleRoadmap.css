@@ -1,7 +1,7 @@
 .hero-wrapper {
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 80px;
+    padding-top: 50px;
 }
 
 .hero-container {
@@ -336,6 +336,23 @@
 
     .timeline__event__description {
         font-size: 13px;
+    }
+
+    .timeline__event:last-child {
+        flex-direction: column !important;
+        width: 100% !important;
+        margin: 30px 0 !important;
+        height: auto !important;
+    }
+
+    .timeline__event:last-child .timeline__event__date {
+        min-height: auto !important;
+        width: 100% !important;
+    }
+
+    .timeline__event:last-child .timeline__event__content {
+        min-height: auto !important;
+        width: 100% !important;
     }
 }
 

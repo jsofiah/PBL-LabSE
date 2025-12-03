@@ -7,7 +7,6 @@ if (!isset($_SESSION['username'])) {
 
 require_once "../config.php";
 
-// Ambil semua artikel
 $qArtikel = "SELECT * FROM vw_artikel ORDER BY id_artikel ASC";
 $rArtikel = pg_query($conn, $qArtikel);
 ?>

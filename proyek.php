@@ -1,7 +1,6 @@
 <?php
     require 'config.php';
 
-    // --- 1. Logika Navbar & Header ---
     $qNav = "SELECT * FROM vw_nav";
     $rNav = pg_query($conn, $qNav);
     $navItems = [];
@@ -23,7 +22,6 @@
         }
     }
 
-    // --- 2. Logika Submenu Dosen ---
     $qDosen = "SELECT id_dosen, nama_dosen FROM vw_detail_dosen ORDER BY nama_dosen";
     $rDosen = pg_query($conn, $qDosen);
     
@@ -34,13 +32,10 @@
         ];
     }
 
-    // --- 3. Logika Logo ---
     $qLogo = "SELECT * FROM vw_logo_cta";
     $rLogo = pg_query($conn, $qLogo);
     $rowLogo = pg_fetch_assoc($rLogo);
 
-
-    // --- 4. Logika Proyek & Pencarian (FTS) ---
     $filter = isset($_GET['filter']) ? $_GET['filter'] : 'terbaru';
     $cari   = isset($_GET['cari']) ? trim($_GET['cari']) : ''; 
     $orderDirection = ($filter == 'terlama') ? 'ASC' : 'DESC';
@@ -49,8 +44,6 @@
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $start = ($page > 1) ? ($page * $limit) - $limit : 0;
 
-    // Base Query pakai VIEW + JOIN untuk Search
-    // PERBAIKAN DI SINI: Menambahkan semua kolom vw_proyek ke GROUP BY
     $base_join = " FROM vw_proyek p
                    LEFT JOIN public.proyek_mhs pm ON p.id_proyek = pm.id_proyek
                    LEFT JOIN public.mhs_segeeks m ON pm.id_mhs = m.id_mhs
@@ -67,8 +60,7 @@
                         p.url_gambar_proyek3 ";
 
     $having_clause = "";
-    
-    // Filter Pencarian Hybrid
+
     if (!empty($cari)) {
         $clean_cari = preg_replace('/[^a-zA-Z0-9 ]/', '', $cari);
         $words = explode(" ", $clean_cari);
@@ -96,7 +88,6 @@
         }
     }
 
-    // --- 5. Pagination & Eksekusi Query ---
     $qTotal = "SELECT COUNT(*) as total FROM (SELECT p.id_proyek $base_join $having_clause) as sub";
     $rTotal = pg_query($conn, $qTotal);
     
@@ -119,7 +110,6 @@
 
     $rProyek = pg_query($conn, $qProyek);
 
-    // Format Data Tampilan
     $listProyek = [];
     if ($rProyek) {
         while ($row = pg_fetch_assoc($rProyek)) {
@@ -152,57 +142,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyek - Laboratorium Software Engineer</title>
-    
+    <link rel="icon" href="img/Logo-hitam.png" type="image" sizes="30x30">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="css/styleRoot.css">
-    <!-- <link rel="stylesheet" href="css/styleIndex.css"> -->
     <link rel="stylesheet" href="css/styleFooter.css">
     <link rel="stylesheet" href="css/styleProyek.css">
 </head>
 <body>
+    <div id="scrollIndicator" class="scroll-indicator"></div>
+    <div class="header-container">
+        <div class="logo">
+            <?php if ($rowLogo): ?>
+                <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
+            <?php else: ?>
+                <img src="img/logo.png" alt="LABSE" class="logo-img">
+            <?php endif; ?>
+        </div>
+        
+        <div class="desktop-nav">
+            <nav>
+                <ul id="nav-list" class="nav-collapse">
+                    <?php foreach ($navItems as $nav): ?>
+                        <?php if (count($nav['subnav']) > 0): ?>
+                            <li class="dropdown">
+                                <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
+                                    <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                                    <i class="bi bi-chevron-down"></i>
+                                </a>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+                                        <?php foreach ($nav['subnav'] as $sub): ?>
+                                            <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
+                                                <?php echo htmlspecialchars($sub['nama_subnav']); ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php else: ?>
+                            <li>
+                                <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                                    <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
 
-    <div class="logo">
-        <?php if ($rowLogo): ?>
-            <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
-        <?php else: ?>
-            <img src="img/logo.png" alt="LABSE" class="logo-img">
-        <?php endif; ?>
+            <?php if($rowLogo): ?>
+                <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
+                    <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
+                </a>
+            <?php endif; ?>
+        </div>
+        
+        <div class="mobile-nav-toggle">
+            <i class="bi bi-list"></i>
+        </div>
     </div>
-
-    <nav>
-        <ul id="nav-list" class="nav-collapse">
+    
+    <div class="mobile-nav">
+        <ul class="mobile-nav-list">
             <?php foreach ($navItems as $nav): ?>
                 <?php if (count($nav['subnav']) > 0): ?>
-                    <li class="dropdown">
-                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
-                            <?php echo htmlspecialchars($nav['nama_nav']); ?> <i class="bi bi-chevron-down"></i>
-                        </a>
-                        <div class="dropdown-content">
-                            <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
-                                <?php foreach ($nav['subnav'] as $sub): ?>
-                                    <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
-                                        <?php echo htmlspecialchars($sub['nama_subnav']); ?>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
+                    <li>
+                        <button class="mobile-dropdown-btn">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="mobile-dropdown-content">
+                            <?php foreach ($nav['subnav'] as $sub): ?>
+                                <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
+                                    <?php echo htmlspecialchars($sub['nama_subnav']); ?>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
                     </li>
                 <?php else: ?>
-                    <li><a href="<?php echo htmlspecialchars($nav['url_nav']); ?>"><?php echo htmlspecialchars($nav['nama_nav']); ?></a></li>
+                    <li>
+                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                        </a>
+                    </li>
                 <?php endif; ?>
             <?php endforeach; ?>
         </ul>
-    </nav>
-
-    <?php if($rowLogo): ?>
-        <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
-            <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
-        </a>
-    <?php endif; ?>
+        
+        <?php if($rowLogo): ?>
+            <div class="mobile-cta">
+                <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
+                    <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
 
     <div class="hero-wrapper">
         <div class="hero-container">
@@ -315,8 +352,14 @@
         <?php endif; ?>
     </div>
     
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
+    <script src="js/navigation.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dropdown.js"></script>
 </body>

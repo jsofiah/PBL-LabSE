@@ -47,13 +47,18 @@ if (isset($_POST['simpan'])) {
     }
 
     if (!isset($error)) {
-        $query = "CALL sp_create_admin('$username', '$password', '$fotoPath')";
+        $hashedPassword = md5($password);
+        $query = "CALL sp_create_admin('$username', '$hashedPassword', '$fotoPath')";
+
         $result = pg_query($conn, $query);
 
         if ($result) {
-            $_SESSION['pesan'] = "Data Admin berhasil ditambahkan!";
-            header("Location: kelola_admin.php");
-            exit;
+            echo "
+                <script>
+                    alert('Admin berhasil ditambahkan!');
+                    window.location.href = 'kelola_admin.php';
+                </script>";
+exit;
         } else {
             $error = "Database Error: " . pg_last_error($conn);
         }
@@ -67,13 +72,13 @@ if (isset($_POST['simpan'])) {
     <meta charset="UTF-8">
     <title>Tambah Admin</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
-<body>
-    <?php include 'sidebar.php'; ?>
+<body class="p-4">
     
     <div class="content-area container">
-        <h3 class="mb-4">Tambah Admin Baru</h3>
+        <h1 class="mb-4 fw-bold text-center">Tambah Admin Baru</h1>
         
         <?php if(isset($error)): ?>
             <div class='alert alert-danger'><?= $error ?></div>
@@ -81,17 +86,17 @@ if (isset($_POST['simpan'])) {
         
         <form action="" method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
             <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" required>
+                <label class="form-label text-white">Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Masukkan username" required>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <label class="form-label text-white">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">Foto Profil</label>
+                <label class="form-label text-white">Foto Profil</label>
                 <input type="file" name="foto" class="form-control" accept="image/*">
             </div>
             

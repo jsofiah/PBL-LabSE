@@ -115,97 +115,98 @@
           border-radius: 10px; 
           display: block; 
       }
-      /* ----
+      
     </style>
 </head>
 <body>
-   <div class="logo">
-        <?php if ($rowLogo): ?>
-            <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
-        <?php else: ?>
-            <img src="img/logo.png" alt="LABSE" class="logo-img">
-        <?php endif; ?>
+  <div id="scrollIndicator" class="scroll-indicator"></div>
+  <div class="header-container">
+        <div class="logo">
+            <?php if ($rowLogo): ?>
+                <img src="<?php echo htmlspecialchars($rowLogo['url_logo']); ?>" alt="LABSE" class="logo-img">
+            <?php else: ?>
+                <img src="img/logo.png" alt="LABSE" class="logo-img">
+            <?php endif; ?>
+        </div>
+        
+        <div class="desktop-nav">
+            <nav>
+                <ul id="nav-list" class="nav-collapse">
+                    <?php foreach ($navItems as $nav): ?>
+                        <?php if (count($nav['subnav']) > 0): ?>
+                            <li class="dropdown">
+                                <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>" class="dropbtn">
+                                    <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                                    <i class="bi bi-chevron-down"></i>
+                                </a>
+                                <div class="dropdown-content">
+                                    <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+                                        <?php foreach ($nav['subnav'] as $sub): ?>
+                                            <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
+                                                <?php echo htmlspecialchars($sub['nama_subnav']); ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </li>
+                        <?php else: ?>
+                            <li>
+                                <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                                    <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+
+            <?php if($rowLogo): ?>
+                <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
+                    <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
+                </a>
+            <?php endif; ?>
+        </div>
+        
+        <div class="mobile-nav-toggle">
+            <i class="bi bi-list"></i>
+        </div>
     </div>
-
-    <nav>
-    <ul id="nav-list" class="nav-collapse">
-        <?php foreach ($navItems as $nav): ?>
-            <?php if (count($nav['subnav']) > 0): ?>
-                <li class="dropdown">
-
-                    <!-- TOMBOL UTAMA — TIDAK PINDAH HALAMAN -->
-                    <a href="#" class="dropbtn" onclick="toggleDropdown(event)">
-                        <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                        <i class="bi bi-chevron-down"></i>
-                    </a>
-
-                    <div class="dropdown-content">
-                        <div class="dropdown-scroll overflow-auto" style="max-height: 250px;">
+    
+    <div class="mobile-nav">
+        <ul class="mobile-nav-list">
+            <?php foreach ($navItems as $nav): ?>
+                <?php if (count($nav['subnav']) > 0): ?>
+                    <li>
+                        <button class="mobile-dropdown-btn">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="mobile-dropdown-content">
                             <?php foreach ($nav['subnav'] as $sub): ?>
                                 <a href="<?php echo htmlspecialchars($sub['url_subnav']); ?>">
                                     <?php echo htmlspecialchars($sub['nama_subnav']); ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                    </div>
-
-                </li>
-            <?php else: ?>
-                <li>
-                    <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
-                        <?php echo htmlspecialchars($nav['nama_nav']); ?>
-                    </a>
-                </li>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </ul>
-</nav>
-
-<script>
-function toggleDropdown(event) {
-    event.preventDefault();
-
-    // Tutup semua dropdown lain dulu
-    document.querySelectorAll(".dropdown").forEach(d => {
-        if (d !== event.target.closest(".dropdown")) {
-            d.classList.remove("show-dropdown");
-        }
-    });
-
-    // Baru toggle dropdown yang diklik
-    const parent = event.target.closest(".dropdown");
-    parent.classList.toggle("show-dropdown");
-}
-
-// Tutup semua dropdown kalau klik di luar navbar
-document.addEventListener("click", function(e) {
-    if (!e.target.closest("nav")) {
-        document.querySelectorAll(".dropdown").forEach(d => {
-            d.classList.remove("show-dropdown");
-        });
-    }
-});
-
-</script>
-
-<style>
-/* Biar sama kaya index */
-.dropdown-content {
-    display: none;
-}
-.show-dropdown .dropdown-content {
-    display: block;
-}
-</style>
-
-
-
-
-    <?php if($rowLogo): ?>
-        <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
-            <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
-        </a>
-    <?php endif; ?>
+                    </li>
+                <?php else: ?>
+                    <li>
+                        <a href="<?php echo htmlspecialchars($nav['url_nav']); ?>">
+                            <?php echo htmlspecialchars($nav['nama_nav']); ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+        
+        <?php if($rowLogo): ?>
+            <div class="mobile-cta">
+                <a href="<?php echo htmlspecialchars($rowLogo['link_cta']); ?>" class="cta-button">
+                    <span class="cta-text"><?php echo htmlspecialchars($rowLogo['judul_cta']); ?></span>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
 
     <div class="hero-wrapper">
         <div class="hero-container">
@@ -236,7 +237,6 @@ document.addEventListener("click", function(e) {
           <div class="card card-rounded mb-3 dosen-info p-3 d-flex align-items-center gap-3">
            <div class="dosen-avatar-container">
               <?php
-                // pakai foto jika tersedia, jika tidak pakai default avatar lokal
                 $foto = ($rowDosen && $rowDosen['url_foto_dosen']) ? $rowDosen['url_foto_dosen'] : $default_avatar;
               ?>
               <img src="<?php echo htmlspecialchars($foto); ?>" alt="Foto Dosen" class="dosen-avatar-img">
@@ -280,10 +280,8 @@ document.addEventListener("click", function(e) {
                       </div>
                       <div class="publikasi-authors">
                         <?php
-                          // Ambil kontributor publikasi
                           $idpub = intval($it['id_publikasi']);
                           
-                          // Pastikan view vw_kontributor_publikasi tersedia dan benar
                           $qKontrib = "SELECT d.nama_dosen FROM vw_kontributor_publikasi vk
                                            JOIN dosen d ON d.id_dosen = vk.id_dosen
                                            WHERE vk.id_publikasi = $idpub";
@@ -299,7 +297,6 @@ document.addEventListener("click", function(e) {
                           if (count($authors) > 0) {
                               echo implode(' — ', array_map('htmlspecialchars', $authors));
                           } else if ($rowDosen) { 
-                              // jika kontributor tidak ada di view, tampilkan nama dosen utama
                               echo htmlspecialchars($rowDosen['nama_dosen']) . ' (Penulis Tunggal/Kontributor Tidak Terdata)';
                           }
                         ?>
@@ -310,16 +307,19 @@ document.addEventListener("click", function(e) {
               </div>
             <?php endforeach; ?>
           <?php endif; ?>
-
         </main>
       </div>
     </div>
 
+    <button id="toTop" class="to-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
+    <script src="js/scroll-top.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // highlight active nav sebelah kiri
       document.querySelectorAll('.btn-nav').forEach(b => {
         b.addEventListener('click', () => {
           document.querySelectorAll('.btn-nav').forEach(x => x.classList.remove('active'));

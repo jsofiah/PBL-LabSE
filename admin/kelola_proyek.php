@@ -7,43 +7,21 @@ if (!isset($_SESSION['username'])) {
 
 require "../config.php";
 
-/* Ambil semua proyek */
-$qProyek = "SELECT * FROM proyek ORDER BY id_proyek ASC";
+$qProyek = "SELECT * FROM vw_proyek ORDER BY id_proyek ASC";
 $rProyek = pg_query($conn, $qProyek);
 
-/* Ambil relasi proyek–mahasiswa */
-$qPM = "
-    SELECT pm.id_proyek,
-           p.judul_proyek,
-           pm.id_mhs,
-           m.nama_mhs
-    FROM proyek_mhs pm
-    JOIN proyek p ON pm.id_proyek = p.id_proyek
-    JOIN mhs_segeeks m ON pm.id_mhs = m.id_mhs
-    ORDER BY pm.id_proyek ASC
-";
+$qPM = "SELECT * FROM vw_proyek_mhs ORDER BY id_proyek ASC";
 $rPM = pg_query($conn, $qPM);
 
-/* Ambil relasi proyek–dosen */
-$qPD = "
-    SELECT pd.id_proyek,
-           p.judul_proyek,
-           pd.id_dosen,
-           d.nama_dosen
-    FROM proyek_dosen pd
-    JOIN proyek p ON pd.id_proyek = p.id_proyek
-    JOIN dosen d ON pd.id_dosen = d.id_dosen
-    ORDER BY pd.id_proyek ASC
-";
+$qPD = "SELECT * FROM vw_proyek_dosen ORDER BY id_proyek ASC";
 $rPD = pg_query($conn, $qPD);
-
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Kelola Proyek</title>
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -55,8 +33,6 @@ $rPD = pg_query($conn, $qPD);
 <?php include 'sidebar.php'; ?>
 
 <div class="content-area container">
-
-    <!-- ================= PROYEK ================= -->
     <div class="mb-4">
         <h2 class="mb-2">Kelola Proyek</h2>
         <a href="tambah_proyek.php" class="btn btn-success btn-sm">
@@ -91,32 +67,25 @@ $rPD = pg_query($conn, $qPD);
         <tbody>
         <?php while($pm = pg_fetch_assoc($rProyek)): ?>
             <tr>
-                <!-- ID -->
                 <td class="text-center"><?= $pm['id_proyek'] ?></td>
 
-                <!-- Gambar -->
                 <td class="text-center" >
                     <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" width="80">
                 </td>
 
-                <!-- Judul -->
                 <td class="text-center" ><?= htmlspecialchars($pm['judul_proyek']) ?></td>
 
-                <!-- Deskripsi -->
                 <td class="text-center" ><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
 
-                <!-- Tanggal -->
                 <td class="text-center" ><?= $pm['tanggal_terbit_proyek'] ?></td>
 
-                <!-- Penulis -->
                 <td class="text-center" ><?= $pm['penulis_proyek'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                     <a href="hapus_proyek.php?id=<?= $pm['id_proyek'] ?>" 
                        onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                       class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Hapus</a>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -126,7 +95,6 @@ $rPD = pg_query($conn, $qPD);
 
     <hr class="my-5">
 
-    <!-- ================= PROYEK - MAHASISWA ================= -->
     <div class="mb-4">
         <h2>Kelola Proyek Mahasiswa</h2>
         <a href="tambah_proyek_mhs.php" class="btn btn-success btn-sm">
@@ -158,24 +126,26 @@ $rPD = pg_query($conn, $qPD);
         <tbody>
         <?php while($pm = pg_fetch_assoc($rPM)): ?>
             <tr>
-                <!-- ID Proyek Mahasiswa -->
                 <td class="text-center" ><?= $pm['id_proyek'] ?></td>
 
-                <!-- ID Mahasiswa -->
                 <td class="text-center" ><?= $pm['id_mhs'] ?></td>
 
-                <!-- Judul -->
                 <td class="text-center" ><?= $pm['judul_proyek'] ?></td>
 
-                <!-- Nama Mahasiswa -->
                 <td class="text-center" ><?= $pm['nama_mhs'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek_mhs.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="hapus_proyek_mhs.php?id=<?= $pm['id_proyek'] ?>" 
-                       onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>" 
+                    class="btn btn-warning btn-sm">
+                    <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
+                    onclick="return confirm('Yakin ingin menghapus?')"
+                    class="btn btn-danger btn-sm">
+                    <i class="fa fa-trash"></i> Hapus
+                    </a>
+
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -185,7 +155,6 @@ $rPD = pg_query($conn, $qPD);
 
     <hr class="my-5">
 
-    <!-- ================= PROYEK - DOSEN ================= -->
     <div class="mb-4">
         <h2>Kelola Proyek Dosen</h2>
         <a href="tambah_proyek_dosen.php" class="btn btn-success btn-sm">
@@ -218,24 +187,23 @@ $rPD = pg_query($conn, $qPD);
 
         <?php while($pd = pg_fetch_assoc($rPD)): ?>
             <tr>
-                <!-- ID Proyek Dosen -->
                 <td class="text-center" ><?= $pd['id_proyek'] ?></td>
-
-                <!-- ID Dosen -->
                 <td class="text-center" ><?= $pd['id_dosen'] ?></td>
-
-                <!-- Judul Proyek -->
                 <td class="text-center" ><?= $pd['judul_proyek'] ?></td>
-
-                <!-- Nama Dosen -->
                 <td class="text-center" ><?= $pd['nama_dosen'] ?></td>
 
-                <!-- Aksi -->
                 <td class="text-center" >
-                    <a href="edit_proyek_dosen.php?id=<?= $pd['id_proyek'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="hapus_proyek_dosen.php?id=<?= $pd['id_proyek'] ?>" 
-                       onclick="return confirm('Yakin ingin menghapus?')"
-                       class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="edit_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
+                    class="btn btn-warning btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+
+                    <a href="hapus_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>" 
+                    onclick="return confirm('Yakin ingin menghapus?')"
+                    class="btn btn-danger btn-sm">
+                        <i class="fa fa-trash"></i> Hapus
+                    </a>
+
                 </td>
             </tr>
         <?php endwhile; ?>

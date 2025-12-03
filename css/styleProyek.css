@@ -1,7 +1,7 @@
 .hero-wrapper {
     max-width: 1400px;
     margin: 0 auto;
-    padding-top: 80px;
+    padding-top: 50px;
 }
 
 .hero-container {
@@ -56,14 +56,6 @@
     letter-spacing: -1px;
 }
 
-/* .content-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;  
-    padding: 0 2.5rem; 
-    margin-top: 0rem;
-    margin-bottom: 5rem;
-    max-width: 1400px;
-} */
 @media (max-width: 768px) {
     .content-wrapper {
         padding: 0 1.5rem;

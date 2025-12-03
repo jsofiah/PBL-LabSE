@@ -7,11 +7,35 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$id = $_GET['id'];
+$id = intval($_GET['id']);
 
-$qDelete = "CALL sp_delete_mitra($id)";
-$res = pg_query($conn, $qDelete);
+$qData = "SELECT url_gambar_mitra FROM mitra WHERE id_mitra = $1";
+$rData = pg_query_params($conn, $qData, [$id]);
+$data = pg_fetch_assoc($rData);
 
-header("Location: kelola_mitra.php?msg=deleted");
-exit;
+if ($data && !empty($data['url_gambar_mitra'])) {
+
+    $filePath = "../" . $data['url_gambar_mitra'];
+
+    if (file_exists($filePath)) {
+        unlink($filePath);
+    }
+}
+
+$qDelete = "CALL sp_delete_mitra($1)";
+$res = pg_query_params($conn, $qDelete, [$id]);
+
+if ($res) {
+    echo "<script>
+            alert('Mitra berhasil dihapus!');
+            window.location='kelola_mitra.php';
+          </script>";
+    exit;
+} else {
+    echo "<script>
+            alert('Gagal menghapus mitra!');
+            window.location='kelola_mitra.php';
+          </script>";
+    exit;
+}
 ?>

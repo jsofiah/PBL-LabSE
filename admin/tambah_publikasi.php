@@ -7,7 +7,6 @@
 
     require_once "../config.php";
 
-    // Ambil list jenis publikasi dan dosen
     $qJenis = "SELECT id_jenispublikasi, nama_jenispublikasi FROM jenis_publikasi ORDER BY id_jenispublikasi ASC";
     $rJenis = pg_query($conn, $qJenis);
 

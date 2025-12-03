@@ -50,17 +50,17 @@
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul Konten</label>
-                <input type='text' name='judul' class='form-control' placeholder="tambah judul Konten" required>
+                <input type='text' name='judul' class='form-control' placeholder="Masukkan judul konten" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Isi Konten</label>
-                <textarea name='isi' rows='5' class='form-control' placeholder="tambah Isi Konten" required></textarea>
+                <textarea name='isi' rows='5' class='form-control' placeholder="Masukkan isi konten" required></textarea>
             </div>
 
             <div class='d-flex gap-2 mt-3'>
                 <button type='submit' name='simpan' class='btn btn-primary'>
-                    <i class='fa fa-plus'></i> Tambah Konten
+                    <i class='fa fa-plus'></i> Tambah
                 </button>
                 <a href='kelola_kontenLab.php' class='btn btn-secondary'>
                     <i class='fa fa-arrow-left'></i> Kembali

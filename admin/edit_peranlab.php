@@ -17,13 +17,21 @@ if (isset($_POST['submit'])) {
     $desk = $_POST['deskripsi_peran'];
     $icon = $_POST['icon'];
 
-    $update = "UPDATE peran_lab 
-               SET nama_peran='$nama', deskripsi_peran='$desk', icon='$icon'
-               WHERE id_peran=$id";
+    $update = "CALL sp_update_peran_lab(
+                $id,
+                '$nama',
+                '$desk',
+                '$icon'
+                )";
 
     pg_query($conn, $update);
 
-    header("Location: kelola_peranLab.php");
+    echo "
+        <script>
+            alert('Peran lab berhasil diperbarui!');
+            window.location.href = 'kelola_peranLab.php';
+        </script>
+        ";
     exit;
 }
 ?>
@@ -33,25 +41,28 @@ if (isset($_POST['submit'])) {
 <head>
     <title>Edit Peran</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styleForm.css">
 </head>
 
 <body class="container mt-4">
 
-<h3>Edit Peran Lab</h3>
+<h1 class="mb-4 fw-bold text-center">Edit Peran Lab</h1>
 
 <form method="POST">
+<div class="card shadow-sm p-4">
+    <label class="form-label text-white">Nama Peran</label>
+    <input type="text" name="nama_peran" placeholder="Masukkan nama peran" value="<?= $data['nama_peran'] ?>" class="form-control mb-3" required>
 
-    <label>Nama Peran:</label>
-    <input type="text" name="nama_peran" value="<?= $data['nama_peran'] ?>" class="form-control mb-3" required>
+    <label class="form-label text-white">Deskripsi Peran</label>
+    <textarea name="deskripsi_peran" placeholder="Masukkan deskripsi" class="form-control mb-3" required><?= $data['deskripsi_peran'] ?></textarea>
 
-    <label>Deskripsi Peran:</label>
-    <textarea name="deskripsi_peran" class="form-control mb-3" required><?= $data['deskripsi_peran'] ?></textarea>
-
-    <label>Icon (text):</label>
-    <input type="text" name="icon" value="<?= $data['icon'] ?>" class="form-control mb-3">
-
-    <button class="btn btn-warning" name="submit">Update</button>
+    <label class="form-label text-white">Icon (text)</label>
+    <input type="text" name="icon" placeholder="Masukkan icon" value="<?= $data['icon'] ?>" class="form-control mb-3">
+    <div class="d-flex gap-2 mt-3">
+    <button class="btn btn-primary" name="submit">Simpan perubahan</button>
     <a href="kelola_peranLab.php" class="btn btn-secondary">Kembali</a>
+</div>
 
 </form>
 
