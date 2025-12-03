@@ -7,8 +7,44 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$query = "SELECT * FROM vw_peran_lab ORDER BY id_peran ASC";
+// ==========================================================
+// LOGIKA PAGINATION
+// ==========================================================
+$limit = 20; // Jumlah data per halaman
+
+// Tentukan halaman saat ini
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+// Hitung offset (awal data yang diambil)
+$offset = ($page - 1) * $limit;
+
+// Query untuk menghitung total data (menggunakan vw_peran_lab)
+$qTotal = "SELECT COUNT(*) FROM vw_peran_lab";
+$rTotal = pg_query($conn, $qTotal);
+$total_records = pg_fetch_result($rTotal, 0, 0);
+
+// Hitung total halaman
+$total_pages = ceil($total_records / $limit);
+
+// Pastikan halaman yang diminta tidak melebihi total halaman
+if ($page > $total_pages && $total_pages > 0) {
+    $page = $total_pages;
+    $offset = ($page - 1) * $limit;
+} elseif ($total_pages === 0) {
+    // Jika tidak ada data, set page dan offset ke 0
+    $page = 0;
+    $offset = 0;
+}
+
+// Query untuk mengambil data sesuai limit dan offset
+$query = "SELECT * FROM vw_peran_lab ORDER BY id_peran ASC LIMIT $limit OFFSET $offset";
 $result = pg_query($conn, $query);
+
+// Cek apakah query berhasil dieksekusi
+if (!$result) {
+    die("Query error: " . pg_last_error($conn));
+}
 ?>
 
 <!DOCTYPE html>
@@ -56,31 +92,75 @@ $result = pg_query($conn, $query);
                 </thead>
 
                 <tbody>
-                    <?php while ($row = pg_fetch_assoc($result)) : ?>
-                        <tr>
-                            <td class="text-center"><?= $row['id_peran'] ?></td>
-                            <td class="text-center"><?= htmlspecialchars($row['nama_peran']) ?></td>
-                            <td class="text-center"><?= htmlspecialchars($row['deskripsi_peran']) ?></td>
-                            <td class="text-center"><?= htmlspecialchars($row['icon']) ?></td>
+                    <?php if (pg_num_rows($result) > 0): ?>
+                        <?php while ($row = pg_fetch_assoc($result)) : ?>
+                            <tr>
+                                <td class="text-center"><?= $row['id_peran'] ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['nama_peran']) ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['deskripsi_peran']) ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['icon']) ?></td>
 
-                            <td class="text-center">
-                                <a href="edit_peranLab.php?id=<?= $row['id_peran'] ?>" 
-                                   class="btn btn-warning btn-sm">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
+                                <td class="text-center">
+                                    <a href="edit_peranLab.php?id=<?= $row['id_peran'] ?>" 
+                                       class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
 
-                                <a href="hapus_peranLab.php?id=<?= $row['id_peran'] ?>" 
-                                   class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Yakin ingin menghapus peran ini?')">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </a>
-                            </td>
+                                    <a href="hapus_peranLab.php?id=<?= $row['id_peran'] ?>" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Yakin ingin menghapus peran ini?')">
+                                        <i class="fa fa-trash"></i> Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                         <tr>
+                            <td colspan="5" class="text-center">Tidak ada data peran laboratorium.</td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endif; ?>
                 </tbody>
 
             </table>
         </div>
+
+        <?php if ($total_pages > 1): // Tampilkan pagination hanya jika lebih dari 1 halaman ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- Tombol Previous -->
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    // Tampilkan link ke beberapa halaman di sekitar halaman saat ini
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <!-- Tombol Next -->
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
+
 
     </div>
 
