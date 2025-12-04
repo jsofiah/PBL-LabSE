@@ -103,12 +103,10 @@
                 </select>
             </div>
 
-            <button type='submit' class='btn btn-primary'>
-                <i class='fa fa-save'></i> Simpan Perubahan
+            <button type='submit' class='btn btn-primary'>Simpan Perubahan
             </button>
 
-            <a href='kelola_dosenKeahlian.php' class='btn btn-secondary'>
-                <i class='fa fa-arrow-left'></i> Kembali
+            <a href='kelola_dosenKeahlian.php' class='btn btn-secondary'>Kembali
             </a>
 
         </form>
