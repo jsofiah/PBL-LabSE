@@ -67,10 +67,10 @@
             </div>
 
             <button type='submit' name='simpan' class='btn btn-primary'>
-                <i class='fa fa-plus'></i> Tambah
+                <i></i> Tambah
             </button>
             <a href='kelola_sertifikasi.php' class='btn btn-secondary'>
-                <i class='fa fa-arrow-left'></i> Kembali
+                <i></i> Kembali
             </a>
 
         </form>
