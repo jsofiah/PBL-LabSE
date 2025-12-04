@@ -7,8 +7,55 @@
 
     require_once '../config.php';
 
-    $qViewPenelitian = "SELECT * FROM vw_penelitian_dosen ORDER BY id_penelitian ASC";
+    // ==========================================================
+    // LOGIKA PAGINATION (Batas 20 data per halaman)
+    // ==========================================================
+    $limit = 20; // Jumlah data per halaman
+
+    // Tentukan halaman saat ini
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+
+    // Query untuk menghitung total data dari view
+    $qTotal = "SELECT COUNT(*) FROM vw_penelitian_dosen"; 
+    $rTotal = pg_query($conn, $qTotal);
+
+    if (!$rTotal) {
+        // Handle error query jika gagal
+        die("Query hitung total data gagal: " . pg_last_error($conn));
+    }
+
+    $total_records = pg_fetch_result($rTotal, 0, 0);
+
+    // Hitung total halaman
+    $total_pages = ceil($total_records / $limit);
+
+    // Hitung offset (awal data yang diambil)
+    if ($total_records === 0) {
+        // Jika tidak ada data
+        $page = 0;
+        $offset = 0;
+    } else {
+        // Pastikan halaman yang diminta tidak melebihi total halaman
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+        $offset = ($page - 1) * $limit;
+    }
+
+    // Query untuk mengambil data sesuai limit dan offset dari view
+    $qViewPenelitian = "
+        SELECT 
+            * FROM vw_penelitian_dosen 
+        ORDER BY id_penelitian ASC
+        LIMIT $limit OFFSET $offset;
+    ";
+    
     $rViewPenelitian = pg_query($conn, $qViewPenelitian);
+    
+    if (!$rViewPenelitian) {
+        die("Query error: " . pg_last_error($conn));
+    }
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +106,11 @@
             </thead>
 
             <tbody>
-            <?php $no = 1; ?>
-            <?php while($p = pg_fetch_assoc($rViewPenelitian)) : ?>
+            <?php 
+                if (pg_num_rows($rViewPenelitian) > 0) :
+                    $no = $offset + 1; // Nomor urut disesuaikan dengan halaman saat ini
+                    while($p = pg_fetch_assoc($rViewPenelitian)) : 
+            ?>
                 <tr>
                     <td class="text-center"><?= $no++; ?></td>
                     <td><?= htmlspecialchars($p['judul_penelitian']); ?></td>
@@ -80,13 +130,54 @@
                         </a>
                     </td>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-
-
+            <?php 
+                    endwhile; 
+                else: 
+            ?>
+                <tr>
+                    <td colspan="5" class="text-center">Tidak ada data penelitian dosen yang ditemukan.</td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
         </table>
     </div>
 
+    <?php if ($total_pages > 1): // Tampilkan pagination hanya jika lebih dari 1 halaman ?>
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <!-- Tombol Previous -->
+                <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Sebelumnya</span>
+                    </a>
+                </li>
+
+                <?php 
+                // Tampilkan link ke beberapa halaman di sekitar halaman saat ini
+                $start_page = max(1, $page - 2);
+                $end_page = min($total_pages, $page + 2);
+                
+                for ($i = $start_page; $i <= $end_page; $i++): 
+                ?>
+                    <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+
+                <!-- Tombol Next -->
+                <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                    <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                        <span aria-hidden="true">Berikutnya &raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <p class="text-center text-muted mt-2">
+        Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+    </p>
+    <?php endif; ?>
 </div>
 
 <script src="js/sidebar.js"></script>
