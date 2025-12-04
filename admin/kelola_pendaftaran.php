@@ -6,8 +6,43 @@
     }
     require_once '../config.php';
 
-    $qViewPendaftar = "SELECT * FROM vw_pendaftaran_segeeks ORDER BY id_pendaftar";
+    $limit = 20; 
+
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    if ($page < 1) $page = 1;
+
+    $qTotal = "SELECT COUNT(*) FROM pendaftaran_segeeks"; 
+    $rTotal = pg_query($conn, $qTotal);
+
+    if (!$rTotal) {
+        die("Query hitung total data gagal: " . pg_last_error($conn));
+    }
+
+    $total_records = pg_fetch_result($rTotal, 0, 0);
+
+    $total_pages = ceil($total_records / $limit);
+
+    if ($total_records === 0) {
+        $page = 0;
+        $offset = 0;
+    } else {
+        if ($page > $total_pages) {
+            $page = $total_pages;
+        }
+        $offset = ($page - 1) * $limit;
+    }
+
+    $qViewPendaftar = "
+        SELECT * FROM vw_pendaftaran_segeeks 
+        ORDER BY id_pendaftar DESC -- Urutkan data terbaru di atas
+        LIMIT $limit OFFSET $offset
+    ";
+    
     $rViewPendaftar = pg_query($conn, $qViewPendaftar);
+    
+    if (!$rViewPendaftar) {
+        die("Query error: " . pg_last_error($conn));
+    }
 ?>
 
 <!DOCTYPE html>
@@ -54,8 +89,11 @@
                 </thead>
 
                 <tbody>
-                <?php $no = 1; ?>
-                <?php while($pendaftar = pg_fetch_assoc($rViewPendaftar)) : ?>
+                <?php 
+                if (pg_num_rows($rViewPendaftar) > 0) :
+                    $no = $offset + 1;
+                    while($pendaftar = pg_fetch_assoc($rViewPendaftar)) : 
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
 
@@ -68,14 +106,24 @@
                         <td class="text-center"><?= htmlspecialchars($pendaftar['angkatan_pendaftar']); ?></td>
 
                         <td class="text-center">
-                            <?= $pendaftar['status_pendaftaran'] 
-                                    ? htmlspecialchars($pendaftar['status_pendaftaran']) 
-                                    : "Belum dikonfirmasi"; ?>
+                            <?php 
+                                $status = htmlspecialchars($pendaftar['status_pendaftaran']);
+                                $class = '';
+                                if ($status == 'Diterima') {
+                                    $class = 'text-success fw-bold';
+                                } elseif ($status == 'Ditolak') {
+                                    $class = 'text-danger fw-bold';
+                                } else {
+                                    $status = 'Menunggu Konfirmasi';
+                                    $class = 'text-warning';
+                                }
+                            ?>
+                            <span class="<?= $class; ?>"><?= $status; ?></span>
                         </td>
 
                         <td class="text-center">
                             <a href="terima_pendaftar.php?id=<?= $pendaftar['id_pendaftar'] ?>" 
-                                class="btn btn-success btn-sm"
+                                class="btn btn-success btn-sm me-1"
                                 onclick="return confirm('Terima pendaftar ini?')">
                                 <i class="fa fa-check"></i> Terima
                             </a>
@@ -87,11 +135,52 @@
                             </a>
                         </td>
                     </tr>
-                <?php endwhile; ?>
-            </tbody>
+                <?php 
+                    endwhile; 
+                else: 
+                ?>
+                    <tr>
+                        <td colspan="7" class="text-center">Tidak ada data Pendaftar yang ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
 
             </table>
         </div>
+
+        <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+        <?php endif; ?>
     </div>
 
     </div>
