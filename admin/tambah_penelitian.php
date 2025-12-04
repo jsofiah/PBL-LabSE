@@ -82,13 +82,8 @@ $rDosen = pg_query($conn, $qDosen);
                 </div>
 
                 <div class='d-flex gap-2 mt-3'>
-                    <button type='submit' name='simpan' class='btn btn-primary'>
-                        <i class='fa fa-plus'></i> Tambah Penelitian
-                    </button>
-
-                    <a href='kelola_penelitian.php' class='btn btn-secondary'>
-                        <i class='fa fa-arrow-left'></i> Kembali
-                    </a>
+                    <button type='submit' name='simpan' class='btn btn-primary'> Tambah Penelitian</button>
+                    <a href='kelola_penelitian.php' class='btn btn-secondary'> Kembali </a>
                 </div>
 
             </form>
