@@ -67,7 +67,7 @@
                     <i class='fa fa-plus'></i> Tambah
                 </button>
                 <a href='kelola_kontenLab.php' class='btn btn-secondary'>
-                    <i class='btn btn-secondary'></i> Kembali
+                    <i class='fa fa-arrow-left'></i> Kembali
                 </a>
             </div>
 
