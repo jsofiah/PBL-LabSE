@@ -57,11 +57,9 @@
                         </div>
 
                         <div class='d-flex gap-2 mt-3'>
-                        <button type='submit' name='simpan' class='btn btn-primary'>
-                                <i class='fa fa-plus'></i> Tambah
+                        <button type='submit' name='simpan' class='btn btn-primary'> Tambah
                         </button>
-                        <a href='kelola_keahlian.php' class='btn btn-secondary'>
-                                <i class='fa fa-arrow-left'></i> Kembali
+                        <a href='kelola_keahlian.php' class='btn btn-secondary'> Kembali
                         </a>
                         </div>
                 </form>
