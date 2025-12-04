@@ -9,7 +9,7 @@
     $qViewSertifikasi = "SELECT * FROM vw_sertifikasi ORDER BY id_sertifikasi";
     $rViewSertifikasi = pg_query($conn, $qViewSertifikasi);
 
-    $qViewSertifikasiDosen = "SELECT * FROM vw_sertifikasi_dosen ORDER BY id_sertifikasi";
+    $qViewSertifikasiDosen = "SELECT * FROM vw_sertifikasi_dosen ORDER BY id_dosen";
     $rViewSertifikasiDosen = pg_query($conn, $qViewSertifikasiDosen);
 ?>
 
