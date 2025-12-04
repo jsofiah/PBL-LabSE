@@ -7,8 +7,42 @@ if (!isset($_SESSION['username'])) {
 
 require_once "../config.php";
 
-$qArtikel = "SELECT * FROM vw_artikel ORDER BY id_artikel ASC";
+$limit = 20;
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
+$qTotal = "SELECT COUNT(*) FROM artikel"; 
+$rTotal = pg_query($conn, $qTotal);
+
+if (!$rTotal) {
+    die("Query hitung total data gagal: " . pg_last_error($conn));
+}
+
+$total_records = pg_fetch_result($rTotal, 0, 0);
+
+$total_pages = ceil($total_records / $limit);
+
+if ($total_records === 0) {
+    $page = 0;
+    $offset = 0;
+} else {
+    if ($page > $total_pages) {
+        $page = $total_pages;
+    }
+    $offset = ($page - 1) * $limit;
+}
+
+$qArtikel = "
+    SELECT * FROM vw_artikel 
+    ORDER BY id_artikel DESC -- Urutkan artikel terbaru di atas
+    LIMIT $limit OFFSET $offset
+";
 $rArtikel = pg_query($conn, $qArtikel);
+
+if (!$rArtikel) {
+    die("Query error: " . pg_last_error($conn));
+}
 ?>
 
 <!DOCTYPE html>
@@ -61,8 +95,11 @@ $rArtikel = pg_query($conn, $qArtikel);
             </thead>
 
             <tbody>
-                <?php $no = 1; ?>
-                <?php while($a = pg_fetch_assoc($rArtikel)) : ?>
+                <?php 
+                if (pg_num_rows($rArtikel) > 0) :
+                    $no = $offset + 1; 
+                    while($a = pg_fetch_assoc($rArtikel)) : 
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td><?= htmlspecialchars($a['judul_artikel']); ?></td>
@@ -70,7 +107,7 @@ $rArtikel = pg_query($conn, $qArtikel);
                         <td class="text-center"><?= htmlspecialchars($a['tanggal_terbit_artikel']); ?></td>
                         <td class="text-center"><?= htmlspecialchars($a['penulis_artikel']); ?></td>
 
-                        <td class="text-center">
+                        <td class="text-center text-nowrap">
                             <a href="edit_artikel.php?id=<?= $a['id_artikel']; ?>" class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
@@ -82,11 +119,52 @@ $rArtikel = pg_query($conn, $qArtikel);
                             </a>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php 
+                    endwhile; 
+                else: 
+                ?>
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data Artikel yang ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
 
         </table>
     </div>
+
+    <?php if ($total_pages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php 
+                    $start_page = max(1, $page - 2);
+                    $end_page = min($total_pages, $page + 2);
+                    
+                    for ($i = $start_page; $i <= $end_page; $i++): 
+                    ?>
+                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
+        </p>
+    <?php endif; ?>
 
 </div>
 
