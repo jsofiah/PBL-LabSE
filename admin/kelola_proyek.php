@@ -7,14 +7,69 @@ if (!isset($_SESSION['username'])) {
 
 require "../config.php";
 
-$qProyek = "SELECT * FROM vw_proyek ORDER BY id_proyek ASC";
+$limit = 20;
+
+$page_proyek = isset($_GET['page_proyek']) && is_numeric($_GET['page_proyek']) ? (int)$_GET['page_proyek'] : 1;
+if ($page_proyek < 1) $page_proyek = 1;
+
+$qTotalProyek = "SELECT COUNT(*) FROM proyek";
+$rTotalProyek = pg_query($conn, $qTotalProyek);
+$total_records_proyek = $rTotalProyek ? pg_fetch_result($rTotalProyek, 0, 0) : 0;
+$total_pages_proyek = ceil($total_records_proyek / $limit);
+
+if ($total_records_proyek === 0) {
+    $page_proyek = 0;
+    $offset_proyek = 0;
+} else {
+    if ($page_proyek > $total_pages_proyek) $page_proyek = $total_pages_proyek;
+    $offset_proyek = ($page_proyek - 1) * $limit;
+}
+
+$qProyek = "SELECT * FROM vw_proyek ORDER BY id_proyek DESC LIMIT $limit OFFSET $offset_proyek";
 $rProyek = pg_query($conn, $qProyek);
 
-$qPM = "SELECT * FROM vw_proyek_mhs ORDER BY id_proyek ASC";
+$page_mhs = isset($_GET['page_mhs']) && is_numeric($_GET['page_mhs']) ? (int)$_GET['page_mhs'] : 1;
+if ($page_mhs < 1) $page_mhs = 1;
+
+$qTotalMhs = "SELECT COUNT(*) FROM proyek_mhs"; 
+$rTotalMhs = pg_query($conn, $qTotalMhs);
+$total_records_mhs = $rTotalMhs ? pg_fetch_result($rTotalMhs, 0, 0) : 0;
+$total_pages_mhs = ceil($total_records_mhs / $limit);
+
+if ($total_records_mhs === 0) {
+    $page_mhs = 0;
+    $offset_mhs = 0;
+} else {
+    if ($page_mhs > $total_pages_mhs) $page_mhs = $total_pages_mhs;
+    $offset_mhs = ($page_mhs - 1) * $limit;
+}
+
+$qPM = "SELECT * FROM vw_proyek_mhs ORDER BY id_proyek ASC LIMIT $limit OFFSET $offset_mhs";
 $rPM = pg_query($conn, $qPM);
 
-$qPD = "SELECT * FROM vw_proyek_dosen ORDER BY id_proyek ASC";
+
+$page_dosen = isset($_GET['page_dosen']) && is_numeric($_GET['page_dosen']) ? (int)$_GET['page_dosen'] : 1;
+if ($page_dosen < 1) $page_dosen = 1;
+
+$qTotalDosen = "SELECT COUNT(*) FROM proyek_dosen"; 
+$rTotalDosen = pg_query($conn, $qTotalDosen);
+$total_records_dosen = $rTotalDosen ? pg_fetch_result($rTotalDosen, 0, 0) : 0;
+$total_pages_dosen = ceil($total_records_dosen / $limit);
+
+if ($total_records_dosen === 0) {
+    $page_dosen = 0;
+    $offset_dosen = 0;
+} else {
+    if ($page_dosen > $total_pages_dosen) $page_dosen = $total_pages_dosen;
+    $offset_dosen = ($page_dosen - 1) * $limit;
+}
+
+$qPD = "SELECT * FROM vw_proyek_dosen ORDER BY id_proyek ASC LIMIT $limit OFFSET $offset_dosen";
 $rPD = pg_query($conn, $qPD);
+
+if (!$rProyek || !$rPM || !$rPD) {
+    die("Gagal mengambil data dari database.");
+}
 ?>
 
 <!DOCTYPE html>
@@ -33,16 +88,17 @@ $rPD = pg_query($conn, $qPD);
 <?php include 'sidebar.php'; ?>
 
 <div class="content-area container">
+
     <div class="mb-4">
         <h2 class="mb-2">Kelola Proyek</h2>
         <a href="tambah_proyek.php" class="btn btn-success btn-sm">
-                <i class="fa fa-plus"></i> Tambah Proyek
+            <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>
 
     <div class="table-responsive">
-            <table class="table table-bordered table-striped table-fixed">
-                <colgroup>
+        <table class="table table-bordered table-striped table-fixed">
+            <colgroup>
                 <col style="width:40px;">
                 <col style="width:150px;">
                 <col style="width:200px;">
@@ -52,7 +108,7 @@ $rPD = pg_query($conn, $qPD);
                 <col style="width:180px;">
             </colgroup>
 
-        <thead class="table-primary">
+            <thead class="table-primary">
                 <tr>
                     <th class="text-center">No</th>
                     <th class="text-center">Gambar</th>
@@ -65,24 +121,27 @@ $rPD = pg_query($conn, $qPD);
             </thead>
 
             <tbody>
-            <?php $no = 1; ?>
-            <?php while($pm = pg_fetch_assoc($rProyek)): ?>
+            <?php 
+            if (pg_num_rows($rProyek) > 0):
+                $no = $offset_proyek + 1;
+                while($pm = pg_fetch_assoc($rProyek)): 
+            ?>
             <tr>
                 <td class="text-center"><?= $no++; ?></td>
 
                 <td class="text-center">
-                    <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" width="80">
+                    <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" width="80" alt="Gambar Proyek">
                 </td>
 
                 <td class="text-center"><?= htmlspecialchars($pm['judul_proyek']) ?></td>
 
-                <td class="text-center"><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
+                <td class="text-truncate" style="max-width: 300px;"><?= htmlspecialchars(substr($pm['isi_proyek'],0,100)) ?>...</td>
 
                 <td class="text-center"><?= $pm['tanggal_terbit_proyek'] ?></td>
 
                 <td class="text-center"><?= $pm['penulis_proyek'] ?></td>
 
-                <td class="text-center">
+                <td class="text-center text-nowrap">
                     <a href="edit_proyek.php?id=<?= $pm['id_proyek'] ?>" class="btn btn-warning btn-sm">
                         <i class="fa fa-edit"></i> Edit
                     </a>
@@ -95,23 +154,57 @@ $rPD = pg_query($conn, $qPD);
                 </td>
             </tr>
             <?php endwhile; ?>
+            <?php else: ?>
+            <tr>
+                <td colspan="7" class="text-center">Tidak ada data Proyek Utama.</td>
+            </tr>
+            <?php endif; ?>
         </tbody>
 
-    </table>
+        </table>
     </div>
+    
+    <?php if ($total_pages_proyek > 1): ?>
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item <?= ($page_proyek <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_proyek=<?= $page_proyek - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php for ($i = max(1, $page_proyek - 2); $i <= min($total_pages_proyek, $page_proyek + 2); $i++): ?>
+                        <li class="page-item <?= ($i == $page_proyek) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page_proyek=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page_proyek >= $total_pages_proyek) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_proyek=<?= $page_proyek + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset_proyek + 1; ?> - <?= min($offset_proyek + $limit, $total_records_proyek); ?> dari total **<?= $total_records_proyek; ?>** data. 
+        </p>
+    <?php endif; ?>
 
     <hr class="my-5">
 
     <div class="mb-4">
         <h2>Kelola Proyek Mahasiswa</h2>
         <a href="tambah_proyek_mhs.php" class="btn btn-success btn-sm">
-                <i class="fa fa-plus"></i> Tambah Proyek
+            <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>
 
     <div class="table-responsive">
-            <table class="table table-bordered table-striped table-fixed">
-                <colgroup>
+        <table class="table table-bordered table-striped table-fixed">
+            <colgroup>
                 <col style="width:40px;">
                 <col style="width:100px;">
                 <col style="width:200px;">
@@ -120,29 +213,30 @@ $rPD = pg_query($conn, $qPD);
             </colgroup>
 
         <thead class="table-primary">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">ID Mahasiswa</th>
-                    <th class="text-center">Judul Proyek</th>
-                    <th class="text-center">Nama Mahasiswa</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-                </tr>
-            </thead>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">ID Mahasiswa</th>
+                <th class="text-center">Judul Proyek</th>
+                <th class="text-center">Nama Mahasiswa</th>
+                <th class="text-center">Aksi</th>
+            </tr>
+        </thead>
         <tbody>
-        <?php $no = 1; ?>
-        <?php while($pm = pg_fetch_assoc($rPM)): ?>
+        <?php 
+        if (pg_num_rows($rPM) > 0):
+            $no = $offset_mhs + 1;
+            while($pm = pg_fetch_assoc($rPM)): 
+        ?>
         <tr>
             <td class="text-center"><?= $no++; ?></td>
 
             <td class="text-center"><?= $pm['id_mhs'] ?></td>
 
-            <td class="text-center"><?= $pm['judul_proyek'] ?></td>
+            <td class="text-center"><?= htmlspecialchars($pm['judul_proyek']) ?></td>
 
-            <td class="text-center"><?= $pm['nama_mhs'] ?></td>
+            <td class="text-center"><?= htmlspecialchars($pm['nama_mhs']) ?></td>
 
-            <td class="text-center">
+            <td class="text-center text-nowrap">
                 <a href="edit_proyek_mhs.php?id_proyek=<?= $pm['id_proyek'] ?>&id_mhs=<?= $pm['id_mhs'] ?>"
                 class="btn btn-warning btn-sm">
                     <i class="fa fa-edit"></i> Edit
@@ -156,23 +250,57 @@ $rPD = pg_query($conn, $qPD);
             </td>
         </tr>
         <?php endwhile; ?>
-    </tbody>
+        <?php else: ?>
+        <tr>
+            <td colspan="5" class="text-center">Tidak ada data Proyek Mahasiswa.</td>
+        </tr>
+        <?php endif; ?>
+        </tbody>
 
-    </table>
+        </table>
     </div>
+
+    <?php if ($total_pages_mhs > 1): ?>
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item <?= ($page_mhs <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_mhs=<?= $page_mhs - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php for ($i = max(1, $page_mhs - 2); $i <= min($total_pages_mhs, $page_mhs + 2); $i++): ?>
+                        <li class="page-item <?= ($i == $page_mhs) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page_mhs=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page_mhs >= $total_pages_mhs) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_mhs=<?= $page_mhs + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset_mhs + 1; ?> - <?= min($offset_mhs + $limit, $total_records_mhs); ?> dari total **<?= $total_records_mhs; ?>** data. 
+        </p>
+    <?php endif; ?>
 
     <hr class="my-5">
 
     <div class="mb-4">
         <h2>Kelola Proyek Dosen</h2>
         <a href="tambah_proyek_dosen.php" class="btn btn-success btn-sm">
-                <i class="fa fa-plus"></i> Tambah Proyek
+            <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>
 
     <div class="table-responsive">
-            <table class="table table-bordered table-striped table-fixed">
-                <colgroup>
+        <table class="table table-bordered table-striped table-fixed">
+            <colgroup>
                 <col style="width:40px;">
                 <col style="width:100px;">
                 <col style="width:200px;">
@@ -181,19 +309,20 @@ $rPD = pg_query($conn, $qPD);
             </colgroup>
 
         <thead class="table-primary">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">ID Dosen</th>
-                    <th class="text-center">Judul Proyek</th>
-                    <th class="text-center">Nama Dosen</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-                </tr>
-            </thead>
+            <tr>
+                <th class="text-center">No</th>
+                <th class="text-center">ID Dosen</th>
+                <th class="text-center">Judul Proyek</th>
+                <th class="text-center">Nama Dosen</th>
+                <th class="text-center">Aksi</th>
+            </tr>
+        </thead>
         <tbody>
-        <?php $no = 1; ?>
-        <?php while($pd = pg_fetch_assoc($rPD)): ?>
+        <?php 
+        if (pg_num_rows($rPD) > 0):
+            $no = $offset_dosen + 1;
+            while($pd = pg_fetch_assoc($rPD)): 
+        ?>
         <tr>
             <td class="text-center"><?= $no++; ?></td>
 
@@ -203,7 +332,7 @@ $rPD = pg_query($conn, $qPD);
 
             <td class="text-center"><?= htmlspecialchars($pd['nama_dosen']) ?></td>
 
-            <td class="text-center">
+            <td class="text-center text-nowrap">
                 <a href="edit_proyek_dosen.php?id_proyek=<?= $pd['id_proyek'] ?>&id_dosen=<?= $pd['id_dosen'] ?>"
                 class="btn btn-warning btn-sm">
                     <i class="fa fa-edit"></i> Edit
@@ -217,10 +346,44 @@ $rPD = pg_query($conn, $qPD);
             </td>
         </tr>
         <?php endwhile; ?>
-    </tbody>
+        <?php else: ?>
+        <tr>
+            <td colspan="5" class="text-center">Tidak ada data Proyek Dosen.</td>
+        </tr>
+        <?php endif; ?>
+        </tbody>
 
-    </table>
+        </table>
     </div>
+    
+    <?php if ($total_pages_dosen > 1): ?>
+        <div class="d-flex justify-content-center mt-3">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item <?= ($page_dosen <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_dosen=<?= $page_dosen - 1; ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Sebelumnya</span>
+                        </a>
+                    </li>
+
+                    <?php for ($i = max(1, $page_dosen - 2); $i <= min($total_pages_dosen, $page_dosen + 2); $i++): ?>
+                        <li class="page-item <?= ($i == $page_dosen) ? 'active' : ''; ?>">
+                            <a class="page-link" href="?page_dosen=<?= $i; ?>"><?= $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+
+                    <li class="page-item <?= ($page_dosen >= $total_pages_dosen) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page_dosen=<?= $page_dosen + 1; ?>" aria-label="Next">
+                            <span aria-hidden="true">Berikutnya &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <p class="text-center text-muted mt-2">
+            Menampilkan data <?= $offset_dosen + 1; ?> - <?= min($offset_dosen + $limit, $total_records_dosen); ?> dari total **<?= $total_records_dosen; ?>** data. 
+        </p>
+    <?php endif; ?>
 </div>
 
     <script src="js/sidebar.js"></script>
