@@ -49,6 +49,8 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body class="p-4">
+    <?php include 'sidebar.php'; ?>
+    
     <div class="content-area container">
         <h1 class="mb-4 fw-bold text-center">Edit Peran Lab</h1>
 
