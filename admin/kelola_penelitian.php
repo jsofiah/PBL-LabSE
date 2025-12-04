@@ -7,43 +7,32 @@
 
     require_once '../config.php';
 
-    // ==========================================================
-    // LOGIKA PAGINATION (Batas 20 data per halaman)
-    // ==========================================================
-    $limit = 20; // Jumlah data per halaman
+    $limit = 20; 
 
-    // Tentukan halaman saat ini
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
     if ($page < 1) $page = 1;
 
-    // Query untuk menghitung total data dari view
     $qTotal = "SELECT COUNT(*) FROM vw_penelitian_dosen"; 
     $rTotal = pg_query($conn, $qTotal);
 
     if (!$rTotal) {
-        // Handle error query jika gagal
         die("Query hitung total data gagal: " . pg_last_error($conn));
     }
 
     $total_records = pg_fetch_result($rTotal, 0, 0);
 
-    // Hitung total halaman
     $total_pages = ceil($total_records / $limit);
 
-    // Hitung offset (awal data yang diambil)
     if ($total_records === 0) {
-        // Jika tidak ada data
         $page = 0;
         $offset = 0;
     } else {
-        // Pastikan halaman yang diminta tidak melebihi total halaman
         if ($page > $total_pages) {
             $page = $total_pages;
         }
         $offset = ($page - 1) * $limit;
     }
 
-    // Query untuk mengambil data sesuai limit dan offset dari view
     $qViewPenelitian = "
         SELECT 
             * FROM vw_penelitian_dosen 
@@ -108,7 +97,7 @@
             <tbody>
             <?php 
                 if (pg_num_rows($rViewPenelitian) > 0) :
-                    $no = $offset + 1; // Nomor urut disesuaikan dengan halaman saat ini
+                    $no = $offset + 1;
                     while($p = pg_fetch_assoc($rViewPenelitian)) : 
             ?>
                 <tr>
@@ -142,11 +131,10 @@
         </table>
     </div>
 
-    <?php if ($total_pages > 1): // Tampilkan pagination hanya jika lebih dari 1 halaman ?>
+    <?php if ($total_pages > 1):  ?>
     <div class="d-flex justify-content-center mt-4">
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <!-- Tombol Previous -->
                 <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
                     <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
                         <span aria-hidden="true">&laquo; Sebelumnya</span>
@@ -154,7 +142,6 @@
                 </li>
 
                 <?php 
-                // Tampilkan link ke beberapa halaman di sekitar halaman saat ini
                 $start_page = max(1, $page - 2);
                 $end_page = min($total_pages, $page + 2);
                 
@@ -165,7 +152,6 @@
                     </li>
                 <?php endfor; ?>
 
-                <!-- Tombol Next -->
                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
                     <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
                         <span aria-hidden="true">Berikutnya &raquo;</span>
