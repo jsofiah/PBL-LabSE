@@ -124,13 +124,9 @@ if (isset($_POST['update'])) {
             </div>
 
             <div class='d-flex gap-2 mt-3'>
-                <button type='submit' name='update' class='btn btn-primary'>
-                    <i class='fa fa-save'></i> Simpan Perubahan
-                </button>
+                <button type='submit' name='update' class='btn btn-primary'> Simpan Perubahan </button>
 
-                <a href='kelola_artikel.php' class='btn btn-secondary'>
-                    <i class='fa fa-arrow-left'></i> Kembali
-                </a>
+                <a href='kelola_artikel.php' class='btn btn-secondary'> Kembali </a>
             </div>
 
         </form>
