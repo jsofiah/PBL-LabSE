@@ -124,10 +124,10 @@
 
                 <div class='d-flex gap-2 mt-3'>
                     <button type='submit' name='update' class='btn btn-primary'>
-                        <i class='fa fa-save'></i> Simpan Perubahan
+                        <i></i> Simpan Perubahan
                     </button>
                     <a href='kelola_profil.php' class='btn btn-secondary'>
-                        <i class='fa fa-arrow-left'></i> Kembali
+                        <i></i> Kembali
                     </a>
                 </div>
 

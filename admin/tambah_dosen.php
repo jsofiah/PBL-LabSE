@@ -89,10 +89,10 @@
 
                 <div class='d-flex gap-2 mt-3'>
                     <button type='submit' name='simpan' class='btn btn-primary'>
-                        <i class='fa fa-plus'></i> Tambah Dosen
+                        <i></i> Tambah Dosen
                     </button>
                     <a href='kelola_profil.php' class='btn btn-secondary'>
-                        <i class='fa fa-arrow-left'></i> Kembali
+                        <i></i> Kembali
                     </a>
                 </div>
 
