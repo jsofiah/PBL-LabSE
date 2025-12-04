@@ -54,13 +54,9 @@ if (isset($_POST['simpan'])) {
                 </div>
 
                 <div class='d-flex gap-2 mt-3'>
-                    <button type='submit' name='simpan' class='btn btn-primary'>
-                        <i class='fa fa-plus'></i> Tambah
-                    </button>
-                    <a href='kelola_jenispublikasi.php' class='btn btn-secondary'>
-                        <i class='fa fa-arrow-left'></i> Kembali
-                    </a>
-                </div>
+                <button type='submit' name='simpan' class='btn btn-primary'> Tambah </button>
+                <a href='kelola_jenisPublikasi.php' class='btn btn-secondary'> Kembali </a>
+            </div>
 
             </form>
         </div>
