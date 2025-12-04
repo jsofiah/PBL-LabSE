@@ -6,31 +6,62 @@
     }
     require_once '../config.php';
 
-    $qViewNav = "SELECT * FROM vw_nav ORDER BY id_nav, id_subnav";
-    $rViewNav = pg_query($conn, $qViewNav);
+    $limit = 20;
 
-    $navs = [];
-    $subnavs = [];
+    $page_nav = isset($_GET['page_nav']) && is_numeric($_GET['page_nav']) ? (int)$_GET['page_nav'] : 1;
+    $page_nav = max(1, $page_nav);
 
-    while ($row = pg_fetch_assoc($rViewNav)) {
-        $idNav = $row['id_nav'];
+    $qTotalNav = "SELECT COUNT(*) FROM nav";
+    $rTotalNav = pg_query($conn, $qTotalNav);
+    $total_nav_records = pg_fetch_result($rTotalNav, 0, 0);
+    $total_nav_pages = ceil($total_nav_records / $limit);
 
-        if (!isset($navs[$idNav])) {
-            $navs[$idNav] = [
-                'id_nav' => $row['id_nav'],
-                'nama_nav' => $row['nama_nav'],
-                'url_nav' => $row['url_nav']
-            ];
-        }
+    if ($total_nav_records === 0) {
+        $page_nav = 0;
+        $offset_nav = 0;
+    } else {
+        $page_nav = min($page_nav, $total_nav_pages);
+        $offset_nav = ($page_nav - 1) * $limit;
+    }
 
-        if (!empty($row['id_subnav'])) {
-            $subnavs[] = [
-                'id_subnav' => $row['id_subnav'],
-                'nama_subnav' => $row['nama_subnav'],
-                'url_subnav' => $row['url_subnav'],
-                'parent_nav' => $row['nama_nav']
-            ];
-        }
+    $qNav = "
+        SELECT id_nav, nama_nav, url_nav 
+        FROM nav 
+        ORDER BY id_nav ASC 
+        LIMIT $limit OFFSET $offset_nav
+    ";
+    $rNav = pg_query($conn, $qNav);
+    if (!$rNav) {
+        die("Query Navigasi error: " . pg_last_error($conn));
+    }
+
+    $page_subnav = isset($_GET['page_subnav']) && is_numeric($_GET['page_subnav']) ? (int)$_GET['page_subnav'] : 1;
+    $page_subnav = max(1, $page_subnav);
+
+    $qTotalSubnav = "SELECT COUNT(*) FROM subnav";
+    $rTotalSubnav = pg_query($conn, $qTotalSubnav);
+    $total_subnav_records = pg_fetch_result($rTotalSubnav, 0, 0);
+    $total_subnav_pages = ceil($total_subnav_records / $limit);
+
+    if ($total_subnav_records === 0) {
+        $page_subnav = 0;
+        $offset_subnav = 0;
+    } else {
+        $page_subnav = min($page_subnav, $total_subnav_pages);
+        $offset_subnav = ($page_subnav - 1) * $limit;
+    }
+
+    $qSubnav = "
+        SELECT 
+            s.id_subnav, s.nama_subnav, s.url_subnav, n.nama_nav as parent_nav 
+        FROM subnav s
+        JOIN nav n ON s.id_nav = n.id_nav
+        ORDER BY s.id_subnav ASC 
+        LIMIT $limit OFFSET $offset_subnav
+    ";
+    $rSubnav = pg_query($conn, $qSubnav);
+    if (!$rSubnav) {
+        die("Query Subnavigasi error: " . pg_last_error($conn));
     }
 ?>
 
@@ -49,8 +80,9 @@
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="content-area container">
+
         <div class="mb-4">
-            <h2 class="mb-2">Kelola Nav</h2>
+            <h2 class="mb-2">Kelola Navigasi Utama</h2>
             <a href="tambah_nav.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Nav</a>
         </div>
         
@@ -71,25 +103,67 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; ?>
-                <?php foreach ($navs as $nav) : ?>
+                <?php 
+                if (pg_num_rows($rNav) > 0) :
+                    $no = $offset_nav + 1;
+                    while ($nav = pg_fetch_assoc($rNav)) : 
+                ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td class="text-center"><?= htmlspecialchars($nav['nama_nav']); ?></td>
                         <td class="text-center"><?= htmlspecialchars($nav['url_nav']); ?></td>
-                        <td class="text-center">
+                        <td class="text-center text-nowrap">
                             <a href="edit_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
                             <a href="hapus_nav.php?id=<?= $nav['id_nav']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus Nav ini?')"><i class="fa fa-trash"></i> Hapus</a>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php 
+                    endwhile; 
+                else:
+                ?>
+                    <tr>
+                        <td colspan="4" class="text-center">Tidak ada data Navigasi Utama yang ditemukan.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
-
             </table>
         </div>
 
+        <?php if ($total_nav_pages > 1): ?>
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Navigasi Halaman Nav">
+                    <ul class="pagination">
+                        <li class="page-item <?= ($page_nav <= 1) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav - 1; ?>&page_subnav=<?= $page_subnav; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Sebelumnya</span>
+                            </a>
+                        </li>
+
+                        <?php 
+                        $start_page = max(1, $page_nav - 2);
+                        $end_page = min($total_nav_pages, $page_nav + 2);
+                        for ($i = $start_page; $i <= $end_page; $i++): 
+                        ?>
+                            <li class="page-item <?= ($i == $page_nav) ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page_nav=<?= $i; ?>&page_subnav=<?= $page_subnav; ?>"><?= $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= ($page_nav >= $total_nav_pages) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav + 1; ?>&page_subnav=<?= $page_subnav; ?>" aria-label="Next">
+                                <span aria-hidden="true">Berikutnya &raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <p class="text-center text-muted mt-2 mb-5">
+                Menampilkan data Navigasi <?= $offset_nav + 1; ?> - <?= min($offset_nav + $limit, $total_nav_records); ?> dari total **<?= $total_nav_records; ?>** data. 
+            </p>
+        <?php endif; ?>
+
         <div class="mt-5 mb-4">
-            <h2 class="mb-2">Kelola Subnav</h2>
+            <h2 class="mb-2">Kelola Subnavigasi</h2>
             <a href="tambah_subnav.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Subnav</a>
         </div>
         
@@ -112,14 +186,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <?php $noSub = 1; ?>
-                    <?php foreach ($subnavs as $sub) : ?>
+                    <?php 
+                    if (pg_num_rows($rSubnav) > 0) :
+                        $noSub = $offset_subnav + 1; 
+                        while ($sub = pg_fetch_assoc($rSubnav)) : 
+                    ?>
                         <tr>
                         <td class="text-center"><?= $noSub++; ?></td>
                         <td class="text-center"><?= htmlspecialchars($sub['nama_subnav']); ?></td>
                         <td class="text-center"><?= htmlspecialchars($sub['url_subnav']); ?></td>
                         <td class="text-center"><?= htmlspecialchars($sub['parent_nav']); ?></td>
-                        <td class="text-center">
+                        <td class="text-center text-nowrap">
                             <a href="edit_subnav.php?id=<?= $sub['id_subnav']; ?>" class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
@@ -128,11 +205,53 @@
                             <i class="fa fa-trash"></i> Hapus
                             </a>
                         </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+                        </tr>
+                    <?php 
+                        endwhile; 
+                    else:
+                    ?>
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada data Subnavigasi yang ditemukan.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
+
+        <?php if ($total_subnav_pages > 1): ?>
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Navigasi Halaman Subnav">
+                    <ul class="pagination">
+                        <li class="page-item <?= ($page_subnav <= 1) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $page_subnav - 1; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Sebelumnya</span>
+                            </a>
+                        </li>
+
+                        <?php 
+                        $start_page = max(1, $page_subnav - 2);
+                        $end_page = min($total_subnav_pages, $page_subnav + 2);
+                        for ($i = $start_page; $i <= $end_page; $i++): 
+                        ?>
+                            <li class="page-item <?= ($i == $page_subnav) ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $i; ?>"><?= $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= ($page_subnav >= $total_subnav_pages) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $page_subnav + 1; ?>" aria-label="Next">
+                                <span aria-hidden="true">Berikutnya &raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <p class="text-center text-muted mt-2">
+                Menampilkan data Subnavigasi <?= $offset_subnav + 1; ?> - <?= min($offset_subnav + $limit, $total_subnav_records); ?> dari total **<?= $total_subnav_records; ?>** data. 
+            </p>
+        <?php endif; ?>
+
     </div>
     <script src="js/sidebar.js"></script>
 </body>
+</html>
