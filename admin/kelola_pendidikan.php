@@ -59,6 +59,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
+    <link rel="stylesheet" href="css/stylePaging.css">
     <link rel="stylesheet" href="css/styleTabel.css">
 </head>
 <body>
@@ -134,40 +135,7 @@
 
             </table>
         </div>
-
-        <?php if ($total_pages > 1): ?>
-        <div class="d-flex justify-content-center mt-4">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <li class="page-item <?= ($page <= 1) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page=<?= $page - 1; ?>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; Sebelumnya</span>
-                        </a>
-                    </li>
-
-                    <?php 
-                    $start_page = max(1, $page - 2);
-                    $end_page = min($total_pages, $page + 2);
-                    
-                    for ($i = $start_page; $i <= $end_page; $i++): 
-                    ?>
-                        <li class="page-item <?= ($i == $page) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?= $i; ?>"><?= $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page=<?= $page + 1; ?>" aria-label="Next">
-                            <span aria-hidden="true">Berikutnya &raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <p class="text-center text-muted mt-2">
-            Menampilkan data <?= $offset + 1; ?> - <?= min($offset + $limit, $total_records); ?> dari total **<?= $total_records; ?>** data. 
-        </p>
-        <?php endif; ?>
+        <?php include 'paging.php'; ?>
     </div>
 
     <script src="js/sidebar.js"></script>
