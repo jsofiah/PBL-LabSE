@@ -162,36 +162,18 @@ if (!$rProyek || !$rPM || !$rPD) {
         </tbody>
 
         </table>
-    </div>
-    
-    <?php if ($total_pages_proyek > 1): ?>
-        <div class="d-flex justify-content-center mt-3">
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item <?= ($page_proyek <= 1) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_proyek=<?= $page_proyek - 1; ?>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; Sebelumnya</span>
-                        </a>
-                    </li>
+    </div> 
+    <?php 
+        $page = $page_proyek;
+        $total_pages = $total_pages_proyek;
+        $offset = $offset_proyek;
+        $total_records = $total_records_proyek;
+        $param_name = 'page_proyek';
+        $other_param = 'page_mhs=' . $page_mhs . '&page_dosen=' . $page_dosen;
+        $label = 'Proyek';
 
-                    <?php for ($i = max(1, $page_proyek - 2); $i <= min($total_pages_proyek, $page_proyek + 2); $i++): ?>
-                        <li class="page-item <?= ($i == $page_proyek) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page_proyek=<?= $i; ?>"><?= $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= ($page_proyek >= $total_pages_proyek) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_proyek=<?= $page_proyek + 1; ?>" aria-label="Next">
-                            <span aria-hidden="true">Berikutnya &raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <p class="text-center text-muted mt-2">
-            Menampilkan data <?= $offset_proyek + 1; ?> - <?= min($offset_proyek + $limit, $total_records_proyek); ?> dari total **<?= $total_records_proyek; ?>** data. 
-        </p>
-    <?php endif; ?>
+        include 'paging.php'; 
+    ?>
 
     <hr class="my-5">
 
@@ -259,35 +241,17 @@ if (!$rProyek || !$rPM || !$rPD) {
 
         </table>
     </div>
+    <?php 
+        $page = $page_mhs;
+        $total_pages = $total_pages_mhs;
+        $offset = $offset_mhs;
+        $total_records = $total_records_mhs;
+        $param_name = 'page_mhs';
+        $other_param = 'page_proyek=' . $page_proyek . '&page_dosen=' . $page_dosen;
+        $label = 'Proyek Mahasiswa';
 
-    <?php if ($total_pages_mhs > 1): ?>
-        <div class="d-flex justify-content-center mt-3">
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item <?= ($page_mhs <= 1) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_mhs=<?= $page_mhs - 1; ?>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; Sebelumnya</span>
-                        </a>
-                    </li>
-
-                    <?php for ($i = max(1, $page_mhs - 2); $i <= min($total_pages_mhs, $page_mhs + 2); $i++): ?>
-                        <li class="page-item <?= ($i == $page_mhs) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page_mhs=<?= $i; ?>"><?= $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= ($page_mhs >= $total_pages_mhs) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_mhs=<?= $page_mhs + 1; ?>" aria-label="Next">
-                            <span aria-hidden="true">Berikutnya &raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <p class="text-center text-muted mt-2">
-            Menampilkan data <?= $offset_mhs + 1; ?> - <?= min($offset_mhs + $limit, $total_records_mhs); ?> dari total **<?= $total_records_mhs; ?>** data. 
-        </p>
-    <?php endif; ?>
+        include 'paging.php'; 
+    ?>
 
     <hr class="my-5">
 
@@ -356,34 +320,17 @@ if (!$rProyek || !$rPM || !$rPD) {
         </table>
     </div>
     
-    <?php if ($total_pages_dosen > 1): ?>
-        <div class="d-flex justify-content-center mt-3">
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item <?= ($page_dosen <= 1) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_dosen=<?= $page_dosen - 1; ?>" aria-label="Previous">
-                            <span aria-hidden="true">&laquo; Sebelumnya</span>
-                        </a>
-                    </li>
+    <?php 
+        $page = $page_dosen;
+        $total_pages = $total_pages_dosen;
+        $offset = $offset_dosen;
+        $total_records = $total_records_dosen;
+        $param_name = 'page_dosen';
+        $other_param = 'page_proyek=' . $page_proyek . '&page_mhs=' . $page_mhs;
+        $label = 'Proyek Dosen';
 
-                    <?php for ($i = max(1, $page_dosen - 2); $i <= min($total_pages_dosen, $page_dosen + 2); $i++): ?>
-                        <li class="page-item <?= ($i == $page_dosen) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page_dosen=<?= $i; ?>"><?= $i; ?></a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <li class="page-item <?= ($page_dosen >= $total_pages_dosen) ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="?page_dosen=<?= $page_dosen + 1; ?>" aria-label="Next">
-                            <span aria-hidden="true">Berikutnya &raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <p class="text-center text-muted mt-2">
-            Menampilkan data <?= $offset_dosen + 1; ?> - <?= min($offset_dosen + $limit, $total_records_dosen); ?> dari total **<?= $total_records_dosen; ?>** data. 
-        </p>
-    <?php endif; ?>
+        include 'paging.php'; 
+    ?>
 </div>
 
     <script src="js/sidebar.js"></script>
