@@ -130,16 +130,16 @@
         </div>
 
         <?php 
-$page = $page_nav;
-$total_pages = $total_nav_pages;
-$offset = $offset_nav;
-$total_records = $total_nav_records;
-$param_name = 'page_nav';  // INI YANG BERBEDA - nama parameter
-$other_param = 'page_subnav=' . $page_subnav;  // INI JUGA - parameter lain yang dipertahankan
-$label = 'Navigasi';
+            $page = $page_nav;
+            $total_pages = $total_nav_pages;
+            $offset = $offset_nav;
+            $total_records = $total_nav_records;
+            $param_name = 'page_nav';  
+            $other_param = 'page_subnav=' . $page_subnav; 
+            $label = 'Navigasi';
 
-include 'paging.php'; 
-?>
+            include 'paging.php'; 
+        ?>
 
         <div class="mt-5 mb-4">
             <h2 class="mb-2">Kelola Subnavigasi</h2>
@@ -196,18 +196,17 @@ include 'paging.php';
                 </tbody>
             </table>
         </div>
-
         <?php 
-$page = $page_subnav;
-$total_pages = $total_subnav_pages;
-$offset = $offset_subnav;
-$total_records = $total_subnav_records;
-$param_name = 'page_subnav';  // BERBEDA - untuk subnav
-$other_param = 'page_nav=' . $page_nav;  // BERBEDA - simpan halaman nav
-$label = 'Subnavigasi';
+            $page = $page_subnav;
+            $total_pages = $total_subnav_pages;
+            $offset = $offset_subnav;
+            $total_records = $total_subnav_records;
+            $param_name = 'page_subnav';  
+            $other_param = 'page_nav=' . $page_nav;  
+            $label = 'Subnavigasi';
 
-include 'paging.php'; 
-?>
+            include 'paging.php'; 
+        ?>
     </div>
     <script src="js/sidebar.js"></script>
 </body>
