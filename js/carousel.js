@@ -4,22 +4,53 @@ const style = getComputedStyle(carousel);
 const gap = parseInt(style.gap);
 const cardWidth = cards[0].offsetWidth + gap;
 
-// Duplicate all items to make a "long loop"
 carousel.innerHTML += carousel.innerHTML;
 
 let position = 0;
+let isPaused = false;
+let animationId = null;
 
 function smoothSlide() {
-    position += 1; // speed (px per frame) — bisa dikecilkan utk lebih halus
+    if (!isPaused) {
+        position += 0.8;
 
-    // Reset jika lewat panjang asli
-    if (position >= cards.length * cardWidth) {
-        position = 0;
+        if (position >= cards.length * cardWidth) {
+            position = 0;
+        }
+
+        carousel.style.transform = `translateX(-${position}px)`;
     }
 
-    carousel.style.transform = `translateX(-${position}px)`;
-
-    requestAnimationFrame(smoothSlide);
+    animationId = requestAnimationFrame(smoothSlide);
 }
 
+const carouselWrapper = document.querySelector('.carousel-wrapper');
+
+carouselWrapper.addEventListener('mouseenter', () => {
+    isPaused = true;
+    carousel.style.transition = 'transform 0.3s ease';
+});
+
+carouselWrapper.addEventListener('mouseleave', () => {
+    isPaused = false;
+    carousel.style.transition = 'none';
+});
+
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        isPaused = true;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+        isPaused = false;
+    });
+});
+
 smoothSlide();
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        isPaused = !isPaused;
+    }
+});

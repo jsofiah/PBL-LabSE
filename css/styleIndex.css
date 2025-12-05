@@ -265,6 +265,11 @@
 .carousel-wrapper {
   position: relative;
   padding: 40px 60px 0 80px;
+  cursor: grab;
+}
+
+.carousel-wrapper:active {
+  cursor: grabbing;
 }
 
 .carousel {
@@ -282,11 +287,19 @@
   overflow: hidden;
   flex-shrink: 0;
   transition: transform .3s ease, box-shadow .3s ease;
+  position: relative;
 }
 
+/* Hover effect dengan scale dan glow */
 .card:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 10px 20px rgba(0,0,0,0.15);
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0px 15px 30px rgba(250, 204, 21, 0.3);
+  z-index: 10;
+}
+
+/* Animasi subtle pada gambar saat hover */
+.card:hover .img-box img {
+  transform: scale(1.1);
 }
 
 .img-box {
@@ -296,6 +309,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .img-box img {
@@ -303,6 +317,18 @@
   height: 100%;
   object-fit: cover;
   object-position: top; 
+  transition: transform 0.5s ease;
+}
+
+/* Overlay gradient saat hover */
+.card:hover .img-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1));
 }
 
 .content {
@@ -310,16 +336,26 @@
 }
 
 .content h3 {
-  font-size: 23px;
+  font-size: 20px;
   font-weight: bold;
   color: #000;
   margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.card:hover .content h3 {
+  color: #f59e0b;
 }
 
 .lab {
   font-size: 16px;
-  color: #000;
+  color: #666;
   margin-bottom: 4px;
+  transition: color 0.3s ease;
+}
+
+.card:hover .lab {
+  color: #000;
 }
 
 .btn {
@@ -330,12 +366,15 @@
   color: #000;
   font-weight: 600;
   display: inline-block;
-  transition: background .3s;
+  transition: all .3s;
+  margin-top: 8px;
 }
 
 .btn:hover {
-  background: #fbbf24;
-  color: #000;
+  background: #f59e0b;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
 }
 
 .fade-left, .fade-right {
@@ -344,6 +383,8 @@
   bottom: 0;
   width: 80px;
   pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.3s ease;
 }
 
 .fade-left {
@@ -354,6 +395,11 @@
 .fade-right {
     right: 0;
     background: linear-gradient(to left, #fff, transparent);
+}
+
+.carousel-wrapper:hover .fade-left,
+.carousel-wrapper:hover .fade-right {
+  opacity: 0.7;
 }
 
 .artikel-section {
@@ -517,10 +563,6 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .artikel-section {
-    padding: 60px 0;
-  }
-  
   .artikel-section h2 {
     font-size: 2rem;
   }

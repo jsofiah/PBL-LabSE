@@ -263,10 +263,6 @@
 }
 
 @media (max-width: 768px) {
-    .hero-wrapper {
-        padding: 80px 1.5rem 0;
-    }
-
     .roadmap-section {
         padding: 30px 1.5rem 40px;
     }

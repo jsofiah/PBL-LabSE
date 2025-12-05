@@ -82,41 +82,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Publikasi Dosen - Laboratorium SE</title>
-
+    <link rel="icon" href="img/Logo-hitam.png" type="image">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="css/styleRoot.css">
     <link rel="stylesheet" href="css/stylePublikasi.css">
     <link rel="stylesheet" href="css/styleFooter.css">
-    <style>
-      /* kecilkan spacing untuk tampilan lebih mirip desain */
-      .container-main { max-width: 1400px; margin: 0 auto; padding: 20px; }
-      .side-left { width: 260px; }
-      .content-right { flex: 1; }
-      .card-rounded { border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
-      .back-link { display:inline-flex; align-items:center; gap:.5rem; color: #222; text-decoration:none; }
-      .dosen-info {
-          display: flex; /* Paksa Flexbox diterapkan */
-          flex-direction: row; /* Paksa elemen sejajar baris */
-          justify-content: flex-start; /* Paksa konten mulai dari kiri */
-      }
-      .dosen-avatar-container { 
-          width: 100px; 
-          height: 100px; 
-      }
-      .dosen-avatar-img { 
-          width: 100px; 
-          height: 100px; 
-          object-fit: cover; 
-          border-radius: 10px; 
-          display: block; 
-      }
-      
-    </style>
 </head>
 <body>
   <div id="scrollIndicator" class="scroll-indicator"></div>
