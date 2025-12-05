@@ -120,42 +120,17 @@
             </tbody>
             </table>
         </div>
+        <?php 
+            $page = $page_sertifikasi;
+            $total_pages = $total_pages_sertifikasi;
+            $offset = $offset_sertifikasi;
+            $total_records = $total_records_sertifikasi;
+            $param_name = 'page_sertifikasi';
+            $other_param = 'page_dosen=' . $page_dosen;
+            $label = 'Sertifikasi';
 
-        <?php if ($total_pages_sertifikasi > 1): ?>
-            <div class="d-flex justify-content-center mt-4 mb-5">
-                <nav aria-label="Page navigation for Sertifikasi">
-                    <ul class="pagination">
-                        <li class="page-item <?= ($page_sertifikasi <= 1) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page_sertifikasi=<?= $page_sertifikasi - 1; ?>&page_dosen=<?= $current_page_dosen; ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo; Sebelumnya</span>
-                            </a>
-                        </li>
-                        
-                        <?php 
-                        $start_page = max(1, $page_sertifikasi - 2);
-                        $end_page = min($total_pages_sertifikasi, $page_sertifikasi + 2);
-                        
-                        if ($start_page > 1) { echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; }
-
-                        for ($i = $start_page; $i <= $end_page; $i++): 
-                        ?>
-                            <li class="page-item <?= ($i == $page_sertifikasi) ? 'active' : ''; ?>">
-                                <a class="page-link" href="?page_sertifikasi=<?= $i; ?>&page_dosen=<?= $current_page_dosen; ?>"><?= $i; ?></a>
-                            </li>
-                        <?php endfor; ?>
-                        
-                        <?php if ($end_page < $total_pages_sertifikasi) { echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; } ?>
-
-                        <li class="page-item <?= ($page_sertifikasi >= $total_pages_sertifikasi) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page_sertifikasi=<?= $page_sertifikasi + 1; ?>&page_dosen=<?= $current_page_dosen; ?>" aria-label="Next">
-                                <span aria-hidden="true">Berikutnya &raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        <?php endif; ?>
-
+            include 'paging.php'; 
+        ?>
 
         <div class="mt-5 mb-4">
             <h2 class="mb-2">Kelola Sertifikasi Dosen</h2>
@@ -217,42 +192,17 @@
 
             </table>
         </div>
+        <?php 
+            $page = $page_dosen;
+            $total_pages = $total_pages_dosen;
+            $offset = $offset_dosen;
+            $total_records = $total_records_dosen;
+            $param_name = 'page_dosen';
+            $other_param = 'page_sertifikasi=' . $page_sertifikasi;
+            $label = 'Sertifikasi Dosen';
 
-        <?php if ($total_pages_dosen > 1): ?>
-            <div class="d-flex justify-content-center mt-4">
-                <nav aria-label="Page navigation for Sertifikasi Dosen">
-                    <ul class="pagination">
-                        <li class="page-item <?= ($page_dosen <= 1) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page_dosen=<?= $page_dosen - 1; ?>&page_sertifikasi=<?= $current_page_sertifikasi; ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo; Sebelumnya</span>
-                            </a>
-                        </li>
-
-                        <?php 
-                        $start_page = max(1, $page_dosen - 2);
-                        $end_page = min($total_pages_dosen, $page_dosen + 2);
-                        
-                        if ($start_page > 1) { echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; }
-
-                        for ($i = $start_page; $i <= $end_page; $i++): 
-                        ?>
-                            <li class="page-item <?= ($i == $page_dosen) ? 'active' : ''; ?>">
-                                <a class="page-link" href="?page_dosen=<?= $i; ?>&page_sertifikasi=<?= $current_page_sertifikasi; ?>"><?= $i; ?></a>
-                            </li>
-                        <?php endfor; ?>
-                        
-                        <?php if ($end_page < $total_pages_dosen) { echo '<li class="page-item disabled"><span class="page-link">...</span></li>'; } ?>
-
-                        <li class="page-item <?= ($page_dosen >= $total_pages_dosen) ? 'disabled' : ''; ?>">
-                            <a class="page-link" href="?page_dosen=<?= $page_dosen + 1; ?>&page_sertifikasi=<?= $current_page_sertifikasi; ?>" aria-label="Next">
-                                <span aria-hidden="true">Berikutnya &raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        <?php endif; ?>
-
+            include 'paging.php'; 
+        ?>
     </div>
     <script src="js/sidebar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
