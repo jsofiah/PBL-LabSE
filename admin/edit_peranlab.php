@@ -46,6 +46,7 @@ if (isset($_POST['submit'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
+    <link rel="stylesheet" href="css/iconpicker.css">
 </head>
 
 <body class="p-4">
@@ -64,17 +65,37 @@ if (isset($_POST['submit'])) {
                 <textarea name="deskripsi_peran" placeholder="Masukkan deskripsi" class="form-control mb-3"
                     required><?= $data['deskripsi_peran'] ?></textarea>
 
-                <label class="form-label text-white">Icon (text)</label>
-                <input type="text" name="icon" placeholder="Masukkan icon" value="<?= $data['icon'] ?>"
-                    class="form-control mb-3">
+                <label class="form-label text-white">Pilih Icon</label>
+                <div class="icon-picker-wrapper mb-3">
+                    <i class="icon-preview" id="iconPreview" style="margin-right:10px; <?= $data['icon'] ? "class='{$data['icon']}'" : '' ?>"></i>
+
+                    <input type="text" name="icon" id="iconInput"
+                        class="form-control icon-input"
+                        placeholder="Klik tombol untuk memilih icon"
+                        value="<?= $data['icon'] ?>"
+                        readonly required>
+                </div>
+
+                <button type="button" class="btn btn-warning w-100 mb-3" id="openPickerBtn">
+                    <i class="fas fa-hand-pointer"></i> Pilih Icon Font Awesome
+                </button>
+
+                <div class="selected-display <?= $data['icon'] ? 'show' : '' ?>" id="selectedDisplay">
+                    <i id="selectedIcon" class="<?= $data['icon'] ?>"></i>
+                    <div class="fw-bold mt-2">Icon Terpilih</div>
+                    <code id="selectedCode"><?= $data['icon'] ?></code>
+                </div>
+
+                <?php include 'iconpicker_modal.php'; ?>
+
+
                 <div class="d-flex gap-2 mt-3">
                     <button class="btn btn-primary" name="submit">Simpan perubahan</button>
                     <a href="kelola_peranLab.php" class="btn btn-secondary">Kembali</a>
                 </div>
-
         </form>
-
     </div>
+    <script src="js/iconpicker.js"></script>
     <script src="js/sidebar.js"></script>
 </body>
 </html>
