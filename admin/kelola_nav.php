@@ -6,24 +6,18 @@
     }
     require_once '../config.php';
 
-   $limit = 20;
+    $limit = 20;
 
-    $page_nav = 1;
-    if (isset($_GET['page_nav']) && is_numeric($_GET['page_nav'])) {
-        $page_nav = (int)$_GET['page_nav'];
-    } elseif (isset($_GET['page']) && is_numeric($_GET['page'])) {
-        $page_nav = (int)$_GET['page'];
-    }
+    $page_nav = isset($_GET['page_nav']) && is_numeric($_GET['page_nav']) ? (int)$_GET['page_nav'] : 1;
     $page_nav = max(1, $page_nav);
 
     $qTotalNav = "SELECT COUNT(*) FROM nav";
     $rTotalNav = pg_query($conn, $qTotalNav);
-    $total_nav_records = (int)pg_fetch_result($rTotalNav, 0, 0); 
-    
-    $total_nav_pages = ceil($total_nav_records / $limit); 
+    $total_nav_records = pg_fetch_result($rTotalNav, 0, 0);
+    $total_nav_pages = ceil($total_nav_records / $limit);
 
     if ($total_nav_records === 0) {
-        $page_nav = 1; 
+        $page_nav = 0;
         $offset_nav = 0;
     } else {
         $page_nav = min($page_nav, $total_nav_pages);
@@ -41,19 +35,16 @@
         die("Query Navigasi error: " . pg_last_error($conn));
     }
 
-    $page_subnav = 1;
-    if (isset($_GET['page_subnav']) && is_numeric($_GET['page_subnav'])) {
-        $page_subnav = (int)$_GET['page_subnav'];
-    }
+    $page_subnav = isset($_GET['page_subnav']) && is_numeric($_GET['page_subnav']) ? (int)$_GET['page_subnav'] : 1;
     $page_subnav = max(1, $page_subnav);
 
     $qTotalSubnav = "SELECT COUNT(*) FROM subnav";
     $rTotalSubnav = pg_query($conn, $qTotalSubnav);
-    $total_subnav_records = (int)pg_fetch_result($rTotalSubnav, 0, 0);
+    $total_subnav_records = pg_fetch_result($rTotalSubnav, 0, 0);
     $total_subnav_pages = ceil($total_subnav_records / $limit);
 
     if ($total_subnav_records === 0) {
-        $page_subnav = 1; 
+        $page_subnav = 0;
         $offset_subnav = 0;
     } else {
         $page_subnav = min($page_subnav, $total_subnav_pages);
@@ -138,14 +129,39 @@
             </table>
         </div>
 
-        <?php 
-            $total_pages = $total_nav_pages;
-            $page = $page_nav;
-            $offset = $offset_nav;             
-            $total_records = $total_nav_records;  
-            $base_url = "kelola_nav.php?page_nav="; 
-            include 'paging.php'; 
-        ?>
+        <?php if ($total_nav_pages > 1): ?>
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Navigasi Halaman Nav">
+                    <ul class="pagination">
+                        <li class="page-item <?= ($page_nav <= 1) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav - 1; ?>&page_subnav=<?= $page_subnav; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Sebelumnya</span>
+                            </a>
+                        </li>
+
+                        <?php 
+                        $start_page = max(1, $page_nav - 2);
+                        $end_page = min($total_nav_pages, $page_nav + 2);
+                        for ($i = $start_page; $i <= $end_page; $i++): 
+                        ?>
+                            <li class="page-item <?= ($i == $page_nav) ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page_nav=<?= $i; ?>&page_subnav=<?= $page_subnav; ?>"><?= $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= ($page_nav >= $total_nav_pages) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav + 1; ?>&page_subnav=<?= $page_subnav; ?>" aria-label="Next">
+                                <span aria-hidden="true">Berikutnya &raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <p class="text-center text-muted mt-2 mb-5">
+                Menampilkan data Navigasi <?= $offset_nav + 1; ?> - <?= min($offset_nav + $limit, $total_nav_records); ?> dari total **<?= $total_nav_records; ?>** data. 
+            </p>
+        <?php endif; ?>
+
         <div class="mt-5 mb-4">
             <h2 class="mb-2">Kelola Subnavigasi</h2>
             <a href="tambah_subnav.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Subnav</a>
@@ -201,14 +217,40 @@
                 </tbody>
             </table>
         </div>
-        <?php 
-            $total_pages = $total_subnav_pages;
-            $page = $page_subnav;
-            $offset = $offset_subnav;            
-            $total_records = $total_subnav_records; 
-            $base_url = "kelola_nav.php?page_subnav="; 
-            include 'paging.php'; 
-        ?>
+
+        <?php if ($total_subnav_pages > 1): ?>
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Navigasi Halaman Subnav">
+                    <ul class="pagination">
+                        <li class="page-item <?= ($page_subnav <= 1) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $page_subnav - 1; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo; Sebelumnya</span>
+                            </a>
+                        </li>
+
+                        <?php 
+                        $start_page = max(1, $page_subnav - 2);
+                        $end_page = min($total_subnav_pages, $page_subnav + 2);
+                        for ($i = $start_page; $i <= $end_page; $i++): 
+                        ?>
+                            <li class="page-item <?= ($i == $page_subnav) ? 'active' : ''; ?>">
+                                <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $i; ?>"><?= $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <li class="page-item <?= ($page_subnav >= $total_subnav_pages) ? 'disabled' : ''; ?>">
+                            <a class="page-link" href="?page_nav=<?= $page_nav; ?>&page_subnav=<?= $page_subnav + 1; ?>" aria-label="Next">
+                                <span aria-hidden="true">Berikutnya &raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <p class="text-center text-muted mt-2">
+                Menampilkan data Subnavigasi <?= $offset_subnav + 1; ?> - <?= min($offset_subnav + $limit, $total_subnav_records); ?> dari total **<?= $total_subnav_records; ?>** data. 
+            </p>
+        <?php endif; ?>
+
     </div>
     <script src="js/sidebar.js"></script>
 </body>
