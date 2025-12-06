@@ -45,34 +45,34 @@
         die("Query hitung total data gagal: " . pg_last_error($conn));
     }
 
-    $total_records = pg_fetch_result($rTotal, 0, 0);
-    $total_pages = ceil($total_records / $limit);
+    $total_records = (int)pg_fetch_result($rTotal, 0, 0);
+    $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
 
-    if ($total_records === 0) {
-        $page = 0;
-        $offset = 0;
-    } else {
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-        $offset = ($page - 1) * $limit;
+    if ($page > $total_pages && $total_pages > 0) {
+        $page = $total_pages;
     }
-
-    $qViewPendidikanDosen = "
-        SELECT 
-            rp.*, 
-            d.nama_dosen
-        FROM vw_riwayat_pendidikan rp
-        JOIN dosen d ON d.id_dosen = rp.id_dosen
-        $where_clause
-        ORDER BY rp.id_pendidikan
-        LIMIT $limit OFFSET $offset
-    ";
-
-    $rViewPendidikanDosen = pg_query_params($conn, $qViewPendidikanDosen, $params);
     
-    if (!$rViewPendidikanDosen) {
-        die("Query error: " . pg_last_error($conn));
+    $offset = max(0, ($page - 1) * $limit);
+    
+    if ($total_records > 0) {
+        $qViewPendidikanDosen = "
+            SELECT 
+                rp.*, 
+                d.nama_dosen
+            FROM vw_riwayat_pendidikan rp
+            JOIN dosen d ON d.id_dosen = rp.id_dosen
+            $where_clause
+            ORDER BY rp.id_pendidikan
+            LIMIT $limit OFFSET $offset
+        ";
+
+        $rViewPendidikanDosen = pg_query_params($conn, $qViewPendidikanDosen, $params);
+        
+        if (!$rViewPendidikanDosen) {
+            die("Query error: " . pg_last_error($conn));
+        }
+    } else {
+        $rViewPendidikanDosen = false;
     }
 
     $qTahun = "SELECT DISTINCT tahun_lulus FROM vw_riwayat_pendidikan ORDER BY tahun_lulus DESC";
@@ -134,12 +134,18 @@
                         </label>
                         <select name="tahun" class="form-select filter-select">
                             <option value="">Semua Tahun</option>
-                            <?php while($tahun = pg_fetch_assoc($rTahun)): ?>
-                                <option value="<?= $tahun['tahun_lulus'] ?>" 
+                            <?php 
+                            if ($rTahun) {
+                                while($tahun = pg_fetch_assoc($rTahun)): 
+                            ?>
+                                <option value="<?= htmlspecialchars($tahun['tahun_lulus']) ?>" 
                                         <?= $filter_tahun == $tahun['tahun_lulus'] ? 'selected' : '' ?>>
-                                    <?= $tahun['tahun_lulus'] ?>
+                                    <?= htmlspecialchars($tahun['tahun_lulus']) ?>
                                 </option>
-                            <?php endwhile; ?>
+                            <?php 
+                                endwhile; 
+                            }
+                            ?>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -212,7 +218,7 @@
 
                     <tbody>
                     <?php 
-                        if (pg_num_rows($rViewPendidikanDosen) > 0) :
+                        if ($rViewPendidikanDosen && pg_num_rows($rViewPendidikanDosen) > 0) :
                             $no = $offset + 1; 
                             while($dosen = pg_fetch_assoc($rViewPendidikanDosen)) : 
                                 $initial = strtoupper(substr($dosen['nama_dosen'], 0, 1));
@@ -278,7 +284,12 @@
                 </table>
             </div>
         </div>
-        <?php include 'paging.php'; ?>
+        
+        <?php 
+        if ($total_records > 0) {
+            include 'paging.php'; 
+        }
+        ?>
     </div>
 
     <script src="js/sidebar.js"></script>

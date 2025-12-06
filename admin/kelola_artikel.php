@@ -54,29 +54,31 @@
         die("Query hitung total data gagal: " . pg_last_error($conn));
     }
 
-    $total_records = pg_fetch_result($rTotal, 0, 0);
-    $total_pages = ceil($total_records / $limit);
+    $total_records = (int)pg_fetch_result($rTotal, 0, 0);
+    $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
 
-    if ($total_records === 0) {
-        $page = 0;
-        $offset = 0;
-    } else {
-        if ($page > $total_pages) $page = $total_pages;
-        $offset = ($page - 1) * $limit;
+    if ($page > $total_pages && $total_pages > 0) {
+        $page = $total_pages;
     }
+    
+    $offset = max(0, ($page - 1) * $limit);
+    
+    if ($total_records > 0) {
+        $qArtikel = "
+            SELECT a.*, ja.nama_jenisartikel
+            FROM vw_artikel a
+            JOIN jenis_artikel ja ON ja.id_jenisartikel = a.id_jenisartikel
+            $where_clause
+            ORDER BY a.id_artikel DESC
+            LIMIT $limit OFFSET $offset
+        ";
+        $rArtikel = pg_query_params($conn, $qArtikel, $params);
 
-    $qArtikel = "
-        SELECT a.*, ja.nama_jenisartikel
-        FROM vw_artikel a
-        JOIN jenis_artikel ja ON ja.id_jenisartikel = a.id_jenisartikel
-        $where_clause
-        ORDER BY a.id_artikel DESC
-        LIMIT $limit OFFSET $offset
-    ";
-    $rArtikel = pg_query_params($conn, $qArtikel, $params);
-
-    if (!$rArtikel) {
-        die("Query error: " . pg_last_error($conn));
+        if (!$rArtikel) {
+            die("Query error: " . pg_last_error($conn));
+        }
+    } else {
+        $rArtikel = false;
     }
 
     $qJenis = "SELECT * FROM jenis_artikel ORDER BY nama_jenisartikel ASC";
@@ -118,7 +120,6 @@
         </a>
     </div>
 
-    <!-- FILTER SECTION (SAMA SEPERTI CONTOH) -->
     <div class="search-filter-section">
         <form method="GET" action="" id="filterForm">
             <div class="row g-3">
@@ -143,12 +144,18 @@
                     </label>
                     <select name="jenis" class="form-select filter-select">
                         <option value="">Semua Jenis</option>
-                        <?php while($j = pg_fetch_assoc($rJenis)): ?>
-                            <option value="<?= $j['id_jenisartikel'] ?>"
+                        <?php 
+                        if ($rJenis) {
+                            while($j = pg_fetch_assoc($rJenis)): 
+                        ?>
+                            <option value="<?= htmlspecialchars($j['id_jenisartikel']) ?>"
                                 <?= $filter_jenis == $j['id_jenisartikel'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($j['nama_jenisartikel']) ?>
                             </option>
-                        <?php endwhile; ?>
+                        <?php 
+                            endwhile; 
+                        }
+                        ?>
                     </select>
                 </div>
 
@@ -158,12 +165,18 @@
                     </label>
                     <select name="tahun" class="form-select filter-select">
                         <option value="">Semua Tahun</option>
-                        <?php while($t = pg_fetch_assoc($rTahun)): ?>
-                            <option value="<?= $t['tahun'] ?>"
+                        <?php 
+                        if ($rTahun) {
+                            while($t = pg_fetch_assoc($rTahun)): 
+                        ?>
+                            <option value="<?= htmlspecialchars($t['tahun']) ?>"
                                 <?= $filter_tahun == $t['tahun'] ? 'selected' : '' ?>>
-                                <?= $t['tahun'] ?>
+                                <?= htmlspecialchars($t['tahun']) ?>
                             </option>
-                        <?php endwhile; ?>
+                        <?php 
+                            endwhile; 
+                        }
+                        ?>
                     </select>
                 </div>
 
@@ -241,7 +254,7 @@
 
                 <tbody>
                 <?php 
-                if (pg_num_rows($rArtikel) > 0):
+                if ($rArtikel && pg_num_rows($rArtikel) > 0):
                     $no = $offset + 1;
                     while($a = pg_fetch_assoc($rArtikel)): ?>
                     <tr>
@@ -286,7 +299,11 @@
         </div>
     </div>
 
-    <?php include 'paging.php'; ?>
+    <?php 
+    if ($total_records > 0) {
+        include 'paging.php'; 
+    }
+    ?>
 </div>
 
 <script src="js/sidebar.js"></script>

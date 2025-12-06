@@ -31,29 +31,29 @@
         die("Query hitung total data gagal: " . pg_last_error($conn));
     }
 
-    $total_records = pg_fetch_result($rTotal, 0, 0);
-    $total_pages = ceil($total_records / $limit);
+    $total_records = (int)pg_fetch_result($rTotal, 0, 0);
+    $total_pages = ($total_records > 0) ? ceil($total_records / $limit) : 1;
 
-    if ($total_records === 0) {
-        $page = 0;
-        $offset = 0;
-    } else {
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-        $offset = ($page - 1) * $limit;
+    if ($page > $total_pages && $total_pages > 0) {
+        $page = $total_pages;
     }
+    
+    $offset = max(0, ($page - 1) * $limit);
+    
+    if ($total_records > 0) {
+        $qViewAdmin = "
+            SELECT * FROM vw_admin_user 
+            $where_clause
+            ORDER BY id ASC 
+            LIMIT $limit OFFSET $offset
+        ";
+        $rViewAdmin = pg_query_params($conn, $qViewAdmin, $params);
 
-    $qViewAdmin = "
-        SELECT * FROM vw_admin_user 
-        $where_clause
-        ORDER BY id ASC 
-        LIMIT $limit OFFSET $offset
-    ";
-    $rViewAdmin = pg_query_params($conn, $qViewAdmin, $params);
-
-    if (!$rViewAdmin) {
-        die("Query error: " . pg_last_error($conn));
+        if (!$rViewAdmin) {
+            die("Query error: " . pg_last_error($conn));
+        }
+    } else {
+        $rViewAdmin = false;
     }
 ?>
 
@@ -140,7 +140,7 @@
 
                     <tbody>
                     <?php 
-                        if (pg_num_rows($rViewAdmin) > 0) :
+                        if ($rViewAdmin && pg_num_rows($rViewAdmin) > 0) :
                             $no = $offset + 1; 
                             while($row = pg_fetch_assoc($rViewAdmin)) : 
                     ?>
@@ -193,7 +193,7 @@
                                     <h5>Tidak Ada Data</h5>
                                     <p class="text-muted">
                                         <?php if (!empty($search)): ?>
-                                            Tidak ada data yang sesuai dengan pencarian.
+                                            Tidak ada data yang sesuai dengan pencarian "<?= htmlspecialchars($search) ?>".
                                         <?php else: ?>
                                             Tidak ada data admin user yang ditemukan.
                                         <?php endif; ?>
@@ -207,7 +207,12 @@
                 </table>
             </div>
         </div>
-        <?php include 'paging.php'; ?>
+        
+        <?php 
+        if ($total_records > 0) {
+            include 'paging.php'; 
+        }
+        ?>
     </div>
 
     <script src="js/sidebar.js"></script>
