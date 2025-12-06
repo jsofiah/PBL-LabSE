@@ -279,3 +279,36 @@ h2 {
     color: #1e3a8a;
     font-weight: 600;
 }
+
+.style-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 0 20px;
+}
+
+.style-tab {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.style-tab:hover {
+    border-color: #4CAF50;
+    background: #f1f8f4;
+}
+
+.style-tab.active {
+    border-color: #4CAF50;
+    background: #4CAF50;
+    color: white;
+}
+
+.style-tab i {
+    margin-right: 6px;
+}

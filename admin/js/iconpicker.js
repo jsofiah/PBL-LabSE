@@ -1,24 +1,46 @@
 let selectedIconClass = '';
 let allIcons = [];
+let currentStyle = 'fas';
 
 async function loadFontAwesomeIcons() {
     try {
-        const response = await fetch('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        const response = await fetch('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
         const cssText = await response.text();
         
         const regex = /\.fa-([a-z0-9-]+):before/g;
         const iconSet = new Set();
         let match;
-
+        
         while ((match = regex.exec(cssText)) !== null) {
             const iconName = match[1];
-            if (!iconName.match(/^(solid|regular|light|thin|brands|duotone|xs|sm|lg|[0-9]x|fw|ul|li|border|pull-left|pull-right|spin|pulse|rotate|flip|stack|inverse|layers|sr-only)$/)) {
+            if (!iconName.match(/^(solid|regular|light|thin|brands|duotone|xs|sm|lg|[0-9]x|fw|ul|li|border|pull-left|pull-right|spin|pulse|rotate|flip|stack|inverse|layers|sr-only|w|h|size)$/)) {
                 iconSet.add(iconName);
             }
         }
+        
+        const allIconsList = Array.from(iconSet).sort();
+        
+        const brandIcons = ['facebook', 'twitter', 'instagram', 'youtube', 'linkedin', 'github', 
+                           'whatsapp', 'telegram', 'discord', 'tiktok', 'google', 'apple', 
+                           'microsoft', 'amazon', 'spotify', 'reddit', 'pinterest', 'snapchat',
+                           'paypal', 'stripe', 'wordpress', 'drupal', 'android', 'windows',
+                           'linux', 'bitcoin', 'ethereum', 'chrome', 'firefox', 'safari'];
+        
+        allIcons = {
+            'fas': allIconsList,
+            'far': allIconsList,
+            'fab': allIconsList.filter(icon => 
+                brandIcons.some(brand => icon.includes(brand)) || 
+                icon.match(/^(cc-|reddit|yarn|npm|node|react|angular|vue|bootstrap|css3|html5|js|python|java|php|laravel|sass|less)/)
+            )
+        };
 
-        allIcons = Array.from(iconSet).sort();
-        renderIcons(allIcons);
+        console.log(`Total icons loaded: ${allIconsList.length}`);
+        console.log(`- Solid (fas): ${allIcons.fas.length}`);
+        console.log(`- Regular (far): ${allIcons.far.length}`);
+        console.log(`- Brands (fab): ${allIcons.fab.length}`);
+        
+        renderIcons(allIcons[currentStyle] || []);
 
     } catch (error) {
         console.error('Error loading icons:', error);
@@ -48,7 +70,7 @@ function renderIcons(icons) {
     grid.className = 'icon-grid';
 
     icons.forEach(iconName => {
-        const iconClass = `fa-solid fa-${iconName}`;
+        const iconClass = `${currentStyle} fa-${iconName}`;
         const item = document.createElement('div');
         item.className = 'icon-item';
         item.dataset.icon = iconClass;
@@ -71,14 +93,27 @@ function renderIcons(icons) {
     body.appendChild(grid);
 }
 
+document.querySelectorAll('.style-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        currentStyle = this.dataset.style;
+        
+        document.getElementById('searchInput').value = '';
+        renderIcons(allIcons[currentStyle] || []);
+    });
+});
+
 document.getElementById('searchInput').addEventListener('input', function(e) {
     const term = e.target.value.toLowerCase();
-    renderIcons(allIcons.filter(i => i.includes(term)));
+    const iconsToFilter = allIcons[currentStyle] || [];
+    renderIcons(iconsToFilter.filter(i => i.includes(term)));
 });
 
 document.getElementById('openPickerBtn').addEventListener('click', () => {
     document.getElementById('iconPickerModal').classList.add('show');
-    if (allIcons.length === 0) loadFontAwesomeIcons();
+    if (Object.keys(allIcons).length === 0) loadFontAwesomeIcons();
 });
 
 function closeModal() {
