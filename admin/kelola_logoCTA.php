@@ -30,7 +30,7 @@
     <div class="content-area container">
         <div class="mb-4">
             <h2 class="mb-2">Kelola Logo CTA</h2>
-            <a href="tambah_logoCTa.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Logo</a>
+            <!-- <a href="tambah_logoCTa.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Logo</a> -->
         </div>
 
         <div class="table-responsive">
@@ -78,11 +78,11 @@
                                 <i class="fa fa-edit"></i> Edit
                             </a>
 
-                            <a href="hapus_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>"
+                            <!-- <a href="hapus_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>"
                                 class="btn btn-danger btn-sm"
                                 onclick="return confirm('Yakin ingin menghapus Logo CTA ini?')">
                                 <i class="fa fa-trash"></i> Hapus
-                            </a>
+                            </a> -->
                         </td>
                     </tr>
                 <?php endwhile; ?>
