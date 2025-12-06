@@ -27,68 +27,64 @@
 <body>
 
     <?php include 'sidebar.php'; ?>
-    <div class="content-area container">
+    <div class="content-area container-fluid px-3">
         <div class="mb-4">
             <h2 class="mb-2">Kelola Logo CTA</h2>
-            <!-- <a href="tambah_logoCTa.php" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Tambah Logo</a> -->
         </div>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-fixed">
-                <colgroup>
-                    <col style="width:40px;">
-                    <col style="width:200px;">
-                    <col style="width:200px;">
-                    <col style="width:200px;">
-                    <col style="width:120px;">
-                </colgroup>
+        <div class="table-container">
 
-                <thead class="table-primary">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Logo</th>
-                    <th class="text-center">Judul</th>
-                    <th class="text-center">Link</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <?php $no = 1; ?>
-                <?php while ($logo = pg_fetch_assoc($rViewLogo)) : ?>
-                    <tr>
-                        <td class="text-center"><?= $no++; ?></td>
-
-                        <td class="text-center">
-                            <img src="../<?= htmlspecialchars($logo['url_logo']); ?>"
-                                alt="Logo CTA"
-                                style="width:80px; height:auto; border-radius:5px;">
-                        </td>
-
-                        <td class="text-center"><?= htmlspecialchars($logo['judul_cta']); ?></td>
-
-                        <td class="text-center">
-                            <a href="<?= htmlspecialchars($logo['link_cta']); ?>" target="_blank" class="text-primary">
-                                <?= htmlspecialchars($logo['link_cta']); ?>
-                            </a>
-                        </td>
-
-                        <td class="text-center">
-                            <a href="edit_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>" class="btn btn-warning btn-sm">
-                                <i class="fa fa-edit"></i> Edit
-                            </a>
-
-                            <!-- <a href="hapus_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Yakin ingin menghapus Logo CTA ini?')">
-                                <i class="fa fa-trash"></i> Hapus
-                            </a> -->
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-                </tbody>
-
-            </table>
+            <div class="table-responsive">
+                <table class="table modern-table">
+                    <colgroup>
+                        <col style="width:40px;">
+                        <col style="width:200px;">
+                        <col style="width:200px;">
+                        <col style="width:200px;">
+                        <col style="width:120px;">
+                    </colgroup>
+    
+                    <thead>
+                        <tr>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Logo</th>
+                            <th class="text-center">Judul</th>
+                            <th class="text-center">Link</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                    <?php $no = 1; ?>
+                    <?php while ($logo = pg_fetch_assoc($rViewLogo)) : ?>
+                        <tr>
+                            <td class="text-center"><?= $no++; ?></td>
+    
+                            <td class="text-center">
+                                <img src="../<?= htmlspecialchars($logo['url_logo']); ?>"
+                                    alt="Logo CTA"
+                                    style="width:80px; height:auto; border-radius:5px;">
+                            </td>
+    
+                            <td class="text-center"><?= htmlspecialchars($logo['judul_cta']); ?></td>
+    
+                            <td class="text-center">
+                                <a href="<?= htmlspecialchars($logo['link_cta']); ?>" target="_blank" class="text-primary">
+                                    <?= htmlspecialchars($logo['link_cta']); ?>
+                                </a>
+                            </td>
+    
+                            <td class="text-center">
+                                <a href="edit_logoCTA.php?id=<?= $logo['id_logo_cta']; ?>" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                    </tbody>
+    
+                </table>
+            </div>
         </div>
     </div>
     
