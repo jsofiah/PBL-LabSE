@@ -4,6 +4,9 @@
     $query = "SELECT * FROM vw_footer";
     $result = pg_query($conn, $query);
     $row = pg_fetch_assoc($result);
+    $qSos = "SELECT * FROM vw_footer_social ORDER BY id_social";
+    $rSos = pg_query($conn, $qSos);
+
 ?>
 <div class="footer-container">
     <div class="footer-blue">
@@ -63,17 +66,15 @@
                     <iframe src=<?= $row['link_maps']; ?>></iframe>
                 </div>
 
+                <?php if (pg_num_rows($rSos) > 0): ?>
                 <div class="social-links mt-3">
-                    <a href="<?= htmlspecialchars($row['link_instagram']); ?>" class="social-link" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="<?= htmlspecialchars($row['link_youtube']); ?>" class="social-link" target="_blank">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="<?= htmlspecialchars($row['link_linkedin']); ?>" class="social-link" target="_blank">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
+                    <?php while ($s = pg_fetch_assoc($rSos)): ?>
+                        <a href="<?= htmlspecialchars($s['url']); ?>" target="_blank" class="social-link">
+                            <i class="<?= htmlspecialchars($s['icon_class']); ?>"></i>
+                        </a>
+                    <?php endwhile; ?>
                 </div>
+                <?php endif; ?>
             </div>
 
         </div>
