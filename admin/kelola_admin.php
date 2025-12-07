@@ -162,7 +162,7 @@
                             <td class="text-center"><?= htmlspecialchars($row['username']); ?></td>
 
                             <td>
-                                <div class="action-buttons">
+                                <div class="action-buttons text-center">
                                     <a href="edit_admin.php?id=<?= $row['id']; ?>" 
                                        class="btn btn-action btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
