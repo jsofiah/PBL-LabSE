@@ -112,17 +112,14 @@ $rJenis = pg_query($conn, $qJenis);
             </select>
         </div>
 
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100" type="submit">
-                <i class="fa fa-search"></i> Cari
-            </button>
-        </div>
-
-        <div class="col-md-2">
-            <a href="kelola_mitra.php" class="btn btn-secondary w-100">
-                Reset
-            </a>
-        </div>
+        <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Cari
+                </button>
+                <a href="kelola_proyek.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
+            </div>
     </form>
 
 
