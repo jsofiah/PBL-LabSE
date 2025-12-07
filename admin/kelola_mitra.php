@@ -124,7 +124,7 @@ $rJenis = pg_query($conn, $qJenis);
 
 
     <div class="table-responsive">
-        <table class="table table-bordered table-striped table-fixed">
+        <table class="table modern-table">
 
             <colgroup>
                 <col style="width:40px;">
