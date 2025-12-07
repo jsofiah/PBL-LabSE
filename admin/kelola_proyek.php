@@ -82,6 +82,7 @@ if (!$rProyek || !$rPM || !$rPD) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
+    <link rel="stylesheet" href="css/stylePaging.css">
 </head>
 
 <body>
