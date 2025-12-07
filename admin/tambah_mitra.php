@@ -6,10 +6,18 @@ if (!isset($_SESSION['username'])) {
 }
 
 require_once '../config.php';
+require_once "upload_validator.php";
 
 $qJenis = pg_query($conn, "SELECT * FROM jenis_mitra ORDER BY id_jenismitra ASC");
 
 if (isset($_POST['submit'])) {
+
+    $valid = validateUpload($_FILES['gambar'], 2);
+
+    if ($valid !== true) {
+        echo "<script>alert('$valid'); history.back();</script>";
+        exit;
+    }
 
     $jenis  = $_POST['id_jenismitra'];
     $nama   = pg_escape_string($conn, $_POST['nama_mitra']);

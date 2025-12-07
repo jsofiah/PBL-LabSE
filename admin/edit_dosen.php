@@ -6,6 +6,7 @@
     }
 
     require_once "../config.php";
+    require_once "upload_validator.php";
 
     $id_dosen = $_GET['id'] ?? 0;
 
@@ -24,6 +25,12 @@
         $fotoBaru = $fotoLama;
 
         if (!empty($_FILES['foto']['name'])) {
+            $valid = validateUpload($_FILES['foto'], 2);
+
+            if ($valid !== true) {
+                echo "<script>alert('$valid'); history.back();</script>";
+                exit;
+            }
             $targetDir = "../img/dosen/";
             $filename = time() . "_" . basename($_FILES["foto"]["name"]);
             $targetFile = $targetDir . $filename;
