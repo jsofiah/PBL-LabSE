@@ -7,35 +7,63 @@ if (!isset($_SESSION['username'])) {
 
 require_once '../config.php';
 
-$limit = 20; 
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$filterJenis = isset($_GET['jenis']) ? trim($_GET['jenis']) : '';
 
+$limit = 20;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
 
 $offset = ($page - 1) * $limit;
 
-$qTotal = "SELECT COUNT(*) FROM vw_mitra";
+$where = "WHERE 1=1";
+
+if ($search !== '') {
+    $safe = pg_escape_string($conn, $search);
+    $where .= " AND (
+                    m.nama_mitra ILIKE '%$safe%' OR 
+                    m.isi_mitra ILIKE '%$safe%'
+                )";
+}
+
+if ($filterJenis !== '') {
+    $safeJenis = pg_escape_string($conn, $filterJenis);
+    $where .= " AND m.id_jenismitra = '$safeJenis'";
+}
+
+$qTotal = "
+    SELECT COUNT(*)
+    FROM mitra m
+    JOIN jenis_mitra j ON j.id_jenismitra = m.id_jenismitra
+    $where
+";
 $rTotal = pg_query($conn, $qTotal);
 $total_records = pg_fetch_result($rTotal, 0, 0);
-
 $total_pages = ceil($total_records / $limit);
 
 if ($page > $total_pages && $total_pages > 0) {
     $page = $total_pages;
     $offset = ($page - 1) * $limit;
-} elseif ($total_pages === 0) {
-    $page = 0;
-    $offset = 0;
 }
 
-$qViewMitra = "SELECT * FROM vw_mitra 
-               ORDER BY id_mitra ASC 
-               LIMIT $limit OFFSET $offset";
+$qViewMitra = "
+    SELECT 
+        m.id_mitra,
+        m.nama_mitra,
+        m.url_gambar_mitra,
+        m.isi_mitra,
+        j.nama_jenismitra
+    FROM mitra m
+    JOIN jenis_mitra j ON j.id_jenismitra = m.id_jenismitra
+    $where
+    ORDER BY m.id_mitra ASC
+    LIMIT $limit OFFSET $offset
+";
 $rViewMitra = pg_query($conn, $qViewMitra);
 
-if (!$rViewMitra) {
-    die("Query error: " . pg_last_error($conn));
-}
+$qJenis = "SELECT id_jenismitra, nama_jenismitra FROM jenis_mitra ORDER BY nama_jenismitra ASC";
+$rJenis = pg_query($conn, $qJenis);
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -45,7 +73,7 @@ if (!$rViewMitra) {
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
     <link rel="stylesheet" href="css/stylePaging.css">
@@ -63,6 +91,40 @@ if (!$rViewMitra) {
             <i class="fa fa-plus"></i> Tambah Mitra
         </a>
     </div>
+
+    <form method="GET" class="row g-2 mb-3">
+
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control"
+                   placeholder="Cari nama / isi mitra..."
+                   value="<?= htmlspecialchars($search); ?>">
+        </div>
+
+        <div class="col-md-3">
+            <select name="jenis" class="form-select">
+                <option value="">Semua Jenis Mitra</option>
+                <?php while ($j = pg_fetch_assoc($rJenis)) : ?>
+                    <option value="<?= $j['id_jenismitra']; ?>"
+                        <?= ($filterJenis == $j['id_jenismitra']) ? 'selected' : ''; ?>>
+                        <?= htmlspecialchars($j['nama_jenismitra']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100" type="submit">
+                <i class="fa fa-search"></i> Cari
+            </button>
+        </div>
+
+        <div class="col-md-2">
+            <a href="kelola_mitra.php" class="btn btn-secondary w-100">
+                Reset
+            </a>
+        </div>
+    </form>
+
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-fixed">
@@ -89,17 +151,15 @@ if (!$rViewMitra) {
 
             <tbody>
             <?php if (pg_num_rows($rViewMitra) > 0): ?>
-                <?php $no = 1; ?>
+                <?php $no = $offset + 1; ?>
                 <?php while ($m = pg_fetch_assoc($rViewMitra)) : ?>
                     <tr>
-
                         <td class="text-center"><?= $no++; ?></td>
 
                         <td class="text-center">
                             <?php if (!empty($m['url_gambar_mitra'])) : ?>
                                 <img src="../<?= htmlspecialchars($m['url_gambar_mitra']); ?>"
-                                    alt="Logo Mitra"
-                                    style="width:100px; border-radius:5px;">
+                                     style="width:100px; border-radius:5px;">
                             <?php else : ?>
                                 <span class="text-muted">Tidak ada gambar</span>
                             <?php endif; ?>
@@ -115,15 +175,15 @@ if (!$rViewMitra) {
                             <a href="edit_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-warning btn-sm">
                                 <i class="fa fa-edit"></i> Edit
                             </a>
-
-                            <a href="hapus_mitra.php?id=<?= $m['id_mitra']; ?>" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Yakin ingin menghapus mitra ini?')">
+                            <a href="hapus_mitra.php?id=<?= $m['id_mitra']; ?>"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Yakin ingin menghapus mitra ini?')">
                                 <i class="fa fa-trash"></i> Hapus
                             </a>
                         </td>
-
                     </tr>
                 <?php endwhile; ?>
+
             <?php else: ?>
                 <tr>
                     <td colspan="6" class="text-center">Tidak ada data mitra.</td>
@@ -133,6 +193,7 @@ if (!$rViewMitra) {
 
         </table>
     </div>
+
     <?php include 'paging.php'; ?>
 </div>
 
