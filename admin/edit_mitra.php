@@ -6,6 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 require '../config.php';
+require_once "upload_validator.php";
 
 $id = intval($_GET['id']);
 
@@ -29,6 +30,12 @@ if (isset($_POST['update'])) {
     $gambarBaru = $data['url_gambar_mitra'];
 
     if (!empty($_FILES['gambar']['name'])) {
+        $valid = validateUpload($_FILES['gambar'], 2);
+
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
 
         $folder = "../img/mitra/";
         if (!file_exists($folder)) {

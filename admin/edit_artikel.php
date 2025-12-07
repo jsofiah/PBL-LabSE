@@ -6,6 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 require_once "../config.php";
+require_once "upload_validator.php";
 
 $id = $_GET['id'] ?? 0;
 
@@ -25,8 +26,15 @@ if (isset($_POST['update'])) {
 
     $fotoLama = $_POST['foto_lama'];
     $fotoBaru = $fotoLama;
+    
 
     if (!empty($_FILES['foto']['name'])) {
+        $valid = validateUpload($_FILES['foto'], 2);
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
+        
         $uploadDir = "../img/artikel/";
         $filename = time() . "_" . basename($_FILES["foto"]["name"]);
         $targetFile = $uploadDir . $filename;

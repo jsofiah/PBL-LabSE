@@ -6,11 +6,19 @@ if (!isset($_SESSION['username'])) {
 }
 
 require_once "../config.php";
+require_once "upload_validator.php";
 
 $qJenis = "SELECT * FROM jenis_artikel ORDER BY id_jenisartikel ASC";
 $rJenis = pg_query($conn, $qJenis);
 
 if (isset($_POST['simpan'])) {
+
+    $valid = validateUpload($_FILES['foto'], 2);
+
+    if ($valid !== true) {
+        echo "<script>alert('$valid'); history.back();</script>";
+        exit;
+    }
 
     $fotoBaru = "";
 

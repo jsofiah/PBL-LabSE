@@ -245,7 +245,7 @@
                             <td class="text-center"><?= htmlspecialchars($dosen['tahun_lulus']); ?></td>
 
                             <td>
-                                <div class="action-buttons">
+                                <div class="action-buttons text-center">
                                     <a href="edit_pendidikan_dosen.php?id=<?= $dosen['id_pendidikan']; ?>" 
                                        class="btn btn-action btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit

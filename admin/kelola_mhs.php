@@ -72,6 +72,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
+    <link rel="stylesheet" href="css/stylePaging.css">
 </head>
 
 <body>

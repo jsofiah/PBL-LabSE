@@ -5,6 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 require '../config.php';
+require_once "upload_validator.php";
 
 $id = $_GET['id'];
 
@@ -18,6 +19,12 @@ if (isset($_POST['submit'])) {
     $newPath = $data['url_gambar_galeri'];
 
     if (!empty($_FILES['gambar']['name'])) {
+        $valid = validateUpload($_FILES['gambar'], 2);
+
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
 
         $folder = "../img/galeri/";
         $namaFile = time() . "_" . basename($_FILES['gambar']['name']);

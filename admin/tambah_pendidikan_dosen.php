@@ -74,30 +74,45 @@
                         </select>
                         </div>
 
+                        <div class="mb-3">
+                                <label class="form-label text-white">Jenjang</label>
+                                <select name="jenjang" class="form-control" required>
+                                        <option value="" disabled selected>Pilih Jenjang</option>
+                                        <option value="D3">D3</option>
+                                        <option value="D4">D4</option>
+                                        <option value="S1">S1</option>
+                                        <option value="S2">S2</option>
+                                        <option value="S3">S3</option>
+                                </select>
+                        </div>
+
+
                         <div class='mb-3'>
-                        <label class='form-label text-white'>Jenjang</label>
-                        <input type='text' name='jenjang' class='form-control' placeholder="S1 / S2 / S3" required>
+                                <label class='form-label text-white'>Universitas</label>
+                                <input type='text' name='universitas' class='form-control' placeholder="Masukkan universitas" required>
                         </div>
 
                         <div class='mb-3'>
-                        <label class='form-label text-white'>Universitas</label>
-                        <input type='text' name='universitas' class='form-control' placeholder="Masukkan universitas" required>
+                                <label class='form-label text-white'>Bidang Studi</label>
+                                <input type='text' name='bidang_studi' class='form-control' placeholder="Masukkan bidang studi" required>
                         </div>
 
                         <div class='mb-3'>
-                        <label class='form-label text-white'>Bidang Studi</label>
-                        <input type='text' name='bidang_studi' class='form-control' placeholder="Masukkan bidang studi" required>
+                                <label class='form-label text-white'>Tahun Lulus</label>
+                                <input type="number" name="tahun_lulus" class="form-control" min="1900" max="2100" step="1" placeholder="Masukkan tahun lulus" required>
                         </div>
 
-                        <div class='mb-3'>
-                        <label class='form-label text-white'>Tahun Lulus</label>
-                        <input type="number" name="tahun_lulus" class="form-control" min="1900" max="2100" step="1" placeholder="Masukkan tahun lulus" required>
+                        <div class="mb-3">
+                                <label class="form-label text-white">Gelar</label>
+                                <select name="gelar" class="form-control" required>
+                                        <option value="" disabled selected >Pilih Gelar</option>
+                                        <option value="Diploma">Diploma</option>
+                                        <option value="Sarjana">Sarjana</option>
+                                        <option value="Magister">Magister</option>
+                                        <option value="Doktor">Doktor</option>
+                                </select>
                         </div>
 
-                        <div class='mb-3'>
-                        <label class='form-label text-white'>Gelar</label>
-                        <input type='text' name='gelar' class='form-control' placeholder="S.T. / M.T. / Ph.D" required>
-                        </div>
 
                         <div class='d-flex gap-2 mt-3'>
                         <button type='submit' name='simpan' class='btn btn-primary'>

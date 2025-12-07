@@ -6,6 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 require "../config.php";
+require_once "upload_validator.php";
 
 $id = intval($_GET['id']);
 
@@ -24,6 +25,12 @@ if (isset($_POST['update'])) {
     $logoBaru = $logoLama;
 
     if (!empty($_FILES['logo']['name'])) {
+        $valid = validateUpload($_FILES['logo'], 2);
+
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
 
         $targetDir = "../img/logocta/";
         if (!is_dir($targetDir)) mkdir($targetDir);

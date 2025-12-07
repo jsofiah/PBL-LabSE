@@ -6,8 +6,18 @@ if (!isset($_SESSION['username'])) {
 }
 
 require_once '../config.php';
+require_once "upload_validator.php";
 
 if (isset($_POST['submit'])) {
+    foreach (['gambar1', 'gambar2', 'gambar3'] as $field) {
+        if (!empty($_FILES[$field]['name'])) {
+            $valid = validateUpload($_FILES[$field], 2);
+            if ($valid !== true) {
+                echo "<script>alert('$valid'); history.back();</script>";
+                exit;
+            }
+        }
+    }
 
     $judul   = pg_escape_string($conn, $_POST['judul_proyek']);
     $isi     = pg_escape_string($conn, $_POST['isi_proyek']);

@@ -13,10 +13,18 @@ if (file_exists('../config.php')) {
 } else {
     die("Error: File config.php tidak ditemukan.");
 }
+require_once "upload_validator.php";
 
 if (isset($_POST['simpan'])) {
     $username = pg_escape_string($conn, $_POST['username']);
     $password = md5($_POST['password']); 
+
+    $valid = validateUpload($_FILES['foto'], 2);
+
+    if ($valid !== true) {
+        echo "<script>alert('$valid'); history.back();</script>";
+        exit;
+    }
     
     $fotoPath = "";
     

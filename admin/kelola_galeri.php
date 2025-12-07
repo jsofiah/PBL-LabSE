@@ -69,6 +69,7 @@ $rGaleri = pg_query_params($conn, $qGaleri, $params);
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/stylePaging.css">
     <link rel="stylesheet" href="css/styleTabel.css">
+    <link rel="stylesheet" href="css/stylePaging.css">
 </head>
 
 <body>

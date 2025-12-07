@@ -5,6 +5,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 require_once '../config.php';
+require_once "upload_validator.php";
 
 if (!isset($_GET['id'])) {
     header("Location: kelola_admin.php");
@@ -33,6 +34,12 @@ if (isset($_POST['update'])) {
     $fotoPath = $data['foto_admin'];
     
     if (!empty($_FILES['foto']['name'])) {
+        $valid = validateUpload($_FILES['foto'], 2);
+
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
         $targetDir = "img/foto_admin/";
         $fileName = time() . "_" . basename($_FILES['foto']['name']);
         $targetFilePath = $targetDir . $fileName;

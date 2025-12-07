@@ -89,10 +89,16 @@
                     </select>
                 </div>
 
-                <div class='mb-3'>
-                    <label class='form-label text-white'>Jenjang</label>
-                    <input type='text' name='jenjang' placeholder="S1 / S2 / S3" value="<?= htmlspecialchars($data['jenjang']) ?>"
-                        class='form-control' required>
+                <div class="mb-3">
+                    <label class="form-label text-white">Jenjang</label>
+                    <select name="jenjang" class="form-control" required>
+                        <option value="" disabled>Pilih Jenjang</option>
+                        <option value="D3" <?= ($data['jenjang'] == 'D3') ? 'selected' : '' ?>>D3</option>
+                        <option value="D4" <?= ($data['jenjang'] == 'D4') ? 'selected' : '' ?>>D4</option>
+                        <option value="S1" <?= ($data['jenjang'] == 'S1') ? 'selected' : '' ?>>S1</option>
+                        <option value="S2" <?= ($data['jenjang'] == 'S2') ? 'selected' : '' ?>>S2</option>
+                        <option value="S3" <?= ($data['jenjang'] == 'S3') ? 'selected' : '' ?>>S3</option>
+                    </select>
                 </div>
 
                 <div class='mb-3'>
@@ -116,12 +122,17 @@
                         required>
                 </div>
 
-                <div class='mb-3'>
-                    <label class='form-label text-white'>Gelar</label>
-                    <input type='text' name='gelar' placeholder="S.T. / M.T. / Ph.D"
-                        value="<?= htmlspecialchars($data['gelar']) ?>"
-                        class='form-control' required>
+                <div class="mb-3">
+                    <label class="form-label text-white">Gelar</label>
+                    <select name="gelar" class="form-control" required>
+                        <option value="" disabled <?= empty($data['gelar']) ? 'selected' : '' ?>>Pilih Gelar</option>
+                        <option value="Diploma" <?= ($data['gelar'] == 'Diploma') ? 'selected' : '' ?>>Diploma</option>
+                        <option value="Sarjana" <?= ($data['gelar'] == 'Sarjana') ? 'selected' : '' ?>>Sarjana</option>
+                        <option value="Magister" <?= ($data['gelar'] == 'Magister') ? 'selected' : '' ?>>Magister</option>
+                        <option value="Doktor" <?= ($data['gelar'] == 'Doktor') ? 'selected' : '' ?>>Doktor</option>
+                    </select>
                 </div>
+
 
                 <div class='d-flex gap-2 mt-3'>
                     <button type='submit' name='simpan' class='btn btn-primary'>

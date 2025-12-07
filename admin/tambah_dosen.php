@@ -6,8 +6,15 @@
     }
 
     require_once "../config.php";
+    require_once "upload_validator.php";
 
     if (isset($_POST['simpan'])) {
+        $valid = validateUpload($_FILES['foto'], 2);
+
+        if ($valid !== true) {
+            echo "<script>alert('$valid'); history.back();</script>";
+            exit;
+        }
 
         $fotoBaru = "";
 

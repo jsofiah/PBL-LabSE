@@ -6,6 +6,7 @@ if (!isset($_SESSION['username'])) {
 }
 
 require '../config.php';
+require_once "upload_validator.php";
 
 $id = intval($_GET['id']);
 
@@ -28,19 +29,42 @@ if (isset($_POST['update'])) {
     $folder = "../img/proyek/";
     if (!file_exists($folder)) mkdir($folder, 0777, true);
 
-    function updateFile($input, $folder, $oldFile) {
+    $inputs = ['gambar1', 'gambar2', 'gambar3'];
+
+    foreach ($inputs as $inp) {
+        if (!empty($_FILES[$inp]['name'])) {
+            $valid = validateUpload($_FILES[$inp], 2);
+            if ($valid !== true) {
+                echo "<script>alert('$valid'); history.back();</script>";
+                exit;
+            }
+        }
+    }
+
+    function updateFile($input, $folder, $oldFile)
+    {
         if (!empty($_FILES[$input]['name'])) {
-            $newName = time() . "_" . basename($_FILES[$input]["name"]);
+
+            if ($_FILES[$input]['error'] !== 0) {
+                return $oldFile;
+            }
+
+            $cleanName = preg_replace('/[^A-Za-z0-9.\-_]/', '', basename($_FILES[$input]["name"]));
+            $newName = time() . "_" . $cleanName;
+
             $path = $folder . $newName;
 
             if (move_uploaded_file($_FILES[$input]["tmp_name"], $path)) {
+
                 if (!empty($oldFile)) {
                     $lama = "../" . $oldFile;
                     if (file_exists($lama)) unlink($lama);
                 }
+
                 return "img/proyek/" . $newName;
             }
         }
+
         return $oldFile;
     }
 
@@ -57,10 +81,11 @@ if (isset($_POST['update'])) {
         echo "<script>alert('Proyek berhasil diperbarui!'); window.location='kelola_proyek.php';</script>";
         exit;
     } else {
-        $error = "Gagal memperbarui proyek!";
+        die("PG ERROR: " . pg_last_error($conn));
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

@@ -5,8 +5,15 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 require '../config.php';
+require_once "upload_validator.php";
 
 if (isset($_POST['submit'])) {
+    $valid = validateUpload($_FILES['gambar'], 2);
+
+    if ($valid !== true) {
+        echo "<script>alert('$valid'); history.back();</script>";
+        exit;
+    }
 
     $desk = $_POST['deskripsi_galeri'];
 

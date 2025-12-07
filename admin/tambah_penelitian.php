@@ -70,9 +70,9 @@ $rDosen = pg_query($conn, $qDosen);
                 </div>
 
                 <div class='mb-3'>
-                    <label class='form-label text-white'>Pilih Dosen</label>
+                    <label class='form-label text-white'>Dosen</label>
                     <select name='id_dosen' class='form-control' required>
-                        <option value='' disabled selected>-- Pilih Dosen --</option>
+                        <option value='' disabled selected>Pilih Dosen</option>
                         <?php while ($d = pg_fetch_assoc($rDosen)) : ?>
                             <option value="<?= $d['id_dosen']; ?>">
                                 <?= htmlspecialchars($d['nama_dosen']); ?>
