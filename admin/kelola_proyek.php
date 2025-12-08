@@ -220,11 +220,16 @@ $rTahun = pg_query($conn, $qTahun);
                         <td class="text-center"><?= $no++; ?></td>
                         <td class="text-center">
                             <?php if (!empty($pm['url_gambar_proyek1'])): ?>
-                                <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" alt="Gambar Proyek" class="tbl-thumb">
+                                <img src="../<?= htmlspecialchars($pm['url_gambar_proyek1']) ?>" 
+                                    alt="Gambar Proyek" 
+                                    class="tbl-thumb"
+                                    width="160" 
+                                    height="100"> 
                             <?php else: ?>
                                 <span class="text-muted">No image</span>
                             <?php endif; ?>
                         </td>
+                        
                         <td><?= htmlspecialchars($pm['judul_proyek']) ?></td>
                         <td class="text-truncate-custom"><?= htmlspecialchars(substr($pm['isi_proyek'],0,140)) ?>...</td>
                         <td class="text-center"><?= htmlspecialchars($pm['tanggal_terbit_proyek']) ?></td>
