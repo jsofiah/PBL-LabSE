@@ -4,7 +4,6 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
-
 require_once '../config.php';
 
 $limit = 20;
@@ -19,7 +18,8 @@ $params = [];
 $param_count = 1;
 
 if (!empty($search)) {
-    $where_conditions[] = "(judul_roadmap ILIKE $".$param_count." OR deskripsi_roadmap ILIKE $".$param_count.")";
+    $where_conditions[] = "(judul_roadmap ILIKE $" . $param_count . " 
+        OR deskripsi_roadmap ILIKE $" . $param_count . ")";
     $params[] = "%$search%";
     $param_count++;
 }
@@ -30,20 +30,25 @@ $qTotal = "SELECT COUNT(*) FROM vw_roadmap $where_clause";
 $rTotal = pg_query_params($conn, $qTotal, $params);
 $total_records = pg_fetch_result($rTotal, 0, 0);
 
-$total_pages = ceil($total_records / $limit);
+$total_pages = max(1, ceil($total_records / $limit));
 
-if ($total_records === 0) {
-    $page = 0;
+if ($total_records == 0) {
+    $rView = false;
     $offset = 0;
 } else {
-    if ($page > $total_pages) {
-        $page = $total_pages;
-    }
-    $offset = ($page - 1) * $limit;
-}
 
-$qView = "SELECT * FROM vw_roadmap $where_clause ORDER BY id_roadmap ASC LIMIT $limit OFFSET $offset";
-$rView = pg_query_params($conn, $qView, $params);
+    if ($page > $total_pages) $page = $total_pages;
+    if ($page < 1) $page = 1;
+
+    $offset = ($page - 1) * $limit;
+
+    $qView = "SELECT * FROM vw_roadmap 
+              $where_clause 
+              ORDER BY id_roadmap ASC 
+              LIMIT $limit OFFSET $offset";
+
+    $rView = pg_query_params($conn, $qView, $params);
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,10 +72,11 @@ $rView = pg_query_params($conn, $qView, $params);
 <div class="content-area container-fluid px-3">
     <div class="mb-4">
         <h2 class="mb-2">Kelola Roadmap</h2>
-        <a href="tambah_roadmap.php" class="btn btn-success"><i class="fa fa-plus"></i> Tambah Roadmap</a>
+        <a href="tambah_roadmap.php" class="btn btn-success btn-sm">
+            <i class="fa fa-plus"></i> Tambah Roadmap
+        </a>
     </div>
 
-    <!-- SEARCH BAR -->
     <div class="search-filter-section mb-3">
         <form method="GET" action="" id="filterForm">
             <div class="row g-3">
@@ -100,7 +106,6 @@ $rView = pg_query_params($conn, $qView, $params);
         </form>
     </div>
 
-    <!-- TABLE -->
     <div class="table-container">
         <div class="table-responsive">
             <table class="table modern-table">
@@ -123,7 +128,7 @@ $rView = pg_query_params($conn, $qView, $params);
                 </thead>
 
                 <tbody>
-                <?php if (pg_num_rows($rView) > 0): $no = $offset + 1; ?>
+                <?php if ($rView !== false && pg_num_rows($rView) > 0): $no = $offset + 1; ?>
                     <?php while ($row = pg_fetch_assoc($rView)) : ?>
                         <tr>
                             <td class="text-center"><?= $no++; ?></td>
