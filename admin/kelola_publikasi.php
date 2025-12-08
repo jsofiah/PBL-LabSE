@@ -1,62 +1,77 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['username'])) {
-        header("Location: login.php");
-        exit;
-    }
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit;
+}
 
-    require_once '../config.php';
+require_once '../config.php';
 
-    $limit = 20; 
+$limit = 20;
 
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-    if ($page < 1) $page = 1;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
 
-    $qTotal = "SELECT COUNT(*) FROM vw_publikasi_dosen"; 
-    $rTotal = pg_query($conn, $qTotal);
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$filter_tahun = isset($_GET['tahun']) ? $_GET['tahun'] : '';
 
-    if (!$rTotal) {
+$where_conditions = [];
+$params = [];
+$param_count = 1;
 
-        die("Query hitung total data gagal: " . pg_last_error($conn));
-    }
+if (!empty($search)) {
+    $where_conditions[] = "(judul_publikasi ILIKE $" . $param_count . " OR nama_dosen ILIKE $" . $param_count . " OR nama_jenispublikasi ILIKE $" . $param_count . ")";
+    $params[] = "%$search%";
+    $param_count++;
+}
 
-    $total_records = pg_fetch_result($rTotal, 0, 0);
+if (!empty($filter_tahun)) {
+    $where_conditions[] = "tahun_publikasi = $" . $param_count;
+    $params[] = $filter_tahun;
+    $param_count++;
+}
 
-    $total_pages = ceil($total_records / $limit);
+$where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
 
-    if ($total_records === 0) {
-        $page = 0;
-        $offset = 0;
-    } else {
-        if ($page > $total_pages) {
-            $page = $total_pages;
-        }
-        $offset = ($page - 1) * $limit;
-    }
+$qTotal = "SELECT COUNT(*) FROM vw_publikasi_dosen $where_clause";
+$rTotal = pg_query_params($conn, $qTotal, $params);
+$total_records = pg_fetch_result($rTotal, 0, 0);
 
-    $qView = "
-        SELECT 
-            * FROM vw_publikasi_dosen 
-        ORDER BY id_publikasi ASC
-        LIMIT $limit OFFSET $offset;
-    ";
-    
-    $rView = pg_query($conn, $qView);
-    
-    if (!$rView) {
-        die("Query error: " . pg_last_error($conn));
-    }
+$total_pages = ceil($total_records / $limit);
+
+if ($total_records === 0) {
+    $page = 0;
+    $offset = 0;
+} else {
+    if ($page > $total_pages) $page = $total_pages;
+    $offset = ($page - 1) * $limit;
+}
+
+$qView = "
+    SELECT * 
+    FROM vw_publikasi_dosen
+    $where_clause
+    ORDER BY id_publikasi DESC
+    LIMIT $limit OFFSET $offset
+";
+$rView = pg_query_params($conn, $qView, $params);
+
+$qTahun = "SELECT DISTINCT tahun_publikasi FROM vw_publikasi_dosen ORDER BY tahun_publikasi DESC";
+$rTahun = pg_query($conn, $qTahun);
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Publikasi</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleTabel.css">
     <link rel="stylesheet" href="css/stylePaging.css">
@@ -69,73 +84,160 @@
 <div class="content-area container-fluid px-3">
 
     <div class="mb-4">
-        <h2 class="mb-2">Kelola Publikasi</h2>
-        <a href="tambah_publikasi.php" class="btn btn-success btn-sm">
+        <h2 class="mb-2">Kelola Publikasi Dosen</h2>
+        <a href="tambah_publikasi.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Publikasi
         </a>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-fixed">
-            <colgroup>
-                <col style="width:40px;">
-                <col style="width:300px;">
-                <col style="width:120px;">
-                <col style="width:180px;">
-                <col style="width:170px;">
-                <col style="width:150px;"> 
-            </colgroup>
+    <div class="search-filter-section">
+        <form method="GET" action="" id="filterForm">
 
-            <thead class="table-primary">
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Judul</th>
-                    <th class="text-center">Tahun</th>
-                    <th class="text-center">Jenis</th>
-                    <th class="text-center">Dosen</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
+            <div class="row g-3">
 
-            <tbody>
-            <?php 
-                if (pg_num_rows($rView) > 0) :
-                    $no = $offset + 1; 
-                    while($p = pg_fetch_assoc($rView)) : 
-            ?>
-            <tr>
-                <td class="text-center"><?= $no++; ?></td>
-                <td><?= htmlspecialchars($p['judul_publikasi']); ?></td>
-                <td class="text-center"><?= htmlspecialchars($p['tahun_publikasi']); ?></td>
-                <td class="text-center"><?= htmlspecialchars($p['nama_jenispublikasi']); ?></td>
-                <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
+                <div class="col-md-5">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-search"></i> Pencarian
+                    </label>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text"
+                               name="search"
+                               class="form-control"
+                               placeholder="Cari judul publikasi, jenis, atau nama dosen..."
+                               value="<?= htmlspecialchars($search) ?>">
+                    </div>
+                </div>
 
-                <td class="text-center">
-                    <a href="edit_publikasi.php?id=<?= $p['id_publikasi']; ?>" class="btn btn-warning btn-sm">
-                        <i class="fa fa-edit"></i> Edit
-                    </a>
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-calendar"></i> Tahun
+                    </label>
+                    <select name="tahun" class="form-select filter-select">
+                        <option value="">Semua Tahun</option>
+                        <?php while($t = pg_fetch_assoc($rTahun)): ?>
+                        <option value="<?= $t['tahun_publikasi'] ?>" <?= $filter_tahun == $t['tahun_publikasi'] ? 'selected' : '' ?>>
+                            <?= $t['tahun_publikasi'] ?>
+                        </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-                    <a href="hapus_publikasi.php?id=<?= $p['id_publikasi']; ?>"
-                    onclick="return confirm('Yakin ingin menghapus publikasi ini?')"
-                    class="btn btn-danger btn-sm">
-                        <i class="fa fa-trash"></i> Hapus
-                    </a>
-                </td>
-            </tr>
-            <?php 
-                    endwhile; 
-                else: 
-            ?>
-                <tr>
-                    <td colspan="6" class="text-center">Tidak ada data publikasi dosen yang ditemukan.</td>
-                </tr>
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">&nbsp;</label>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Cari
+                        </button>
+                        <a href="?" class="btn btn-outline-secondary">
+                            <i class="fas fa-redo"></i> Reset
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <?php if (!empty($search) || !empty($filter_tahun)): ?>
+            <div class="active-filters mt-2">
+                <span class="fw-semibold">Filter Aktif:</span>
+
+                <?php if (!empty($search)): ?>
+                <span class="filter-badge">
+                    <i class="fas fa-search"></i>
+                    "<?= htmlspecialchars($search) ?>"
+                    <span class="remove-filter" onclick="removeFilter('search')">×</span>
+                </span>
+                <?php endif; ?>
+
+                <?php if (!empty($filter_tahun)): ?>
+                <span class="filter-badge">
+                    <i class="fas fa-calendar"></i>
+                    <?= htmlspecialchars($filter_tahun) ?>
+                    <span class="remove-filter" onclick="removeFilter('tahun')">×</span>
+                </span>
+                <?php endif; ?>
+
+            </div>
             <?php endif; ?>
-            </tbody>
-        </table>
+
+        </form>
     </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table modern-table">
+
+                <colgroup>
+                    <col style="width:40px;">
+                    <col style="width:300px;">
+                    <col style="width:120px;">
+                    <col style="width:180px;">
+                    <col style="width:170px;">
+                    <col style="width:150px;">
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Judul</th>
+                        <th class="text-center">Tahun</th>
+                        <th class="text-center">Jenis</th>
+                        <th class="text-center">Dosen</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                <?php if (pg_num_rows($rView) > 0): ?>
+                    <?php $no = $offset + 1; ?>
+                    <?php while($p = pg_fetch_assoc($rView)): ?>
+                    <tr>
+                        <td class="text-center"><?= $no++; ?></td>
+                        <td><?= htmlspecialchars($p['judul_publikasi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($p['tahun_publikasi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($p['nama_jenispublikasi']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($p['nama_dosen']); ?></td>
+
+                        <td class="text-center text-nowrap">
+                            <a href="edit_publikasi.php?id=<?= $p['id_publikasi']; ?>" class="btn btn-warning btn-sm">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <a href="hapus_publikasi.php?id=<?= $p['id_publikasi']; ?>" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Yakin ingin menghapus publikasi ini?')">
+                                <i class="fa fa-trash"></i> Hapus
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h5>Tidak Ada Data</h5>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
     <?php include 'paging.php'; ?>
+
 </div>
 
 <script src="js/sidebar.js"></script>
+<script>
+function removeFilter(filterName) {
+    const form = document.getElementById('filterForm');
+    const input = form.querySelector(`[name="${filterName}"]`);
+    input.value = '';
+    form.submit();
+}
+</script>
+
 </body>
 </html>
