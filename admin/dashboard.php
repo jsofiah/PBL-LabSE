@@ -102,7 +102,7 @@
             <div class="header-right">
                 <a href="backup_db.php" 
                 class="btn-backup" 
-                onclick="return confirm('Proses ini memakan waktu 10-30 detik. Lanjutkan?');">
+                onclick="return confirm(' Lanjutkan Proses Backup data?');">
                     <i class="fas fa-database"></i> Backup Data
                 </a>
             </div>
