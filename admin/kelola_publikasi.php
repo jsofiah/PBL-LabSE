@@ -42,32 +42,62 @@ $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_c
 
 $qTotal = "SELECT COUNT(*) FROM vw_publikasi_dosen $where_clause";
 $rTotal = pg_query_params($conn, $qTotal, $params);
-$total_records = pg_fetch_result($rTotal, 0, 0);
 
+if (!$rTotal) {
+    die("Query hitung total data gagal: " . pg_last_error($conn));
+}
+
+$total_records = pg_fetch_result($rTotal, 0, 0);
 $total_pages = ceil($total_records / $limit);
 
 if ($total_records === 0) {
-    $page = 0;
     $offset = 0;
+    $page = 1;
 } else {
     if ($page > $total_pages) $page = $total_pages;
     $offset = ($page - 1) * $limit;
 }
 
-$qView = "
-    SELECT * 
-    FROM vw_publikasi_dosen
-    $where_clause
-    ORDER BY id_publikasi DESC
-    LIMIT $limit OFFSET $offset
-";
-$rView = pg_query_params($conn, $qView, $params);
+if ($total_records > 0) {
+    $qView = "
+        SELECT * 
+        FROM vw_publikasi_dosen
+        $where_clause
+        ORDER BY id_publikasi DESC
+        LIMIT $limit OFFSET $offset
+    ";
+    $rView = pg_query_params($conn, $qView, $params);
+    
+    if (!$rView) {
+        die("Query error untuk data publikasi: " . pg_last_error($conn));
+    }
+} else {
+    $rView = false;
+}
 
 $qTahun = "SELECT DISTINCT tahun_publikasi FROM vw_publikasi_dosen ORDER BY tahun_publikasi DESC";
 $rTahun = pg_query($conn, $qTahun);
 
+if (!$rTahun) {
+    die("Query error untuk tahun publikasi: " . pg_last_error($conn));
+}
+
+$tahun_options = [];
+while ($row = pg_fetch_assoc($rTahun)) {
+    $tahun_options[] = $row;
+}
+
 $qJenis = "SELECT DISTINCT nama_jenispublikasi FROM vw_publikasi_dosen ORDER BY nama_jenispublikasi ASC";
 $rJenis = pg_query($conn, $qJenis);
+
+if (!$rJenis) {
+    die("Query error untuk jenis publikasi: " . pg_last_error($conn));
+}
+
+$jenis_options = [];
+while ($row = pg_fetch_assoc($rJenis)) {
+    $jenis_options[] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -125,11 +155,11 @@ $rJenis = pg_query($conn, $qJenis);
                     </label>
                     <select name="tahun" class="form-select filter-select">
                         <option value="">Semua Tahun</option>
-                        <?php while($t = pg_fetch_assoc($rTahun)): ?>
+                        <?php foreach ($tahun_options as $t): ?>
                         <option value="<?= $t['tahun_publikasi'] ?>" <?= $filter_tahun == $t['tahun_publikasi'] ? 'selected' : '' ?>>
                             <?= $t['tahun_publikasi'] ?>
                         </option>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -139,11 +169,11 @@ $rJenis = pg_query($conn, $qJenis);
                     </label>
                     <select name="jenis" class="form-select filter-select">
                         <option value="">Semua Jenis</option>
-                        <?php while($j = pg_fetch_assoc($rJenis)): ?>
+                        <?php foreach ($jenis_options as $j): ?>
                         <option value="<?= $j['nama_jenispublikasi'] ?>" <?= $filter_jenis == $j['nama_jenispublikasi'] ? 'selected' : '' ?>>
                             <?= $j['nama_jenispublikasi'] ?>
                         </option>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -220,7 +250,7 @@ $rJenis = pg_query($conn, $qJenis);
                 </thead>
 
                 <tbody>
-                <?php if (pg_num_rows($rView) > 0): ?>
+                <?php if ($rView && pg_num_rows($rView) > 0): ?>
                     <?php $no = $offset + 1; ?>
                     <?php while($p = pg_fetch_assoc($rView)): ?>
                     <tr>
@@ -268,7 +298,18 @@ $rJenis = pg_query($conn, $qJenis);
         </div>
     </div>
 
-    <?php include 'paging.php'; ?>
+    <?php if ($total_records > 0): ?>
+        <?php 
+        $page = $page;
+        $total_pages = $total_pages;
+        $offset = $offset;
+        $total_records = $total_records;
+        $param_name = 'page';
+        $other_param = http_build_query(['search' => $search, 'tahun' => $filter_tahun, 'jenis' => $filter_jenis]);
+        $label = 'Publikasi';
+        ?>
+        <?php include 'paging.php'; ?>
+    <?php endif; ?>
 
 </div>
 
