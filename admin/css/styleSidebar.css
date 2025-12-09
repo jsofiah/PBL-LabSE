@@ -386,4 +386,14 @@ body {
         margin: 0 auto;
         display: block;
     }
+    .dashboard-label i {
+        margin-right: -10px;
+    }
+
+    .admin-profile i {
+        margin-right: -10px;
+    }
+    .profile-img {
+        margin-right: 0px;
+    }
 }
