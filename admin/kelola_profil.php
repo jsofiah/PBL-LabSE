@@ -26,13 +26,17 @@
 
     $qTotal = "SELECT COUNT(*) FROM vw_detail_dosen $where_clause"; 
     $rTotal = pg_query_params($conn, $qTotal, $params);
+    
+    if (!$rTotal) {
+        die("Query hitung total data gagal: " . pg_last_error($conn));
+    }
+    
     $total_records = pg_fetch_result($rTotal, 0, 0);
-
     $total_pages = ceil($total_records / $limit);
 
     if ($total_records === 0) {
-        $page = 0;
         $offset = 0;
+        $page = 1;
     } else {
         if ($page > $total_pages) {
             $page = $total_pages;
@@ -40,14 +44,18 @@
         $offset = ($page - 1) * $limit;
     }
 
-    $qViewDosen = "SELECT * FROM vw_detail_dosen 
-                   $where_clause
-                   ORDER BY id_dosen ASC 
-                   LIMIT $limit OFFSET $offset";
-    $rViewDosen = pg_query_params($conn, $qViewDosen, $params);
-    
-    if (!$rViewDosen) {
-        die("Query error: " . pg_last_error($conn));
+    if ($total_records > 0) {
+        $qViewDosen = "SELECT * FROM vw_detail_dosen 
+                       $where_clause
+                       ORDER BY id_dosen ASC 
+                       LIMIT $limit OFFSET $offset";
+        $rViewDosen = pg_query_params($conn, $qViewDosen, $params);
+        
+        if (!$rViewDosen) {
+            die("Query error: " . pg_last_error($conn));
+        }
+    } else {
+        $rViewDosen = false;
     }
 ?>
 
@@ -138,7 +146,7 @@
 
                     <tbody>
                     <?php 
-                        if (pg_num_rows($rViewDosen) > 0) :
+                        if ($rViewDosen && pg_num_rows($rViewDosen) > 0) :
                             $no = $offset + 1; 
                             while($dosen = pg_fetch_assoc($rViewDosen)) : 
                     ?>
@@ -169,7 +177,7 @@
                             </td>
 
                             <td>
-                                <div class="action-buttons text-center">
+                                <div class="action-buttons">
                                     <a href="edit_dosen.php?id=<?= $dosen['id_dosen']; ?>" 
                                        class="btn btn-action btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
@@ -209,7 +217,18 @@
             </div>
         </div>
         
-        <?php include 'paging.php'; ?>
+        <?php if ($total_records > 0): ?>
+            <?php 
+            $page = $page;
+            $total_pages = $total_pages;
+            $offset = $offset;
+            $total_records = $total_records;
+            $param_name = 'page';
+            $other_param = http_build_query(['search' => $search]);
+            $label = 'Dosen';
+            ?>
+            <?php include 'paging.php'; ?>
+        <?php endif; ?>
     </div>
     
     <script src="js/sidebar.js"></script>
