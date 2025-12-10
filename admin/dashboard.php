@@ -75,6 +75,8 @@
             $script_popup = "alert(' BACKUP GAGAL!\\n\\nPenyebab: $pesan'); window.location.href='dashboard.php';";
         }
     }
+    $file_txt_path = 'riwayat_backup.txt';
+    $history_lines = file_exists($file_txt_path) ? file($file_txt_path, FILE_IGNORE_NEW_LINES) : [];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -325,6 +327,28 @@
                 </div>
             </div>
         </div>
+
+    <div class="col-lg-6 col-md-12 mt-4 mb-5">
+        <div class="dashboard-card floating-list-card"> 
+            <div class="floating-header">
+                <h5><i class="fas fa-history me-2"></i>Last Update Backup</h5>
+            </div>
+            <div class="floating-list-container">
+                <?php if (empty($history_lines)): ?>
+                    <div class="floating-item empty">Belum ada data backup.</div>
+                <?php else: ?>
+                    <?php foreach($history_lines as $index => $waktu): ?>
+                        <div class="floating-item">
+                            <span class="item-idx"><?php echo $index + 1; ?></span>
+                            <span class="item-date"><?php echo htmlspecialchars($waktu); ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+    </div>
+</div>
+        
+</div>
 
     </div>
     <script src="js/sidebar.js"></script>
