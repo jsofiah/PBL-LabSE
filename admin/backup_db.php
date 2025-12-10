@@ -1,38 +1,40 @@
 <?php
-    $host     = 'localhost';
-    $port     = '5432';
-    $dbname   = 'db_LabSE';
-    $user     = 'postgres';
+    $host = 'localhost';
+    $port = '5432';
+    $dbname = 'db_LabSE';
+    $user = 'postgres';
     $password = 'admin';
-    $pg_dump  = "C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe";
+    $pg_dump = "C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe";
 
-    $root_project  = dirname(__DIR__);
-    $folder_backup = $root_project . '/backup_data';
 
-    if (!is_dir($folder_backup)) {
-        mkdir($folder_backup, 0777, true);
-    }
+    date_default_timezone_set('Asia/Jakarta'); 
 
-    $nama_file = 'Backup_LabSE_' . date('Y-m-d') . '.sql';
-    $file_sql  = $folder_backup . '/' . $nama_file;
+    $backup_name = 'Backup_LabSE_' . date('Y-m-d_H-i') . '.sql';
+    $current_time = date("d M Y, H:i") . " WIB";
+    $file_riwayat = 'riwayat_backup.txt';
 
-    putenv("PGPASSWORD=$password");
-    $cmd = "\"$pg_dump\" --host=$host --port=$port --username=$user --format=plain --clean --file=\"$file_sql\" $dbname";
-    exec($cmd, $output, $status);
-    putenv("PGPASSWORD=");
+    $history = file_exists($file_riwayat) ? file($file_riwayat, FILE_IGNORE_NEW_LINES) : [];
+    array_unshift($history, $current_time);
+    $history_top_5 = array_slice($history, 0, 5);
+    file_put_contents($file_riwayat, implode("\n", $history_top_5));
 
-    if ($status !== 0 || !file_exists($file_sql)) {
-        header("Location: dashboard.php?status=gagal&pesan=Backup gagal");
-        exit;
-    }
+    set_time_limit(0);
+    if (ob_get_level()) ob_end_clean();
 
     header('Content-Description: File Transfer');
+    header('Content-Type: application/force-download');
     header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="' . $nama_file . '"');
-    header('Content-Length: ' . filesize($file_sql));
+    header('Content-Type: application/download');
+    header("Content-Disposition: attachment; filename=\"" . $backup_name . "\"");
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
 
-    readfile($file_sql);
-    unlink($file_sql);
+    putenv("PGPASSWORD=$password");
+    $cmd = "\"$pg_dump\" --host=$host --port=$port --username=$user --format=plain --clean --if-exists $dbname";
+    passthru($cmd);
+    putenv("PGPASSWORD=");
+
     exit;
-
 ?>
