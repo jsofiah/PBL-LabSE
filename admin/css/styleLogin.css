@@ -33,9 +33,12 @@ body {
     margin-top: -40px;
 }
 
+.logo-container{
+    margin-top: 20px;
+}
+
 .logo-img {
     width: 380px;
-    margin-bottom: 4px;
     padding-left: 50px;
 }
 
@@ -146,5 +149,121 @@ body {
 
     .login-card {
         max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .main-wrapper {
+        padding: 30px;
+    }
+    
+    .login-card {
+        padding: 2.2rem 2rem;
+        border-radius: 24px;
+    }
+    
+    .logo-img {
+        max-width: 400px;
+    }
+}
+
+@media (min-width: 992px) {
+    .main-wrapper .row {
+        flex-direction: row;
+        min-height: 80vh;
+    }
+    
+    .left-section {
+        order: 1;
+        align-items: flex-start;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .logo-container {
+        /* margin-bottom: 50px; */
+        text-align: left;
+    }
+    
+    .logo-img {
+        max-width: 380px;
+    }
+    
+    .right-section {
+        display: flex !important;
+        order: 2;
+        justify-content: center;
+        align-items: center;
+        padding-right: 5%;
+    }
+    
+    .right-section svg {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+    }
+}
+
+@media (min-width: 1200px) {
+    .left-section {
+        padding-left: 8%;
+    }
+    
+    .right-section {
+        padding-right: 8%;
+    }
+    
+    .right-section svg {
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 1.5rem 1.2rem;
+        border-radius: 16px;
+    }
+    
+    .form-control {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-login {
+        padding: 14px;
+        font-size: 0.95rem;
+    }
+    
+    .logo-img {
+        max-width: 250px;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .main-wrapper {
+        padding: 10px;
+    }
+    
+    .logo-container {
+        margin-bottom: 15px;
+    }
+    
+    .logo-img {
+        max-width: 250px;
+    }
+    
+    .login-card {
+        padding: 1.5rem;
+        max-width: 400px;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .login-card {
+        box-shadow: 0 12px 50px rgba(15, 23, 42, 0.15);
+    }
+    
+    .btn-login {
+        box-shadow: 0 8px 25px rgba(250, 204, 21, 0.3);
     }
 }

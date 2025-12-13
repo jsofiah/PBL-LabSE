@@ -70,7 +70,7 @@ if (isset($_POST['login'])) {
             <div class="col-lg-7 col-md-12 left-section">
 
                 <div class="logo-container">
-                    <img src="../img/logo.png" alt="Lab SE Logo" class="logo-img">
+                    <img src="../img/Logo-login.png" alt="Lab SE Logo" class="logo-img">
                 </div>
 
                 <div class="login-card">
