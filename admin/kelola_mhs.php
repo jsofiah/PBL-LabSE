@@ -265,11 +265,11 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons text-center">
-                                        <a href="?aksi=edit&id=<?= $mhs['id_mhs']; ?>" 
+                                        <a href="edit_mhs.php?id=<?= $mhs['id_mhs']; ?>" 
                                            class="btn btn-action btn-warning btn-sm">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
-                                        <a href="?aksi=hapus&id=<?= $mhs['id_mhs']; ?>" 
+                                        <a href="hapus_mhs.php?id=<?= $mhs['id_mhs']; ?>" 
                                            class="btn btn-action btn-danger btn-sm"
                                            onclick="return confirm('Yakin ingin menghapus mahasiswa ini?')">
                                             <i class="fa fa-trash"></i> Hapus

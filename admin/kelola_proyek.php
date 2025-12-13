@@ -126,7 +126,7 @@ $rTahun = pg_query($conn, $qTahun);
         <div>
             <h2 class="mb-2">Kelola Proyek</h2>
         </div>
-        <a href="tambah_proyek.php" class="btn btn-success btn-sm">
+        <a href="tambah_proyek.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>
@@ -282,7 +282,7 @@ $rTahun = pg_query($conn, $qTahun);
 
     <div class="mb-4">
         <h2 class="mb-2">Kelola Proyek Mahasiswa</h2>
-        <a href="tambah_proyek_mhs.php" class="btn btn-success btn-sm">
+        <a href="tambah_proyek_mhs.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>
@@ -352,7 +352,7 @@ $rTahun = pg_query($conn, $qTahun);
 
     <div class="mb-4">
         <h2 class="mb-2">Kelola Proyek Dosen</h2>
-        <a href="tambah_proyek_dosen.php" class="btn btn-success btn-sm">
+        <a href="tambah_proyek_dosen.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Proyek
         </a>
     </div>

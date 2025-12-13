@@ -54,8 +54,8 @@ if (isset($_POST['update'])) {
 <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleSidebar.css">
 <link href="css/styleForm.css" rel="stylesheet">
+<link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class="p-4">
@@ -69,17 +69,13 @@ if (isset($_POST['update'])) {
 
             <div class="mb-3">
                 <label class="form-label text-white">Nama Jenis Mitra</label>
-                <input type="text" name="nama_jenismitra" class="form-control"
+                <input type="text" name="nama_jenismitra" placeholder="Masukkan nama jenis mitra" class="form-control"
                        value="<?= htmlspecialchars($data['nama_jenismitra']); ?>" required>
             </div>
 
             <div class="d-flex gap-2 mt-3">
-                <button type="submit" name="update" class="btn btn-primary">
-                    <i class="fa fa-save"></i> Simpan Perubahan
-                </button>
-                <a href="kelola_jenisMitra.php" class="btn btn-secondary">
-                    <i class="fa fa-arrow-left"></i> Kembali
-                </a>
+                <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
+                <a href="kelola_jenisMitra.php" class="btn btn-secondary">Kembali</a>
             </div>
 
         </form>

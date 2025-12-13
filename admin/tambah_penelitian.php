@@ -44,8 +44,8 @@ $rDosen = pg_query($conn, $qDosen);
 <link href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css' rel='stylesheet'>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleSidebar.css">
 <link rel='stylesheet' href='css/styleForm.css'>
+<link rel="stylesheet" href="css/styleSidebar.css">
 
 </head>
 
@@ -66,7 +66,7 @@ $rDosen = pg_query($conn, $qDosen);
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Tahun Penelitian</label>
-                    <input type='number' name='tahun' class='form-control' min="1990" max="2100" placeholder="masukkan tahun penelitian" required>
+                    <input type='number' name='tahun' class='form-control' min="1990" max="2100" placeholder="Masukkan tahun penelitian" required>
                 </div>
 
                 <div class='mb-3'>
@@ -82,8 +82,8 @@ $rDosen = pg_query($conn, $qDosen);
                 </div>
 
                 <div class='d-flex gap-2 mt-3'>
-                    <button type='submit' name='simpan' class='btn btn-primary'> Tambah Penelitian</button>
-                    <a href='kelola_penelitian.php' class='btn btn-secondary'> Kembali </a>
+                    <button type='submit' name='simpan' class='btn btn-primary'>Simpan</button>
+                    <a href='kelola_penelitian.php' class='btn btn-secondary'>Kembali </a>
                 </div>
 
             </form>

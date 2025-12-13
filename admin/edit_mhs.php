@@ -81,8 +81,8 @@ if (isset($_POST['update'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
+    <link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 <body class="p-4">
     <?php include 'sidebar.php'; ?>
@@ -146,14 +146,14 @@ if (isset($_POST['update'])) {
 
             <div class="mb-4">
                 <label class="form-label text-white">Keahlian</label>
-                <div class="border p-2 rounded" style="max-height:220px; overflow-y: scroll;">
+                <div class="border p-2 rounded" style="max-height:220px; overflow-y: scroll; background: #fff;">
                     <?php while($sk = pg_fetch_assoc($rAllSkills)): ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox"
                                 name="keahlian[]" value="<?= $sk['id_keahlian']; ?>"
                                 <?= in_array($sk['id_keahlian'], $mySkills) ? 'checked' : ''; ?>>
                             
-                            <label class="form-check-label text-white">
+                            <label class="form-check-label text-black">
                                 <?= $sk['nama_keahlian']; ?>
                             </label>
                         </div>

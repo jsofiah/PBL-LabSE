@@ -56,8 +56,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/styleSidebar.css">
 <link rel="stylesheet" href="css/styleForm.css">
+<link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class="p-4">
@@ -72,13 +72,13 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Nama Subnav</label>
-                        <input type="text" name="nama_subnav" class="form-control"
+                        <input type="text" name="nama_subnav" placeholder="Masukkan nama subnav" class="form-control"
                             value="<?= htmlspecialchars($subnav['nama_subnav']); ?>" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">URL Subnav</label>
-                        <input type="text" name="url_subnav" class="form-control"
+                        <input type="text" name="url_subnav" placeholder="Masukkan url subnav" class="form-control"
                             value="<?= htmlspecialchars($subnav['url_subnav']); ?>" required>
                     </div>
 
@@ -98,12 +98,8 @@
 
 
                 <div class="d-flex gap-2 mt-3">
-                    <button type="submit" name="update" class="btn btn-primary">
-                        <i class="fa fa-save"></i> Simpan Perubahan
-                    </button>
-                    <a href="kelola_nav.php" class="btn btn-secondary">
-                        <i class="fa fa-arrow-left"></i> Kembali
-                    </a>
+                    <button type="submit" name="update" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="kelola_nav.php" class="btn btn-secondary">Kembali</a>
                 </div>
             </form>
         </div>

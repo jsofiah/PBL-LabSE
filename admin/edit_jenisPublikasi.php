@@ -47,8 +47,8 @@ if (isset($_POST['update'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel='stylesheet' href='css/styleForm.css'>
+    <link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class='p-4'>
@@ -62,7 +62,7 @@ if (isset($_POST['update'])) {
 
                 <div class='mb-3'>
                     <label class='form-label text-white'>Nama Jenis Publikasi</label>
-                    <input type='text' name='nama' class='form-control'
+                    <input type='text' name='nama' class='form-control' placeholder="Masukkan nama jenis publikasi"
                            value='<?= htmlspecialchars($data['nama_jenispublikasi']); ?>'
                            required>
                 </div>
@@ -71,7 +71,7 @@ if (isset($_POST['update'])) {
                 <button type='submit' name='update' class='btn btn-primary'>
                     Simpan Perubahan
                 </button>
-                <a href='kelola_jenisPublikasi.php' class='btn btn-secondary'> Kembali </a>
+                <a href='kelola_jenisPublikasi.php' class='btn btn-secondary'>Kembali </a>
             </div>
 
             </form>

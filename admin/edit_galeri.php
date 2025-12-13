@@ -56,10 +56,11 @@ if (isset($_POST['submit'])) {
 
 <head>
     <title>Edit Galeri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
+    <link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class="p-4">
@@ -73,7 +74,7 @@ if (isset($_POST['submit'])) {
 
                 <div class="mb-3">
                     <label class="form-label text-white">Deskripsi</label>
-                    <input type="text" name="deskripsi_galeri" class="form-control"
+                    <input type="text" name="deskripsi_galeri" placeholder="Masukkan deskripsi gambar" class="form-control"
                         value="<?= htmlspecialchars($data['deskripsi_galeri']); ?>" required>
                 </div>
 
@@ -87,7 +88,7 @@ if (isset($_POST['submit'])) {
                     <input type="file" name="gambar" class="form-control" accept="image/*">
                 </div>
                 <div class="d-flex gap-2 mt-3">
-                    <button class="btn btn-primary" name="submit">Update</button>
+                    <button class="btn btn-primary" name="submit">Simpan Perubahan</button>
                     <a href="kelola_galeri.php" class="btn btn-secondary">Kembali</a>
 
         </form>

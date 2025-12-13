@@ -51,8 +51,8 @@ if (isset($_POST['submit'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel="stylesheet" href="css/styleForm.css">
+    <link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 <body class="p-4">
     <?php include 'sidebar.php'; ?>
@@ -68,12 +68,12 @@ if (isset($_POST['submit'])) {
 
             <div class="mb-3">
                 <label class="form-label text-white">Nama Lengkap</label>
-                <input type="text" name="nama" class="form-control" placeholder="Masukkan Nama" required>
+                <input type="text" name="nama" class="form-control" placeholder="Masukkan nama" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label text-white">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Masukkan Email" required>
+                <input type="email" name="email" class="form-control" placeholder="Masukkan email" required>
             </div>
 
             <div class="mb-3">
@@ -88,7 +88,7 @@ if (isset($_POST['submit'])) {
 
             <div class="mb-3">
                 <label class="form-label text-white">Angkatan</label>
-                <input type="number" name="angkatan" class="form-control" placeholder="Masukkan Angkatan" required>
+                <input type="number" name="angkatan" class="form-control" placeholder="Masukkan tahun angkatan" required>
             </div>
 
             <div class="mb-3">
@@ -101,11 +101,11 @@ if (isset($_POST['submit'])) {
 
             <div class="mb-4">
                 <label class="form-label text-white">Keahlian (Centang yang sesuai):</label>
-                <div class="border p-2 rounded" style="max-height: 200px; overflow-y: scroll;">
+                <div class="border p-2 rounded" style="max-height: 200px; overflow-y: scroll; background: #fff">
                     <?php while($skill = pg_fetch_assoc($rSkills)): ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="keahlian[]" value="<?= $skill['id_keahlian']; ?>">
-                            <label class="form-check-label text-white"> <?= $skill['nama_keahlian']; ?> </label>
+                            <label class="form-check-label text-black"> <?= $skill['nama_keahlian']; ?> </label>
                         </div>
                     <?php endwhile; ?>
                 </div>

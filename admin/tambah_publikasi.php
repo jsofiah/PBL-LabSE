@@ -47,8 +47,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styleSidebar.css">
     <link rel='stylesheet' href='css/styleForm.css'>
+    <link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class='p-4'>
@@ -62,12 +62,12 @@
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Judul Publikasi</label>
-                <input type='text' name='judul' class='form-control' placeholder="masukkan judul publikasi" required>
+                <input type='text' name='judul' class='form-control' placeholder="Masukkan judul publikasi" required>
             </div>
 
             <div class='mb-3'>
                 <label class='form-label text-white'>Tahun</label>
-                <input type='text' name='tahun' class='form-control' placeholder='masukkan tahun' required>
+                <input type='text' name='tahun' class='form-control' placeholder='Masukkan tahun' min="1990" max="2100" required>
             </div>
 
             <div class='mb-3'>
@@ -91,8 +91,8 @@
             </div>
 
             <div class='d-flex gap-2 mt-3'>
-                <button type='submit' name='simpan' class='btn btn-primary'> Tambah Publikasi </button>
-                <a href='kelola_publikasi.php' class='btn btn-secondary'> Kembali </a>
+                <button type='submit' name='simpan' class='btn btn-primary'>Simpan</button>
+                <a href='kelola_publikasi.php' class='btn btn-secondary'>Kembali</a>
             </div>
 
         </form>

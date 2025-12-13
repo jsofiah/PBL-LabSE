@@ -155,7 +155,7 @@ $rTahunDosen = pg_query($conn, $qTahunDosen);
 
     <div class="mb-4">
         <h2 class="mb-2">Kelola Sertifikasi</h2>
-        <a href="tambah_sertifikasi.php" class="btn btn-success btn-sm">
+        <a href="tambah_sertifikasi.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Sertifikasi
         </a>
     </div>
@@ -316,7 +316,7 @@ $rTahunDosen = pg_query($conn, $qTahunDosen);
 
     <div class="mt-5 mb-4">
         <h2 class="mb-2">Kelola Sertifikasi Dosen</h2>
-        <a href="tambah_sertifikasi_dosen.php" class="btn btn-success btn-sm">
+        <a href="tambah_sertifikasi_dosen.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Sertifikasi Dosen
         </a>
     </div>

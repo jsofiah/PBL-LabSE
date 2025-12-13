@@ -72,7 +72,7 @@ if ($total_records == 0) {
 <div class="content-area container-fluid px-3">
     <div class="mb-4">
         <h2 class="mb-2">Kelola Roadmap</h2>
-        <a href="tambah_roadmap.php" class="btn btn-success btn-sm">
+        <a href="tambah_roadmap.php" class="btn btn-success">
             <i class="fa fa-plus"></i> Tambah Roadmap
         </a>
     </div>

@@ -84,8 +84,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="css/styleSidebar.css">
 <link rel="stylesheet" href="css/styleForm.css">
+<link rel="stylesheet" href="css/styleSidebar.css">
 </head>
 
 <body class="p-4">
@@ -98,7 +98,6 @@
         <div class="card shadow-sm p-4">
             <form method="POST" enctype="multipart/form-data">
 
-                <!-- LOGO -->
                 <div class="mb-3 text-center">
                     <label class="form-label fw-bold text-white">Logo saat ini:</label><br>
                     <img src="../<?= htmlspecialchars($footer['url_logo_footer']); ?>" 
@@ -115,48 +114,48 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Judul</label>
-                        <input type="text" name="judul" class="form-control"
+                        <input type="text" name="judul" placeholder="Masukkan judul" class="form-control"
                             value="<?= $footer['judul_footer']; ?>" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Hari Kerja</label>
-                        <input type="text" name="hari_kerja" class="form-control"
+                        <input type="text" name="hari_kerja" placeholder="Masukkan hari kerja (Senin - Jumat)" class="form-control"
                             value="<?= $footer['hari_kerja']; ?>" required>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <label class="form-label text-white">Jam Kerja</label>
-                        <input type="text" name="jam_kerja" class="form-control"
+                        <input type="text" name="jam_kerja" placeholder="Masukkan jam kerja (08:00 - 18:00)" class="form-control"
                             value="<?= $footer['jam_kerja']; ?>" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 1</label>
-                        <input type="text" name="telepon1" class="form-control"
+                        <input type="text" name="telepon1" placeholder="Masukkan nomor telepon 1" class="form-control"
                             value="<?= $footer['no_telepon1']; ?>">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Telepon 2</label>
-                        <input type="text" name="telepon2" class="form-control"
+                        <input type="text" name="telepon2" placeholder="Masukkan nomor telepon 2" class="form-control"
                             value="<?= $footer['no_telepon2']; ?>">
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="2" required><?= $footer['alamat']; ?></textarea>
+                        <textarea name="alamat" class="form-control" placeholder="Masukkan alamat" rows="2" required><?= $footer['alamat']; ?></textarea>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-white">Email</label>
-                        <input type="email" name="email" class="form-control"
+                        <input type="email" name="email" placeholder="Masukkan alamat email" class="form-control"
                             value="<?= $footer['email']; ?>" required>
                     </div>
 
                     <div class="col-md-12 mb-3">
                         <label class="form-label text-white">Link Maps</label>
-                        <textarea name="maps" class="form-control" rows="2" required><?= $footer['link_maps']; ?></textarea>
+                        <textarea name="maps" placeholder="Masukkan link maps" class="form-control" rows="2" required><?= $footer['link_maps']; ?></textarea>
                     </div>
 
                 </div>
