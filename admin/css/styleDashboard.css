@@ -502,7 +502,7 @@
     .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
     .top-item { flex-wrap: wrap; }
     .top-stats { width: 100%; margin-top: 10px; }
-    .chart-container { height: 250px; }
+    .chart-container { height: 300px; }
     
     .welcome-header {
         flex-direction: column;
