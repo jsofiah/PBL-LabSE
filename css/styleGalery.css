@@ -7,7 +7,6 @@
 .hero-container {
     border-radius: 25px;
     padding: 2.5rem;
-    margin-bottom: 100px;
 }
 
 .hero-frame {
@@ -143,15 +142,14 @@
 .grid-item:hover .overlay-content i { opacity: 1; transform: translateY(0); }
 .grid-item:hover img { transform: scale(1.1); }
 
-/* === PAGINATION STYLE (FIXED) === */
 
 .pagination-wrapper {
     display: flex;
-    justify-content: space-between; /* Ini kunci agar tombol pisah ke kiri & kanan */
+    justify-content: space-between;
     align-items: center;
     margin-top: 40px;
     margin-bottom: 20px;
-    width: 100%; /* Memastikan wrapper memenuhi lebar container */
+    width: 100%;
 }
 
 .pagination-info {
@@ -178,9 +176,8 @@
     color: white;
 }
 
-/* Style untuk button yang disabled */
 .btn-pagination:disabled {
-    background-color: #e0e0e0; /* Warna abu-abu agar terlihat mati */
+    background-color: #e0e0e0;
     color: #9e9e9e;
     cursor: not-allowed;
     opacity: 1;
@@ -190,7 +187,6 @@
     background-color: #e0e0e0;
 }
 
-/* === RESPONSIF === */
 @media (max-width: 768px) {
     .custom-grid-container {
         grid-template-columns: repeat(2, 1fr);
@@ -204,7 +200,6 @@
     .overlay-title { font-size: 1.1rem; }
     .grid-item { border-radius: 12px; }
     
-    /* Responsif Pagination */
     .pagination-wrapper {
         flex-direction: column;
         gap: 15px;

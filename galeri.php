@@ -153,74 +153,74 @@
                 <div class="hero-content"><h1 class="hero-title">GALERI</h1></div>
             </div>
         </div>
-    </div>
-    
-    <div class="container py-3 mb-5">
-        <h2 class="gallery-title">Potret Kegiatan dan Prestasi Kami</h2>
-        <div class="custom-grid-container">
-            <?php
-            if (pg_num_rows($result) > 0) {
-                while($row = pg_fetch_assoc($result)) {
-                    $gambar = $row['url_gambar_galeri'];
-                    $deskripsi = $row['deskripsi_galeri'];
-            ?>
-                <div class="grid-item" onclick="previewImage(this)">
-                    <img src="<?php echo htmlspecialchars($gambar); ?>" alt="<?php echo htmlspecialchars($deskripsi); ?>">
-                    <div class="grid-overlay">
-                        <div class="overlay-content">
-                            <h5 class="overlay-title"><?php echo htmlspecialchars($deskripsi); ?></h5>
-                            <i class="bi bi-plus-circle fs-3 text-white"></i>
+        <div class="container mb-5">
+            <h2 class="gallery-title">Potret Kegiatan dan Prestasi Kami</h2>
+            <div class="custom-grid-container">
+                <?php
+                if (pg_num_rows($result) > 0) {
+                    while($row = pg_fetch_assoc($result)) {
+                        $gambar = $row['url_gambar_galeri'];
+                        $deskripsi = $row['deskripsi_galeri'];
+                ?>
+                    <div class="grid-item" onclick="previewImage(this)">
+                        <img src="<?php echo htmlspecialchars($gambar); ?>" alt="<?php echo htmlspecialchars($deskripsi); ?>">
+                        <div class="grid-overlay">
+                            <div class="overlay-content">
+                                <h5 class="overlay-title"><?php echo htmlspecialchars($deskripsi); ?></h5>
+                                <i class="bi bi-plus-circle fs-3 text-white"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php
+                <?php
+                    }
+                } else {
+                    echo '<div class="gallery-empty">Belum ada foto yang diunggah.</div>';
                 }
-            } else {
-                echo '<div class="gallery-empty">Belum ada foto yang diunggah.</div>';
-            }
-            ?>
-        </div>
-        
-        <?php if ($totalPage > 1): ?>
-            <div class="pagination-wrapper">
-
-                <?php if ($page > 1): ?>
-                    <a href="?page=<?php echo $page - 1; ?>" class="btn-pagination">
-                        <i class="bi bi-caret-left-fill me-1"></i> Previous
-                    </a>
-                <?php else: ?>
-                    <button class="btn-pagination" disabled>Previous</button>
-                <?php endif; ?>
-
-                <span class="pagination-info">Slide <?php echo $page; ?> of <?php echo $totalPage; ?></span>
-
-                <?php if ($page < $totalPage): ?>
-                    <a href="?page=<?php echo $page + 1; ?>" class="btn-pagination">
-                        Next <i class="bi bi-caret-right-fill ms-1"></i>
-                    </a>
-                <?php else: ?>
-                    <button class="btn-pagination" disabled>Next</button>
-                <?php endif; ?>
-
+                ?>
             </div>
-        <?php endif; ?>
-
-    </div>
-
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content bg-transparent border-0">
-                <div class="modal-body p-0 text-center position-relative">
-                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <img src="" id="modalImage" class="img-fluid rounded shadow-lg">
+            
+            <?php if ($totalPage > 1): ?>
+                <div class="pagination-wrapper">
+    
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?php echo $page - 1; ?>" class="btn-pagination">
+                            <i class="bi bi-caret-left-fill me-1"></i> Previous
+                        </a>
+                    <?php else: ?>
+                        <button class="btn-pagination" disabled>Previous</button>
+                    <?php endif; ?>
+    
+                    <span class="pagination-info">Slide <?php echo $page; ?> of <?php echo $totalPage; ?></span>
+    
+                    <?php if ($page < $totalPage): ?>
+                        <a href="?page=<?php echo $page + 1; ?>" class="btn-pagination">
+                            Next <i class="bi bi-caret-right-fill ms-1"></i>
+                        </a>
+                    <?php else: ?>
+                        <button class="btn-pagination" disabled>Next</button>
+                    <?php endif; ?>
+    
+                </div>
+            <?php endif; ?>
+    
+        </div>
+    
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body p-0 text-center position-relative">
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <img src="" id="modalImage" class="img-fluid rounded shadow-lg">
+                    </div>
                 </div>
             </div>
         </div>
+    
+        <button id="toTop" class="to-top-btn">
+            <i class="fas fa-arrow-up"></i>
+        </button>
     </div>
-
-    <button id="toTop" class="to-top-btn">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+    
 
     <div id="footer-container"></div>
     <script src="js/footer.js"></script>
